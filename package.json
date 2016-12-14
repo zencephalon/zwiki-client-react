@@ -47,6 +47,7 @@
     "webpack-hot-middleware": "^2.6.0"
   },
   "dependencies": {
+    "classnames": "^2.2.5",
     "draft-js": "^0.9.1",
     "draft-js-linkify-plugin": "^2.0.0-beta1",
     "draft-js-plugins-editor": "^2.0.0-beta1",
