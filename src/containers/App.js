@@ -5,6 +5,7 @@ import * as CounterActions from '../actions/CounterActions'
 import * as NodeActions from '~/apis/nodes/actions'
 import Counter from '../components/Counter'
 import Footer from '../components/Footer'
+import SimpleLinkifyEditor from '~/components/SimpleLinkifyEditor'
 
 /**
  * It is common practice to have a 'Root' container/component require our main App (this one).
@@ -19,13 +20,10 @@ class App extends Component {
 
   render() {
     // we can use ES6's object destructuring to effectively 'unpack' our props
-    const { counter, actions } = this.props
+    const { counter, actions, confirmed, node } = this.props
     return (
       <div className="main-app-container">
-        <div className="main-app-nav">Simple Redux Boilerplate</div>
-        {/* notice that we then pass those unpacked props into the Counter component */}
-        <Counter counter={counter} actions={actions} />
-        <Footer />
+        <SimpleLinkifyEditor />
       </div>
     )
   }
@@ -42,8 +40,23 @@ App.propTypes = {
  * object. By mapping it to props, we can pass it to the child component Counter.
  */
 function mapStateToProps(state) {
+
+  const {
+    data: node,
+    GET: {
+      confirmed,
+    },
+  } = state.nodes.http.things[1] || {
+    data: {},
+    GET: {
+      confirmed: false,
+    },
+  }
+
   return {
     counter: state.counter,
+    node,
+    confirmed,
   }
 }
 
