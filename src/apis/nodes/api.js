@@ -1,4 +1,4 @@
-import api from '~/lib/api'
+import api from '~/apis/api'
 
 const endpoint = 'nodes'
 const indexParam = null

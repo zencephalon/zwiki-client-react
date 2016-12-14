@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 import counter from './counter'
-import node from '~/apis/nodes/reducers'
+import nodes from '~/apis/nodes/reducers'
 
 /**
  * combineReducers is important to understand. As your app might grow in size
@@ -17,7 +17,7 @@ import node from '~/apis/nodes/reducers'
  */
 const rootReducer = combineReducers({
   counter, // you might be used to: counter: counter,
-  node,
+  nodes,
 })
 
 export default rootReducer

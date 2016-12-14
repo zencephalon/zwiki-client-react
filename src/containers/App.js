@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as CounterActions from '../actions/CounterActions'
+import * as NodeActions from '~/apis/nodes/actions'
 import Counter from '../components/Counter'
 import Footer from '../components/Footer'
 
@@ -11,6 +12,11 @@ import Footer from '../components/Footer'
  * component to make the Redux store available to the rest of the app.
  */
 class App extends Component {
+  componentWillMount() {
+    this.props.nodeActions.GET(1)
+  }
+
+
   render() {
     // we can use ES6's object destructuring to effectively 'unpack' our props
     const { counter, actions } = this.props
@@ -52,6 +58,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(CounterActions, dispatch),
+    nodeActions: bindActionCreators(NodeActions, dispatch)
   }
 }
 
