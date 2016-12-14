@@ -53,7 +53,7 @@
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
     "react-redux": "^5.0.0",
-    "redux-rest-reducer": "git+ssh://git@github.com/zencephalon/redux-rest-reducer.git#d9439b0c71eb58b9346101dbbc70cac90862ed87",
+    "redux-rest-reducer": "git+ssh://git@github.com/zencephalon/redux-rest-reducer.git#3c849f5e1720f598377e9381fd610d87852531a6",
     "redux-thunk": "^2.1.0"
   }
 }

@@ -23,7 +23,9 @@ class App extends Component {
     const { counter, actions, confirmed, node } = this.props
     return (
       <div className="main-app-container">
-        <SimpleLinkifyEditor />
+        { confirmed ?
+          <SimpleLinkifyEditor node={node} /> : null
+        }
       </div>
     )
   }
