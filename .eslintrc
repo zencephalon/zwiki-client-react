@@ -8,7 +8,7 @@
   "extends": "airbnb",
   "rules": {
     "no-multiple-empty-lines": "off",
-    "semi": 0,
+    "semi": ["error", "never"],
     "import/no-unresolved": 0,
     "new-cap": 0,
     "no-nested-ternary": 0

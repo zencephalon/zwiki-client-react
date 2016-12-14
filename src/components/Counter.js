@@ -1,16 +1,16 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react'
 
 export default class Counter extends Component {
   constructor(props, context) {
-    super(props, context);
+    super(props, context)
   }
 
   handleIncrement() {
-    this.props.actions.increment();
+    this.props.actions.increment()
   }
 
   handleDecrement() {
-    this.props.actions.decrement();
+    this.props.actions.decrement()
   }
 
   render() {
@@ -23,15 +23,15 @@ export default class Counter extends Component {
         <div className="counter-even-label">{this.props.counter % 2 === 0 ? 'even' : 'odd'}</div>
         <br />
         <div className="counter-buttons">
-          <button onClick={() => {this.handleDecrement();}}>-</button>
-          <button onClick={() => {this.handleIncrement();}}>+</button>
+          <button onClick={() => { this.handleDecrement() }}>-</button>
+          <button onClick={() => { this.handleIncrement() }}>+</button>
         </div>
       </div>
-    );
+    )
   }
 }
 
 Counter.propTypes = {
   counter: PropTypes.number.isRequired,
-  actions: PropTypes.object.isRequired
-};
+  actions: PropTypes.object.isRequired,
+}
