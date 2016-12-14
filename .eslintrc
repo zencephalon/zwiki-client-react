@@ -1,6 +1,16 @@
 {
+  "parser": "babel-eslint",
+  "globals": {
+    // Put things like jQuery, etc
+    "jQuery": true,
+    "$": true
+  },
   "extends": "airbnb",
   "rules": {
-    "comma-dangle": 0
+    "no-multiple-empty-lines": "off",
+    "semi": 0,
+    "import/no-unresolved": 0,
+    "new-cap": 0,
+    "no-nested-ternary": 0
   }
 }
