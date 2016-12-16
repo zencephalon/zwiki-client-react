@@ -37,7 +37,7 @@ module.exports = {
   module: {
     loaders: [
       {
-        test: /\.js?/,
+        test: /\.jsx?$/,
         exclude: [/node_modules/, /styles/],
         loaders: ['babel'],
         include: path.join(__dirname, 'src')
@@ -48,5 +48,8 @@ module.exports = {
       },
       { test: /\.css$/, exclude: /\.useable\.css$/, loader: "style-loader!css-loader" },
     ]
+  },
+  resolve: {
+    extensions: ['', '.js', '.jsx'],
   }
 };
