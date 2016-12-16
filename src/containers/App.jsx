@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import * as NodeActions from '~/apis/nodes/actions'
 import nodeShape from '~/apis/nodes/shape'
 import SimpleLinkifyEditor from '~/components/SimpleLinkifyEditor'
+import OmniSearch from '~/components/OmniSearch'
 
 /**
  * It is common practice to have a 'Root' container/component require our main App (this one).
@@ -21,6 +22,7 @@ class App extends Component {
     const { confirmed, node } = this.props
     return (
       <div className="main-app-container">
+        <OmniSearch />
         {confirmed ?
           <SimpleLinkifyEditor node={node} /> : null
         }
