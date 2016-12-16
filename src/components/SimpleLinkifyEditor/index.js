@@ -19,6 +19,14 @@ class SimpleMentionEditor extends Component {
     timer: null,
   };
 
+  parseNode = (currentContent) => {
+    const plainText = currentContent.getPlainText()
+    return {
+      content: plainText,
+      name: plainText.split('\n', 1)[0].match(/#+\s*(.*)$/)[1],
+    }
+  }
+
   onChange = (editorState) => {
     const { node, dispatch } = this.props
     const { timer } = this.state
@@ -28,9 +36,7 @@ class SimpleMentionEditor extends Component {
     this.setState({
       editorState,
       timer: setTimeout(() => {
-        dispatch(PUT(node.id, {
-          content: editorState.getCurrentContent().getPlainText(),
-        })).then(() => {
+        dispatch(PUT(node.id, this.parseNode(editorState.getCurrentContent()))).then(() => {
           this.setState({ timer: null })
         })
       }, 1500),
