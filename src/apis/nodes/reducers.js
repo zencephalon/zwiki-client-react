@@ -1,6 +1,5 @@
-import t from './actionTypes'
-
 import { http } from 'redux-rest-reducer'
+import t from './actionTypes'
 
 const httpReducer = http.reducerFactory(t)
 
@@ -11,6 +10,8 @@ function queryReducer(state = { q: '' }, action) {
         ...state,
         q: action.q,
       }
+    default:
+      return state
   }
 }
 
