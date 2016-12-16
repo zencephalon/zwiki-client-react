@@ -4,3 +4,5 @@ node_modules
 lib
 coverage
 dist
+zwiki-client.sublime-project
+zwiki-client.sublime-workspace
