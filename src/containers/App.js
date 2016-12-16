@@ -1,10 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import * as CounterActions from '../actions/CounterActions'
 import * as NodeActions from '~/apis/nodes/actions'
-import Counter from '../components/Counter'
-import Footer from '../components/Footer'
+import nodeShape from '~/apis/nodes/shape'
 import SimpleLinkifyEditor from '~/components/SimpleLinkifyEditor'
 
 /**
@@ -14,13 +12,13 @@ import SimpleLinkifyEditor from '~/components/SimpleLinkifyEditor'
  */
 class App extends Component {
   componentWillMount() {
-    this.props.nodeActions.GET(1)
+    this.props.actions.GET(1)
   }
 
 
   render() {
     // we can use ES6's object destructuring to effectively 'unpack' our props
-    const { counter, actions, confirmed, node } = this.props
+    const { confirmed, node } = this.props
     return (
       <div className="main-app-container">
         {confirmed ?
@@ -32,8 +30,9 @@ class App extends Component {
 }
 
 App.propTypes = {
-  counter: PropTypes.number.isRequired,
-  actions: PropTypes.object.isRequired,
+  confirmed: PropTypes.bool.isRequired,
+  node: nodeShape,
+  actions: PropTypes.objectOf(PropTypes.func).isRequired,
 }
 
 /**
@@ -71,8 +70,7 @@ function mapStateToProps(state) {
  */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(CounterActions, dispatch),
-    nodeActions: bindActionCreators(NodeActions, dispatch),
+    actions: bindActionCreators(NodeActions, dispatch),
   }
 }
 
@@ -86,5 +84,5 @@ function mapDispatchToProps(dispatch) {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(App)
