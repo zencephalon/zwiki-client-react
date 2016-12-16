@@ -1,20 +1,21 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
 import { EditorState, ContentState } from 'draft-js'
 import Editor from 'draft-js-plugins-editor' // eslint-disable-line import/no-unresolved
-import createLinkifyPlugin from 'draft-js-linkify-plugin' // eslint-disable-line import/no-unresolved
 
 import classNames from 'classnames'
 
 import { PUT } from '~/apis/nodes/actions'
+import nodeShape from '~/apis/nodes/shape'
 
-const linkifyPlugin = createLinkifyPlugin()
-const plugins = [linkifyPlugin]
+// const linkifyPlugin = createLinkifyPlugin()
+const plugins = []
 
 class SimpleMentionEditor extends Component {
   state = {
-    editorState: EditorState.createWithContent(ContentState.createFromText(this.props.node.content)),
+    editorState: EditorState.createWithContent(
+      ContentState.createFromText(this.props.node.content)),
     timer: null,
   };
 
@@ -53,6 +54,11 @@ class SimpleMentionEditor extends Component {
       </div>
     )
   }
+}
+
+SimpleMentionEditor.propTypes = {
+  node: nodeShape,
+  dispatch: PropTypes.func.isRequired,
 }
 
 export default connect()(SimpleMentionEditor)
