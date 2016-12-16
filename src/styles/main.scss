@@ -40,8 +40,14 @@ body {
 
 // ===== OmniSearch ====
 
-.omni-search input {
-  font-size: 1em;
-  line-height: 1.5em;
-  font-family: 'Vollkorn', serif;
+.omni-search {
+  input {
+    font-size: 1em;
+    line-height: 1.5em;
+    font-family: 'Vollkorn', serif;
+  }
+
+  .suggestions {
+    height: 1em;
+  }
 }

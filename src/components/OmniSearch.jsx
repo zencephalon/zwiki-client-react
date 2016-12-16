@@ -40,9 +40,11 @@ class OmniSearch extends Component {
           onKeyPress={this.handleKeyPress}
           value={q}
         />
-        {confirmed &&
-          suggestions.map(suggestion => <div>{ suggestion.content }</div>)
-        }
+        <div className="suggestions">
+          {confirmed &&
+            suggestions.map(suggestion => <div>{ suggestion.content }</div>)
+          }
+        </div>
       </div>
     )
   }
