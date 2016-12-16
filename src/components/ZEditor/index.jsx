@@ -12,20 +12,12 @@ import nodeShape from '~/apis/nodes/shape'
 // const linkifyPlugin = createLinkifyPlugin()
 const plugins = []
 
-class SimpleMentionEditor extends Component {
+class ZEditor extends Component {
   state = {
     editorState: EditorState.createWithContent(
       ContentState.createFromText(this.props.node.content)),
     timer: null,
   };
-
-  parseNode = (currentContent) => {
-    const plainText = currentContent.getPlainText()
-    return {
-      content: plainText,
-      name: plainText.split('\n', 1)[0].match(/#+\s*(.*)$/)[1],
-    }
-  }
 
   onChange = (editorState) => {
     const { node, dispatch } = this.props
@@ -41,11 +33,20 @@ class SimpleMentionEditor extends Component {
         })
       }, 1500),
     })
-  };
+  }
+
+  parseNode = (currentContent) => {
+    const plainText = currentContent.getPlainText()
+    return {
+      content: plainText,
+      name: plainText.split('\n', 1)[0].match(/#+\s*(.*)$/)[1],
+    }
+  }
+
 
   focus = () => {
     this.editor.focus()
-  };
+  }
 
   render() {
     const { timer } = this.state
@@ -62,9 +63,9 @@ class SimpleMentionEditor extends Component {
   }
 }
 
-SimpleMentionEditor.propTypes = {
+ZEditor.propTypes = {
   node: nodeShape,
   dispatch: PropTypes.func.isRequired,
 }
 
-export default connect()(SimpleMentionEditor)
+export default connect()(ZEditor)

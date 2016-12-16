@@ -16,6 +16,8 @@ body {
   font-size: 2vw;
 }
 
+// ====== Editor ======
+
 .editor {
   box-sizing: border-box;
   border: 1px solid $accent-blue;
@@ -33,5 +35,13 @@ body {
 }
 
 .editor :global(.public-DraftEditor-content) {
-  min-height: 140px;
+  min-height: 2em;
+}
+
+// ===== OmniSearch ====
+
+.omni-search input {
+  font-size: 1em;
+  line-height: 1.5em;
+  font-family: 'Vollkorn', serif;
 }
