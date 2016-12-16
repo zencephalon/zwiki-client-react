@@ -23,7 +23,7 @@ class App extends Component {
     const { counter, actions, confirmed, node } = this.props
     return (
       <div className="main-app-container">
-        { confirmed ?
+        {confirmed ?
           <SimpleLinkifyEditor node={node} /> : null
         }
       </div>
@@ -42,7 +42,6 @@ App.propTypes = {
  * object. By mapping it to props, we can pass it to the child component Counter.
  */
 function mapStateToProps(state) {
-
   const {
     data: node,
     GET: {
@@ -73,7 +72,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(CounterActions, dispatch),
-    nodeActions: bindActionCreators(NodeActions, dispatch)
+    nodeActions: bindActionCreators(NodeActions, dispatch),
   }
 }
 
