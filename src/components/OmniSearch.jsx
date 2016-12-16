@@ -1,13 +1,12 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
-import { INDEX } from '~/apis/nodes/actions'
+import { INDEX, SET_QUERY } from '~/apis/nodes/actions'
 
 class OmniSearch extends Component {
   constructor(props, context) {
     super(props, context)
     this.state = {
-      q: '',
       timer: null,
     }
   }
@@ -15,22 +14,23 @@ class OmniSearch extends Component {
   qChange = (e) => {
     const { dispatch } = this.props
     const { timer } = this.state
+
     const q = e.target.value
 
+    dispatch(SET_QUERY(q))
     clearTimeout(timer)
 
     this.setState({
-      q,
       timer: setTimeout(() => {
         dispatch(INDEX(q)).then(() => {
           this.setState({ timer: null })
         })
-      }),
+      }, 150),
     })
   }
 
   render() {
-    const { q } = this.state
+    const { q, confirmed, suggestions } = this.props
 
     return (
       <div className="omni-search">
@@ -40,18 +40,34 @@ class OmniSearch extends Component {
           onKeyPress={this.handleKeyPress}
           value={q}
         />
+        {confirmed &&
+          suggestions.map(suggestion => <div>{ suggestion.content }</div>)
+        }
       </div>
     )
   }
 }
 
-function mapStateToProps(state, props) {
+function mapStateToProps(state) {
+  const { q } = state.nodes.query
 
+  const {
+    data: suggestions,
+    confirmed,
+  } = state.nodes.http.collections[q] || {
+    data: [],
+    confirmed: false,
+  }
+
+  return {
+    q,
+    confirmed,
+    suggestions,
+  }
 }
 
-Counter.propTypes = {
-  counter: PropTypes.number.isRequired,
-  actions: PropTypes.object.isRequired,
+OmniSearch.propTypes = {
+  q: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired,
 }
 
