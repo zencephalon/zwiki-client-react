@@ -13,3 +13,8 @@ export const {
   PUT,
   INDEX,
 } = acts
+
+export const SET_QUERY = q => ({
+  type: t.SET_QUERY,
+  q,
+})

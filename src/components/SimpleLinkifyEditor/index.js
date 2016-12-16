@@ -21,14 +21,17 @@ class SimpleMentionEditor extends Component {
   onChange = (editorState) => {
     const { node, dispatch } = this.props
     const { timer } = this.state
-    if (timer) {
-      clearTimeout(timer)
-    }
+
+    clearTimeout(timer)
+
     this.setState({
       editorState,
       timer: setTimeout(() => {
-        dispatch(PUT(node.id, { content: editorState.getCurrentContent().getPlainText() }))
-        this.setState({ timer: null })
+        dispatch(PUT(node.id, {
+          content: editorState.getCurrentContent().getPlainText()
+        })).then(() => {
+          this.setState({ timer: null })
+        })
       }, 1500)
     });
   };

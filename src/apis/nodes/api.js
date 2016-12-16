@@ -1,7 +1,7 @@
 import api from '~/apis/api'
 
 const endpoint = 'nodes'
-const indexParam = null
+const indexParam = q
 
 const template = {}
 
