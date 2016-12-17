@@ -2,12 +2,16 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
 import { INDEX, SET_QUERY } from '~/apis/nodes/actions'
+import nodeShape from '~/apis/nodes/shape'
+
+import classNames from 'classnames'
 
 class OmniSearch extends Component {
   constructor(props, context) {
     super(props, context)
     this.state = {
       timer: null,
+      selected: 0,
     }
   }
 
@@ -31,6 +35,7 @@ class OmniSearch extends Component {
 
   render() {
     const { q, confirmed, suggestions } = this.props
+    const { selected } = this.state
 
     return (
       <div className="omni-search">
@@ -39,11 +44,21 @@ class OmniSearch extends Component {
           onChange={this.qChange}
           onKeyPress={this.handleKeyPress}
           value={q}
+          placeholder="Search"
         />
         <div className="suggestions">
-          {confirmed &&
-            suggestions.map(suggestion => <div>{ suggestion.content }</div>)
-          }
+          <div className="suggestion-popover">
+            {confirmed &&
+              suggestions.map((suggestion, index) => (
+                <div
+                  key={suggestion.id}
+                  className={classNames({ selected: index === selected })}
+                >
+                  { suggestion.name }
+                </div>
+              ))
+            }
+          </div>
         </div>
       </div>
     )
@@ -71,6 +86,8 @@ function mapStateToProps(state) {
 OmniSearch.propTypes = {
   q: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired,
+  confirmed: PropTypes.bool.isRequired,
+  suggestions: PropTypes.arrayOf(nodeShape),
 }
 
 export default connect(mapStateToProps)(OmniSearch)
