@@ -27,10 +27,29 @@ class OmniSearch extends Component {
     this.setState({
       timer: setTimeout(() => {
         dispatch(INDEX(q)).then(() => {
-          this.setState({ timer: null })
+          this.setState({ timer: null, selected: 0 })
         })
       }, 150),
     })
+  }
+
+  handleKeyPress = (e) => {
+    const size = this.props.suggestions.length
+    const { selected } = this.state
+
+    console.log('ILUVU', e.key, e.charCode, e.keyCode)
+    if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      this.setState({
+        selected: selected === 0 ? size - 1 : selected - 1,
+      })
+    }
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      this.setState({
+        selected: (selected === size - 1) ? 0 : selected + 1,
+      })
+    }
   }
 
   render() {
@@ -42,7 +61,7 @@ class OmniSearch extends Component {
         <input
           type="text"
           onChange={this.qChange}
-          onKeyPress={this.handleKeyPress}
+          onKeyDown={this.handleKeyPress}
           value={q}
           placeholder="Search"
         />
