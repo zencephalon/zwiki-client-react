@@ -64,6 +64,7 @@ class ZEditor extends Component {
   handleKeyCommand = (command) => {
     if (command === 'switch-focus') {
       this.props.dispatch(SET_FOCUS(OMNI_SEARCH))
+      this.editor.blur()
       return 'handled'
     }
     return 'not-handled'
