@@ -2,7 +2,6 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import rootReducer from '../reducers'
 import createLogger from 'redux-logger'
 import thunk from 'redux-thunk'
-import DevTools from '../containers/DevTools'
 
 /**
  * Entirely optional, this tiny library adds some functionality to
@@ -15,8 +14,6 @@ const logger = createLogger()
 const finalCreateStore = compose(
   // Middleware you want to use in development:
   applyMiddleware(logger, thunk),
-  // Required! Enable Redux DevTools with the monitors you chose
-  DevTools.instrument()
 )(createStore)
 
 module.exports = function configureStore(initialState) {
