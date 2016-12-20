@@ -11,9 +11,9 @@ class NodeContainer extends Component {
   }
 
   render() {
-    const { confirmed, requested, failed, node, children } = this.props
+    const { confirmed, requested, failed, node, children, id } = this.props
     return (
-      <div>
+      <div key={id}>
         {React.Children.map(children, child =>
           React.cloneElement(child, {
             node,
