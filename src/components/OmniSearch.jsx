@@ -5,7 +5,9 @@ import { browserHistory } from 'react-router'
 import { INDEX, SET_QUERY } from '~/apis/nodes/actions'
 import nodeShape from '~/apis/nodes/shape'
 import { NodeEditPath } from '~/routes'
-import { OMNI_SEARCH } from '~/constants'
+
+import { SET_FOCUS } from '~/apis/focus/actions'
+import { OMNI_SEARCH, EDITOR } from '~/constants'
 
 import classNames from 'classnames'
 
@@ -20,12 +22,8 @@ class OmniSearch extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.focus.kind === OMNI_SEARCH) {
-      this.focus()
+      this.input.focus()
     }
-  }
-
-  focus = () => {
-    this.input.focus()
   }
 
   qChange = (e) => {
@@ -66,10 +64,16 @@ class OmniSearch extends Component {
     if (e.key === 'Enter') {
       e.preventDefault()
       browserHistory.push(NodeEditPath(suggestions[selected].id))
+      this.input.blur()
       dispatch(SET_QUERY(''))
+      dispatch(SET_FOCUS(EDITOR))
       this.setState({
         selected: 0,
       })
+    }
+    if (e.key === ' ' && e.ctrlKey) {
+      this.input.blur()
+      dispatch(SET_FOCUS(EDITOR))
     }
   }
 

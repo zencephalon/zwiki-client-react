@@ -10,7 +10,7 @@ import { PUT } from '~/apis/nodes/actions'
 import nodeShape from '~/apis/nodes/shape'
 
 import { SET_FOCUS } from '~/apis/focus/actions'
-import { OMNI_SEARCH } from '~/constants'
+import { OMNI_SEARCH, EDITOR } from '~/constants'
 
 // const linkifyPlugin = createLinkifyPlugin()
 const plugins = []
@@ -27,10 +27,18 @@ class ZEditor extends Component {
     editorState: EditorState.createWithContent(
       ContentState.createFromText(this.props.node.content)),
     timer: null,
-  };
+  }
 
   componentDidMount() {
-    this.focus()
+    if (this.props.focus.kind === EDITOR) {
+      this.focus()
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.focus.kind === EDITOR) {
+      this.focus()
+    }
   }
 
   onChange = (editorState) => {
@@ -88,6 +96,12 @@ class ZEditor extends Component {
   }
 }
 
+function mapStateToProps(state) {
+  return {
+    focus: state.focus,
+  }
+}
+
 ZEditor.propTypes = {
   node: nodeShape,
   dispatch: PropTypes.func.isRequired,
@@ -95,4 +109,4 @@ ZEditor.propTypes = {
   //unbindShortcut: PropTypes.func.isRequired,
 }
 
-export default connect()(ZEditor)
+export default connect(mapStateToProps)(ZEditor)
