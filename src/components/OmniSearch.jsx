@@ -5,6 +5,7 @@ import { browserHistory } from 'react-router'
 import { INDEX, SET_QUERY } from '~/apis/nodes/actions'
 import nodeShape from '~/apis/nodes/shape'
 import { NodeEditPath } from '~/routes'
+import { OMNI_SEARCH } from '~/constants'
 
 import classNames from 'classnames'
 
@@ -15,6 +16,16 @@ class OmniSearch extends Component {
       timer: null,
       selected: 0,
     }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.focus.kind === OMNI_SEARCH) {
+      this.focus()
+    }
+  }
+
+  focus = () => {
+    this.input.focus()
   }
 
   qChange = (e) => {
@@ -74,6 +85,7 @@ class OmniSearch extends Component {
           onKeyDown={this.handleKeyPress}
           value={q}
           placeholder="Search"
+          ref={(element) => { this.input = element }}
         />
         <div className="suggestions">
           <div className="suggestion-popover">
@@ -109,6 +121,7 @@ function mapStateToProps(state) {
     q,
     confirmed,
     suggestions,
+    focus: state.focus,
   }
 }
 
@@ -117,6 +130,7 @@ OmniSearch.propTypes = {
   dispatch: PropTypes.func.isRequired,
   confirmed: PropTypes.bool.isRequired,
   suggestions: PropTypes.arrayOf(nodeShape),
+  focus: PropTypes.object,
 }
 
 export default connect(mapStateToProps)(OmniSearch)
