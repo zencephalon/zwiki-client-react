@@ -19,6 +19,10 @@ class ZEditor extends Component {
     timer: null,
   };
 
+  componentDidMount() {
+    this.focus()
+  }
+
   onChange = (editorState) => {
     const { node, dispatch } = this.props
     const { timer } = this.state
