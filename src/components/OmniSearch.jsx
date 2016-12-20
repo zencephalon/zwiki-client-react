@@ -1,8 +1,10 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
+import { browserHistory } from 'react-router'
 
 import { INDEX, SET_QUERY } from '~/apis/nodes/actions'
 import nodeShape from '~/apis/nodes/shape'
+import { NodeEditPath } from '~/routes'
 
 import classNames from 'classnames'
 
@@ -34,10 +36,10 @@ class OmniSearch extends Component {
   }
 
   handleKeyPress = (e) => {
-    const size = this.props.suggestions.length
+    const { suggestions, dispatch } = this.props
+    const size = suggestions.length
     const { selected } = this.state
 
-    console.log('ILUVU', e.key, e.charCode, e.keyCode)
     if (e.key === 'ArrowUp') {
       e.preventDefault()
       this.setState({
@@ -48,6 +50,14 @@ class OmniSearch extends Component {
       e.preventDefault()
       this.setState({
         selected: (selected === size - 1) ? 0 : selected + 1,
+      })
+    }
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      browserHistory.push(NodeEditPath(suggestions[selected].id))
+      dispatch(SET_QUERY(''))
+      this.setState({
+        selected: 0,
       })
     }
   }
