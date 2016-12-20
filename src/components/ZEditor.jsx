@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
-import { EditorState, ContentState } from 'draft-js'
+import { EditorState, ContentState, getDefaultKeyBinding } from 'draft-js'
 import Editor from 'draft-js-plugins-editor' // eslint-disable-line import/no-unresolved
 
 import classNames from 'classnames'
@@ -9,8 +9,18 @@ import classNames from 'classnames'
 import { PUT } from '~/apis/nodes/actions'
 import nodeShape from '~/apis/nodes/shape'
 
+import { SET_FOCUS } from '~/apis/focus/actions'
+import { OMNI_SEARCH } from '~/constants'
+
 // const linkifyPlugin = createLinkifyPlugin()
 const plugins = []
+
+function keyBindings(e) {
+  if (e.key === ' ' && e.ctrlKey) {
+    return 'switch-focus'
+  }
+  return getDefaultKeyBinding(e)
+}
 
 class ZEditor extends Component {
   state = {
@@ -47,9 +57,16 @@ class ZEditor extends Component {
     }
   }
 
-
   focus = () => {
     this.editor.focus()
+  }
+
+  handleKeyCommand = (command) => {
+    if (command === 'switch-focus') {
+      this.props.dispatch(SET_FOCUS(OMNI_SEARCH))
+      return 'handled'
+    }
+    return 'not-handled'
   }
 
   render() {
@@ -61,6 +78,9 @@ class ZEditor extends Component {
           onChange={this.onChange}
           plugins={plugins}
           ref={(element) => { this.editor = element }}
+          defaultKeyBindings={false}
+          handleKeyCommand={this.handleKeyCommand}
+          keyBindingFn={keyBindings}
         />
       </div>
     )
@@ -70,6 +90,8 @@ class ZEditor extends Component {
 ZEditor.propTypes = {
   node: nodeShape,
   dispatch: PropTypes.func.isRequired,
+  // bindShortcut: PropTypes.func.isRequired,
+  //unbindShortcut: PropTypes.func.isRequired,
 }
 
 export default connect()(ZEditor)
