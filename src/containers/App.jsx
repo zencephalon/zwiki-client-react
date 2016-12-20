@@ -3,24 +3,25 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as NodeActions from '~/apis/nodes/actions'
 import nodeShape from '~/apis/nodes/shape'
+
+import NodeContainer from '~/containers/Node'
+
+import ShowConfirmed from '~/components/ShowConfirmed'
 import ZEditor from '~/components/ZEditor'
 import OmniSearch from '~/components/OmniSearch'
 
+
 class App extends Component {
-  componentWillMount() {
-    this.props.actions.GET(1)
-  }
-
-
   render() {
     // we can use ES6's object destructuring to effectively 'unpack' our props
-    const { confirmed, node } = this.props
     return (
       <div className="main-app-container">
         <OmniSearch />
-        {confirmed ?
-          <ZEditor node={node} /> : null
-        }
+        <NodeContainer id="1">
+          <ShowConfirmed>
+            <ZEditor />
+          </ShowConfirmed>
+        </NodeContainer>
       </div>
     )
   }

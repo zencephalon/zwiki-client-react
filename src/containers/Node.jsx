@@ -35,7 +35,7 @@ NodeContainer.propTypes = {
   actions: PropTypes.objectOf(PropTypes.func).isRequired,
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, props) {
   const {
     data: node,
     GET: {
@@ -43,7 +43,7 @@ function mapStateToProps(state) {
       requested,
       failed,
     },
-  } = state.nodes.http.things[1] || {
+  } = state.nodes.http.things[props.id] || {
     data: {},
     GET: {
       confirmed: false,
@@ -53,7 +53,6 @@ function mapStateToProps(state) {
   }
 
   return {
-    counter: state.counter,
     node,
     confirmed,
     requested,
