@@ -26,7 +26,7 @@ class ZEditor extends Component {
   state = {
     editorState: EditorState.createWithContent(
       ContentState.createFromText(this.props.node.content)),
-    previousContent: this.props.node.content,
+    previousPlainText: this.props.node.content,
     timer: null,
   }
 
@@ -44,22 +44,29 @@ class ZEditor extends Component {
 
   onChange = (editorState) => {
     const { node, dispatch } = this.props
-    const { timer } = this.state
+    const { timer, previousPlainText } = this.state
+    let newTimer
 
     clearTimeout(timer)
 
-    this.setState({
-      editorState,
-      timer: setTimeout(() => {
-        dispatch(PUT(node.id, this.parseNode(editorState.getCurrentContent()))).then(() => {
+    const plainText = editorState.getCurrentContent().getPlainText()
+
+    if (plainText !== previousPlainText) {
+      newTimer = setTimeout(() => {
+        dispatch(PUT(node.id, this.parseNode(plainText))).then(() => {
           this.setState({ timer: null })
         })
-      }, 1500),
+      }, 1500)
+    }
+
+    this.setState({
+      editorState,
+      timer: newTimer,
+      previousPlainText: plainText,
     })
   }
 
-  parseNode = (currentContent) => {
-    const plainText = currentContent.getPlainText()
+  parseNode = (plainText) => {
     return {
       content: plainText,
       name: plainText.split('\n', 1)[0].match(/#+\s*(.*)$/)[1],
