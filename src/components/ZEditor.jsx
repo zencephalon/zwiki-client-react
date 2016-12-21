@@ -26,6 +26,7 @@ class ZEditor extends Component {
   state = {
     editorState: EditorState.createWithContent(
       ContentState.createFromText(this.props.node.content)),
+    previousContent: this.props.node.content,
     timer: null,
   }
 
@@ -35,8 +36,8 @@ class ZEditor extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.focus.kind === EDITOR) {
+  componentDidUpdate(lastProps) {
+    if (this.props.focus.kind === EDITOR && lastProps.focus.kind !== EDITOR) {
       this.focus()
     }
   }
