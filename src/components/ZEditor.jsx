@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
-import { EditorState, ContentState, getDefaultKeyBinding } from 'draft-js'
+import { EditorState, ContentState, getDefaultKeyBinding, CompositeDecorator } from 'draft-js'
 import Editor from 'draft-js-plugins-editor' // eslint-disable-line import/no-unresolved
 
 import classNames from 'classnames'
@@ -21,6 +21,32 @@ function keyBindings(e) {
   }
   return getDefaultKeyBinding(e)
 }
+
+const LINK_REGEX = /\@[\w]+/g
+
+function findWithRegex(regex, contentBlock, callback) {
+  const text = contentBlock.getText()
+  let matchArr, start
+  while ((matchArr = regex.exec(text)) !== null) {
+    start = matchArr.index
+    callback(start, start + matchArr[0].length)
+  }
+}
+
+function linkStrategy(contentBlock, callback) {
+  findWithRegex(LINK_REGEX, contentBlock, callback)
+}
+
+const LinkComponent = (props) => {
+  console.log('I got rendered')
+  return <span style={{ color: 'red' }}>{props.children}</span>
+}
+
+const decorator =
+  {
+    strategy: linkStrategy,
+    component: LinkComponent,
+  }
 
 class ZEditor extends Component {
   state = {
@@ -98,6 +124,7 @@ class ZEditor extends Component {
           defaultKeyBindings={false}
           handleKeyCommand={this.handleKeyCommand}
           keyBindingFn={keyBindings}
+          decorators={[decorator]}
         />
       </div>
     )
