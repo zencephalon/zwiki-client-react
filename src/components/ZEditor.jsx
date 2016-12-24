@@ -13,7 +13,7 @@ import { SET_FOCUS } from '~/apis/focus/actions'
 import { OMNI_SEARCH, EDITOR } from '~/constants'
 
 import Link from './Link'
-import RealPortal from './RealPortal'
+import Portal from './Portal'
 
 // const linkifyPlugin = createLinkifyPlugin()
 const plugins = []
@@ -108,7 +108,7 @@ class ZEditor extends Component {
     if (block.getType() === 'atomic') {
       return {
         component: () => (
-          <RealPortal />
+          <Portal />
         ),
         editable: false,
         props: {
