@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
-import { EditorState, ContentState, getDefaultKeyBinding, CompositeDecorator } from 'draft-js'
+import { EditorState, ContentState, getDefaultKeyBinding, AtomicBlockUtils, Entity } from 'draft-js'
 import Editor from 'draft-js-plugins-editor' // eslint-disable-line import/no-unresolved
 
 import classNames from 'classnames'
@@ -13,6 +13,7 @@ import { SET_FOCUS } from '~/apis/focus/actions'
 import { OMNI_SEARCH, EDITOR } from '~/constants'
 
 import Portal from './Portal'
+import RealPortal from './RealPortal'
 
 // const linkifyPlugin = createLinkifyPlugin()
 const plugins = []
@@ -39,11 +40,18 @@ function linkStrategy(contentBlock, callback) {
   findWithRegex(LINK_REGEX, contentBlock, callback)
 }
 
-const decorator =
-  {
-    strategy: linkStrategy,
-    component: Portal,
-  }
+function insertPortal(editorState, id) {
+  console.log('inserting portal')
+  const entityKey = Entity.create(
+    'PORTAL',
+    'IMMUTABLE',
+    { id },
+  )
+
+  const ed = AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, ' ')
+  console.log(ed.getBlockTree())
+  return ed
+}
 
 class ZEditor extends Component {
   state = {
@@ -89,12 +97,34 @@ class ZEditor extends Component {
     })
   }
 
-  parseNode = (plainText) => {
-    return {
+  insertPortal = (id) => {
+    const { editorState } = this.state
+    this.setState({
+      editorState: insertPortal(editorState, id),
+    })
+  }
+
+  blockRenderer = (block) => {
+    if (block.getType() === 'atomic') {
+      return {
+        component: () => (
+          <RealPortal />
+        ),
+        editable: false,
+        props: {
+
+        },
+      }
+    }
+    return null
+  }
+
+  parseNode = plainText => (
+    {
       content: plainText,
       name: plainText.split('\n', 1)[0].match(/#+\s*(.*)$/)[1],
     }
-  }
+  )
 
   focus = () => {
     this.editor.focus()
@@ -121,7 +151,11 @@ class ZEditor extends Component {
           defaultKeyBindings={false}
           handleKeyCommand={this.handleKeyCommand}
           keyBindingFn={keyBindings}
-          decorators={[decorator]}
+          decorators={[{
+            strategy: linkStrategy,
+            component: props => <Portal {...props} insertPortal={this.insertPortal} />,
+          }]}
+          blockRendererFn={this.blockRenderer}
         />
       </div>
     )

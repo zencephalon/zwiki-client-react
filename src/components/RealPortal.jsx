@@ -10,10 +10,6 @@ export default class Portal extends Component {
     clicked: 0,
   }
 
-  componentWillMount() {
-    this.props.insertPortal(1)
-  }
-
   incClick = () => {
     const { clicked } = this.state
     this.setState({ clicked: clicked + 1 })
@@ -23,12 +19,11 @@ export default class Portal extends Component {
     const { clicked } = this.state
     return (
       <div onClick={this.incClick}>
-        {this.props.children}
-        {/*<NodeContainer id="2">
+        <NodeContainer id="2">
           <ShowConfirmed>
             <ZEditor />
           </ShowConfirmed>
-        </NodeContainer>*/}
+        </NodeContainer>
       </div>
     )
   }
