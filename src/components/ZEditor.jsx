@@ -12,6 +12,8 @@ import nodeShape from '~/apis/nodes/shape'
 import { SET_FOCUS } from '~/apis/focus/actions'
 import { OMNI_SEARCH, EDITOR } from '~/constants'
 
+import Portal from './Portal'
+
 // const linkifyPlugin = createLinkifyPlugin()
 const plugins = []
 
@@ -37,15 +39,10 @@ function linkStrategy(contentBlock, callback) {
   findWithRegex(LINK_REGEX, contentBlock, callback)
 }
 
-const LinkComponent = (props) => {
-  console.log('I got rendered')
-  return <span style={{ color: 'red' }}>{props.children}</span>
-}
-
 const decorator =
   {
     strategy: linkStrategy,
-    component: LinkComponent,
+    component: Portal,
   }
 
 class ZEditor extends Component {
