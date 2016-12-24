@@ -21,6 +21,7 @@ export default class Portal extends Component {
 
   render() {
     const { clicked } = this.state
+    console.log('inside portal render', this.props.children[0].props.text)
     return (
       <div onClick={this.incClick}>
         {this.props.children}
