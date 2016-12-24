@@ -12,7 +12,7 @@ import nodeShape from '~/apis/nodes/shape'
 import { SET_FOCUS } from '~/apis/focus/actions'
 import { OMNI_SEARCH, EDITOR } from '~/constants'
 
-import Portal from './Portal'
+import Link from './Link'
 import RealPortal from './RealPortal'
 
 // const linkifyPlugin = createLinkifyPlugin()
@@ -153,7 +153,7 @@ class ZEditor extends Component {
           keyBindingFn={keyBindings}
           decorators={[{
             strategy: linkStrategy,
-            component: props => <Portal {...props} insertPortal={this.insertPortal} />,
+            component: props => <Link {...props} insertPortal={this.insertPortal} />,
           }]}
           blockRendererFn={this.blockRenderer}
         />
