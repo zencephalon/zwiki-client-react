@@ -17,7 +17,9 @@ import { PUT } from '~/apis/nodes/actions'
 import nodeShape from '~/apis/nodes/shape'
 
 import { SET_FOCUS } from '~/apis/focus/actions'
+
 import { OMNI_SEARCH, EDITOR, LINK_REGEX } from '~/constants'
+import { setStatePromise } from '~/helpers'
 
 import Link from './Link'
 import Portal from './Portal'
@@ -100,11 +102,7 @@ class ZEditor extends Component {
     })
   }
 
-  setReadOnly = (callback) => {
-    this.setState({
-      readOnly: true,
-    }, callback)
-  }
+  setReadOnly = (callback) => setStatePromise(this, { readOnly: true })
 
   moveToEnd = (text, callback) => {
     const { editorState } = this.state
@@ -152,7 +150,7 @@ class ZEditor extends Component {
         component: Portal,
         editable: false,
         props: {
-          onClick: this.setReadOnly,
+          parentSetReadOnly: this.setReadOnly,
         },
       }
     }

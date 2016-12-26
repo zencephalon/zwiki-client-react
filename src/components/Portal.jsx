@@ -15,8 +15,9 @@ export default class Portal extends Component {
     return (
       <div
         onClick={() => {
-          this.props.blockProps.onClick()
-          this.editor.focus()
+          this.props.blockProps.parentSetReadOnly().then(() => {
+            this.editor.focus()
+          })
         }}
       >
         <NodeContainer id={id}>
