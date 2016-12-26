@@ -102,9 +102,9 @@ class ZEditor extends Component {
     })
   }
 
-  setReadOnly = (callback) => setStatePromise(this, { readOnly: true })
+  setReadOnly = () => setStatePromise(this, { readOnly: true })
 
-  moveToEnd = (text, callback) => {
+  moveToEnd = (text) => {
     const { editorState } = this.state
     const selection = editorState.getSelection()
     const key = selection.getStartKey()
@@ -132,9 +132,9 @@ class ZEditor extends Component {
       anchorOffset: offset,
     })
 
-    this.setState({
+    return setStatePromise(this, {
       editorState: EditorState.forceSelection(editorState, newSelection),
-    }, callback)
+    })
   }
 
   insertPortal = (id) => {

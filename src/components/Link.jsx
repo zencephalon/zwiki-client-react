@@ -4,8 +4,8 @@ import { LINK_REGEX } from '~/constants'
 
 export default class Link extends Component {
   onClick = () => {
-    const { insertPortal, children, moveToEnd, decoratedText } = this.props
-    moveToEnd(decoratedText, () => {
+    const { insertPortal, moveToEnd, decoratedText } = this.props
+    moveToEnd(decoratedText).then(() => {
       insertPortal(LINK_REGEX.exec(decoratedText)[2])
     })
   }
