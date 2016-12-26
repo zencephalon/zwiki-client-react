@@ -123,8 +123,12 @@ class ZEditor extends Component {
     const blockText = block.getText()
 
     let offset = startOffset
+    const textLength = blockText.length
 
-    while (text.includes(blockText.slice(startOffset, offset))) {
+    while (
+      offset <= textLength &&
+      text.includes(blockText.slice(startOffset, offset))
+    ) {
       offset += 1
     }
 
