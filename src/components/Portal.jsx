@@ -13,10 +13,12 @@ export default class Portal extends Component {
     const entity = Entity.get(entityId)
     const id = entity.data.id
     return (
-      <div onClick={() => {
-        this.props.blockProps.onClick()
-        this.editor.focus()
-      }}>
+      <div
+        onClick={() => {
+          this.props.blockProps.onClick()
+          this.editor.focus()
+        }}
+      >
         <NodeContainer id={id}>
           <ShowConfirmed>
             <ZEditor editorRef={(el) => { this.editor = el }} />
