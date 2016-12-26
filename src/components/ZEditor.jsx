@@ -48,16 +48,13 @@ function linkStrategy(contentBlock, callback) {
 }
 
 function insertPortal(editorState, id) {
-  console.log('inserting portal')
   const entityKey = Entity.create(
     'PORTAL',
     'MUTABLE',
     { id },
   )
 
-  const ed = AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, ' ')
-  console.log(ed.getBlockTree())
-  return ed
+  return AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, ' ')
 }
 
 class ZEditor extends Component {
@@ -85,8 +82,6 @@ class ZEditor extends Component {
     const { node, dispatch } = this.props
     const { timer, previousPlainText } = this.state
     let newTimer
-
-    console.log('change occurred')
 
     clearTimeout(timer)
 
@@ -144,8 +139,6 @@ class ZEditor extends Component {
     this.setState({
       editorState: EditorState.forceSelection(editorState, newSelection),
     }, callback)
-
-    console.log(startOffset, offset)
   }
 
   insertPortal = (id) => {
