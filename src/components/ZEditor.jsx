@@ -54,7 +54,7 @@ function insertPortal(editorState, id) {
     { id },
   )
 
-  return AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, ' ')
+  return AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, '\u200B')
 }
 
 class ZEditor extends Component {
@@ -159,7 +159,7 @@ class ZEditor extends Component {
 
   parseNode = plainText => (
     {
-      content: plainText,
+      content: plainText.replace(/\n\u200B\n/, ''),
       name: plainText.split('\n', 1)[0].match(/#+\s*(.*)$/)[1],
     }
   )
