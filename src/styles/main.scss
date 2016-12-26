@@ -39,6 +39,13 @@ body {
   min-height: 2em;
 }
 
+figure {
+  -webkit-margin-before: 0em;
+  -webkit-margin-after: 0em;
+  -webkit-margin-start: 0em;
+  -webkit-margin-end: 0em;
+}
+
 // ===== OmniSearch ====
 
 .omni-search {
