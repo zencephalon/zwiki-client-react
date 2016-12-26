@@ -66,6 +66,7 @@ class ZEditor extends Component {
       ContentState.createFromText(this.props.node.content)),
     previousPlainText: this.props.node.content,
     timer: null,
+    readOnly: false,
   }
 
   componentDidMount() {
@@ -85,6 +86,8 @@ class ZEditor extends Component {
     const { timer, previousPlainText } = this.state
     let newTimer
 
+    console.log('change occurred')
+
     clearTimeout(timer)
 
     const plainText = editorState.getCurrentContent().getPlainText()
@@ -102,6 +105,12 @@ class ZEditor extends Component {
       timer: newTimer,
       previousPlainText: plainText,
     })
+  }
+
+  setReadOnly = (callback) => {
+    this.setState({
+      readOnly: true,
+    }, callback)
   }
 
   moveToEnd = (text, callback) => {
@@ -145,12 +154,10 @@ class ZEditor extends Component {
   blockRenderer = (block) => {
     if (block.getType() === 'atomic') {
       return {
-        component: () => (
-          <Portal />
-        ),
-        editable: true,
+        component: Portal,
+        editable: false,
         props: {
-
+          onClick: this.setReadOnly,
         },
       }
     }
@@ -178,10 +185,15 @@ class ZEditor extends Component {
   }
 
   render() {
-    const { timer } = this.state
+    const { timer, readOnly } = this.state
     return (
-      <div className={classNames('editor', { saved: !timer })} onClick={this.focus}>
+      <div
+        className={classNames('editor', { saved: !timer })}
+        onClick={this.focus}
+        ref={this.props.editorRef}
+      >
         <Editor
+          readOnly={readOnly}
           editorState={this.state.editorState}
           onChange={this.onChange}
           plugins={plugins}

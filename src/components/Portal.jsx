@@ -8,10 +8,13 @@ import ZEditor from '~/components/ZEditor'
 export default class Portal extends Component {
   render() {
     return (
-      <div>
+      <div onClick={() => {
+        this.props.blockProps.onClick()
+        this.editor.focus()
+      }}>
         <NodeContainer id="2">
           <ShowConfirmed>
-            <ZEditor />
+            <ZEditor editorRef={(el) => { this.editor = el }} />
           </ShowConfirmed>
         </NodeContainer>
       </div>
