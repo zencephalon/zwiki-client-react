@@ -17,7 +17,7 @@ import { PUT } from '~/apis/nodes/actions'
 import nodeShape from '~/apis/nodes/shape'
 
 import { SET_FOCUS } from '~/apis/focus/actions'
-import { OMNI_SEARCH, EDITOR } from '~/constants'
+import { OMNI_SEARCH, EDITOR, LINK_REGEX } from '~/constants'
 
 import Link from './Link'
 import Portal from './Portal'
@@ -31,8 +31,6 @@ function keyBindings(e) {
   }
   return getDefaultKeyBinding(e)
 }
-
-const LINK_REGEX = /\@[\w]+/g
 
 function findWithRegex(regex, contentBlock, callback) {
   const text = contentBlock.getText()
