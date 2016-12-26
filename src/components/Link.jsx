@@ -10,9 +10,9 @@ export default class Link extends Component {
   render() {
     console.log('inside portal render', this.props.children[0].props.text)
     return (
-      <div style={{ color: '#36AECC' }} onClick={this.onClick}>
+      <span style={{ color: '#36AECC' }} onClick={this.onClick}>
         {this.props.children}
-      </div>
+      </span>
     )
   }
 }
