@@ -1,8 +1,15 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
-import { EditorState, ContentState, getDefaultKeyBinding, AtomicBlockUtils, Entity } from 'draft-js'
-import Editor from 'draft-js-plugins-editor' // eslint-disable-line import/no-unresolved
+import {
+  EditorState,
+  ContentState,
+  SelectionState,
+  getDefaultKeyBinding,
+  AtomicBlockUtils,
+  Entity,
+} from 'draft-js'
+import Editor from 'draft-js-plugins-editor'
 
 import classNames from 'classnames'
 
@@ -44,7 +51,7 @@ function insertPortal(editorState, id) {
   console.log('inserting portal')
   const entityKey = Entity.create(
     'PORTAL',
-    'IMMUTABLE',
+    'MUTABLE',
     { id },
   )
 
@@ -63,13 +70,13 @@ class ZEditor extends Component {
 
   componentDidMount() {
     if (this.props.focus.kind === EDITOR) {
-      this.focus()
+      // this.focus()
     }
   }
 
   componentDidUpdate(lastProps) {
     if (this.props.focus.kind === EDITOR && lastProps.focus.kind !== EDITOR) {
-      this.focus()
+      // this.focus()
     }
   }
 
@@ -97,6 +104,37 @@ class ZEditor extends Component {
     })
   }
 
+  moveToEnd = (text, callback) => {
+    const { editorState } = this.state
+    const selection = editorState.getSelection()
+    const key = selection.getStartKey()
+    const startOffset = selection.getStartOffset()
+    const content = editorState.getCurrentContent()
+    const block = content.getBlockForKey(key)
+    const blockText = block.getText()
+
+    let offset = startOffset
+
+    while (text.includes(blockText.slice(startOffset, offset))) {
+      offset += 1
+    }
+
+    offset -= 1
+
+    const newSelection = SelectionState.createEmpty(key).merge({
+      focusKey: key,
+      anchorKey: key,
+      focusOffset: offset,
+      anchorOffset: offset,
+    })
+
+    this.setState({
+      editorState: EditorState.forceSelection(editorState, newSelection),
+    }, callback)
+
+    console.log(startOffset, offset)
+  }
+
   insertPortal = (id) => {
     const { editorState } = this.state
     this.setState({
@@ -110,7 +148,7 @@ class ZEditor extends Component {
         component: () => (
           <Portal />
         ),
-        editable: false,
+        editable: true,
         props: {
 
         },
@@ -153,7 +191,13 @@ class ZEditor extends Component {
           keyBindingFn={keyBindings}
           decorators={[{
             strategy: linkStrategy,
-            component: props => <Link {...props} insertPortal={this.insertPortal} />,
+            component: props => (
+              <Link
+                {...props}
+                insertPortal={this.insertPortal}
+                moveToEnd={this.moveToEnd}
+              />
+            ),
           }]}
           blockRendererFn={this.blockRenderer}
         />
