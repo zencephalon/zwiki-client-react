@@ -4,4 +4,3 @@ export const ROOT = 'root'
 
 // From Slimdown
 export const LINK_REGEX = /\[([^[]+)\]\(([^)]+)\)/g
-// export const LINK_REGEX = /\@.*?/g

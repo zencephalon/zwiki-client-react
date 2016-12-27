@@ -64,20 +64,17 @@ class ZEditor extends Component {
       ContentState.createFromText(this.props.node.content)),
     previousPlainText: this.props.node.content,
     timer: null,
-    readOnly: false,
     editorId: this.props.editorId || uniqueId('editor_'),
   }
 
   componentDidMount() {
-    const { focus } = this.props
-    if (focus.kind === EDITOR && focus.id === this.state.editorId) {
-      this.focus()
+    if (this.editable()) {
+      setTimeout(this.focus, 10)
     }
   }
 
   componentDidUpdate(lastProps) {
-    const { focus } = this.props
-    if (focus.kind === EDITOR && focus.id === this.state.editorId && lastProps.focus.kind !== EDITOR) {
+    if (this.editable() && lastProps.focus.kind !== EDITOR) {
       this.focus()
     }
   }
@@ -106,7 +103,11 @@ class ZEditor extends Component {
     })
   }
 
-  setReadOnly = () => setStatePromise(this, { readOnly: true })
+  editable = () => {
+    const { focus } = this.props
+    const { editorId } = this.state
+    return focus.kind === EDITOR && focus.id === editorId
+  }
 
   moveToEnd = (text) => {
     const { editorState } = this.state
@@ -172,9 +173,10 @@ class ZEditor extends Component {
     this.editor.focus()
   }
 
-  clickFocus = () => {
+  clickFocus = (e) => {
     const { dispatch } = this.props
     dispatch(SET_FOCUS(EDITOR, this.state.editorId))
+    e.stopPropagation()
   }
 
   handleKeyCommand = (command) => {
@@ -187,15 +189,14 @@ class ZEditor extends Component {
   }
 
   render() {
-    const { timer, readOnly } = this.state
+    const { timer } = this.state
     return (
       <div
         className={classNames('editor', { saved: !timer })}
         onClick={this.clickFocus}
-        ref={this.props.editorRef}
       >
         <Editor
-          readOnly={readOnly}
+          readOnly={!this.editable()}
           editorState={this.state.editorState}
           onChange={this.onChange}
           plugins={plugins}

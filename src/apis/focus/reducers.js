@@ -1,7 +1,7 @@
 import t from './actionTypes'
 import { OMNI_SEARCH, EDITOR, ROOT } from '~/constants'
 
-export default function focus(state = { kind: EDITOR, id: ROOT, source: null, lastId: null }, action) {
+export default function focus(state = { kind: OMNI_SEARCH, id: null, source: null, lastId: ROOT }, action) {
   switch (action.type) {
     case t.SET_FOCUS:
       return {
