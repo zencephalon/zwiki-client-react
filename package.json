@@ -53,6 +53,7 @@
     "draft-js": "^0.9.1",
     "draft-js-linkify-plugin": "^2.0.0-beta1",
     "draft-js-plugins-editor": "^2.0.0-beta1",
+    "lodash": "^4.17.3",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
     "react-mousetrap": "^0.1.1",
