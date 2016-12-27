@@ -8,7 +8,7 @@ import ZEditor from '~/components/ZEditor'
 const NodeEdit = (props) => (
   <NodeContainer id={props.params.id}>
     <ShowConfirmed>
-      <ZEditor />
+      <ZEditor editorId="root" />
     </ShowConfirmed>
   </NodeContainer>
 )

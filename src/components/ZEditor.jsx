@@ -11,6 +11,7 @@ import {
 } from 'draft-js'
 import Editor from 'draft-js-plugins-editor'
 
+import { uniqueId } from 'lodash'
 import classNames from 'classnames'
 
 import { PUT } from '~/apis/nodes/actions'
@@ -58,13 +59,19 @@ function insertPortal(editorState, id) {
 }
 
 class ZEditor extends Component {
-  state = {
-    editorState: EditorState.createWithContent(
-      ContentState.createFromText(this.props.node.content)),
-    previousPlainText: this.props.node.content,
-    timer: null,
-    readOnly: false,
+  constructor(props) {
+    const { editorId } = props
+    super(props)
+    this.state = {
+      editorState: EditorState.createWithContent(
+        ContentState.createFromText(this.props.node.content)),
+      previousPlainText: this.props.node.content,
+      timer: null,
+      readOnly: false,
+      editorId: editorId || uniqueId('editor_'),
+    }
   }
+
 
   componentDidMount() {
     if (this.props.focus.kind === EDITOR) {
@@ -220,6 +227,7 @@ function mapStateToProps(state) {
 ZEditor.propTypes = {
   node: nodeShape,
   dispatch: PropTypes.func.isRequired,
+  editorId: PropTypes.string,
   // bindShortcut: PropTypes.func.isRequired,
   //unbindShortcut: PropTypes.func.isRequired,
 }
