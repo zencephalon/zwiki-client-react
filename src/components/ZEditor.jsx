@@ -74,14 +74,16 @@ class ZEditor extends Component {
 
 
   componentDidMount() {
-    if (this.props.focus.kind === EDITOR) {
-      // this.focus()
+    const { focus } = this.props
+    if (focus.kind === EDITOR && focus.id === this.state.editorId) {
+      this.focus()
     }
   }
 
   componentDidUpdate(lastProps) {
-    if (this.props.focus.kind === EDITOR && lastProps.focus.kind !== EDITOR) {
-      // this.focus()
+    const { focus } = this.props
+    if (focus.kind === EDITOR && focus.id === this.state.editorId && lastProps.focus.kind !== EDITOR) {
+      this.focus()
     }
   }
 
