@@ -177,6 +177,11 @@ class ZEditor extends Component {
     this.editor.focus()
   }
 
+  clickFocus = () => {
+    const { dispatch } = this.props
+    dispatch(SET_FOCUS(EDITOR, this.state.editorId))
+  }
+
   handleKeyCommand = (command) => {
     if (command === 'switch-focus') {
       this.props.dispatch(SET_FOCUS(OMNI_SEARCH))
@@ -191,7 +196,7 @@ class ZEditor extends Component {
     return (
       <div
         className={classNames('editor', { saved: !timer })}
-        onClick={this.focus}
+        onClick={this.clickFocus}
         ref={this.props.editorRef}
       >
         <Editor
