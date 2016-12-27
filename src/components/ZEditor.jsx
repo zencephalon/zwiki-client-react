@@ -59,19 +59,14 @@ function insertPortal(editorState, id) {
 }
 
 class ZEditor extends Component {
-  constructor(props) {
-    const { editorId } = props
-    super(props)
-    this.state = {
-      editorState: EditorState.createWithContent(
-        ContentState.createFromText(this.props.node.content)),
-      previousPlainText: this.props.node.content,
-      timer: null,
-      readOnly: false,
-      editorId: editorId || uniqueId('editor_'),
-    }
+  state = {
+    editorState: EditorState.createWithContent(
+      ContentState.createFromText(this.props.node.content)),
+    previousPlainText: this.props.node.content,
+    timer: null,
+    readOnly: false,
+    editorId: this.props.editorId || uniqueId('editor_'),
   }
-
 
   componentDidMount() {
     const { focus } = this.props
