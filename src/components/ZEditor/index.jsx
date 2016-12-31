@@ -56,7 +56,10 @@ function insertPortal(editorState, id) {
     { id },
   )
 
-  return AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, '\u200B')
+  return {
+    editorState: AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, '\u200B'),
+    entityKey,
+  }
 }
 
 class ZEditor extends Component {
@@ -145,9 +148,11 @@ class ZEditor extends Component {
 
   insertPortal = (id) => {
     const { editorState } = this.state
+    const { editorState: newEditorState, entityKey } = insertPortal(editorState, id)
     this.setState({
-      editorState: insertPortal(editorState, id),
+      editorState: newEditorState,
     })
+    return entityKey
   }
 
   blockRenderer = (block) => {
