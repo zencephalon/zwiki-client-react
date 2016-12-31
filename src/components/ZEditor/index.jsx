@@ -22,6 +22,7 @@ import { SET_FOCUS } from '~/apis/focus/actions'
 
 import { OMNI_SEARCH, EDITOR, LINK_REGEX } from '~/constants'
 import { setStatePromise } from '~/helpers'
+import { findWithRegex } from '~./helpers'
 
 import Link from './Link'
 import Portal from './Portal'
@@ -36,14 +37,6 @@ function keyBindings(e) {
   return getDefaultKeyBinding(e)
 }
 
-function findWithRegex(regex, contentBlock, callback) {
-  const text = contentBlock.getText()
-  let matchArr, start
-  while ((matchArr = regex.exec(text)) !== null) {
-    start = matchArr.index
-    callback(start, start + matchArr[0].length)
-  }
-}
 
 function linkStrategy(contentBlock, callback) {
   findWithRegex(LINK_REGEX, contentBlock, callback)
