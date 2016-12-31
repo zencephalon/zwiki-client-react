@@ -6,15 +6,24 @@ export default class Link extends Component {
   onClick = () => {
     const { insertPortal, moveToEnd, decoratedText } = this.props
     moveToEnd(decoratedText).then(() => {
-      insertPortal(LINK_REGEX.exec(decoratedText)[2])
+      this.portalEntityKey = insertPortal(LINK_REGEX.exec(decoratedText)[2])
     })
   }
 
   render() {
     return (
-      <span style={{ color: '#36AECC' }} onClick={this.onClick}>
+      <span
+        style={{ color: '#36AECC' }}
+        onClick={this.onClick}
+      >
         {this.props.children}
       </span>
     )
   }
+}
+
+Link.propTypes = {
+  insertPortal: PropTypes.func.isRequired,
+  moveToEnd: PropTypes.func.isRequired,
+  decoratedText: PropTypes.string.isRequired,
 }
