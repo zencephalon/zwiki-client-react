@@ -5,10 +5,7 @@ import ReactDOM from 'react-dom'
 import {
   EditorState,
   ContentState,
-  SelectionState,
   getDefaultKeyBinding,
-  AtomicBlockUtils,
-  Entity,
 } from 'draft-js'
 import Editor from 'draft-js-plugins-editor'
 
@@ -22,7 +19,7 @@ import { SET_FOCUS } from '~/apis/focus/actions'
 
 import { OMNI_SEARCH, EDITOR, LINK_REGEX } from '~/constants'
 import { setStatePromise } from '~/helpers'
-import { findWithRegex } from '~./helpers'
+import { findWithRegex, moveToEnd, insertPortal } from './helpers'
 
 import Link from './Link'
 import Portal from './Portal'
@@ -40,19 +37,6 @@ function keyBindings(e) {
 
 function linkStrategy(contentBlock, callback) {
   findWithRegex(LINK_REGEX, contentBlock, callback)
-}
-
-function insertPortal(editorState, id) {
-  const entityKey = Entity.create(
-    'PORTAL',
-    'MUTABLE',
-    { id },
-  )
-
-  return {
-    editorState: AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, '\u200B'),
-    entityKey,
-  }
 }
 
 class ZEditor extends Component {
@@ -108,34 +92,9 @@ class ZEditor extends Component {
 
   moveToEnd = (text) => {
     const { editorState } = this.state
-    const selection = editorState.getSelection()
-    const key = selection.getStartKey()
-    const startOffset = selection.getStartOffset()
-    const content = editorState.getCurrentContent()
-    const block = content.getBlockForKey(key)
-    const blockText = block.getText()
-
-    let offset = startOffset
-    const textLength = blockText.length
-
-    while (
-      offset <= textLength &&
-      text.includes(blockText.slice(startOffset, offset))
-    ) {
-      offset += 1
-    }
-
-    offset -= 1
-
-    const newSelection = SelectionState.createEmpty(key).merge({
-      focusKey: key,
-      anchorKey: key,
-      focusOffset: offset,
-      anchorOffset: offset,
-    })
 
     return setStatePromise(this, {
-      editorState: EditorState.forceSelection(editorState, newSelection),
+      editorState: moveToEnd(editorState, text),
     })
   }
 
