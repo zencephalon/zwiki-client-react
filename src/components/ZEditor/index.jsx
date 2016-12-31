@@ -196,8 +196,6 @@ ZEditor.propTypes = {
   node: nodeShape,
   dispatch: PropTypes.func.isRequired,
   editorId: PropTypes.string,
-  // bindShortcut: PropTypes.func.isRequired,
-  //unbindShortcut: PropTypes.func.isRequired,
 }
 
 export default connect(mapStateToProps)(ZEditor)
