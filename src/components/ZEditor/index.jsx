@@ -19,7 +19,7 @@ import { SET_FOCUS } from '~/apis/focus/actions'
 
 import { OMNI_SEARCH, EDITOR, LINK_REGEX } from '~/constants'
 import { setStatePromise } from '~/helpers'
-import { findWithRegex, moveToEnd, insertPortal } from './helpers'
+import { findWithRegex, moveToEnd, insertPortal, getEntitySelectionState } from './helpers'
 
 import Link from './Link'
 import Portal from './Portal'
@@ -107,6 +107,10 @@ class ZEditor extends Component {
     return entityKey
   }
 
+  removeEntity = (entityKey) => {
+    getEntitySelectionState(this.state.editorState.getCurrentContent(), '')
+  }
+
   blockRenderer = (block) => {
     if (block.getType() === 'atomic') {
       return {
@@ -176,6 +180,7 @@ class ZEditor extends Component {
                 {...props}
                 insertPortal={this.insertPortal}
                 moveToEnd={this.moveToEnd}
+                removeEntity={this.removeEntity}
               />
             ),
           }]}

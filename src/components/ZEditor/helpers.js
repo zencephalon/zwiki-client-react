@@ -4,6 +4,7 @@ import {
   AtomicBlockUtils,
   Entity,
 } from 'draft-js'
+import getRangesForDraftEntity from 'draft-js/lib/getRangesForDraftEntity'
 
 export function findWithRegex(regex, contentBlock, callback) {
   const text = contentBlock.getText()
@@ -55,4 +56,27 @@ export function moveToEnd(editorState, text) {
   })
 
   return EditorState.forceSelection(editorState, newSelection)
+}
+
+export const getEntitySelectionState = (contentState, entityKey) => {
+  contentState.getBlockMap().forEach(block => {
+    console.log('got a block', block)
+  })
+  // const block = contentState.getBlockForKey(selectionKey)
+  // const blockKey = block.getKey()
+
+  // let entitySelection
+  // getRangesForDraftEntity(block, entityKey).forEach((range) => {
+  //   if (range.start <= selectionOffset && selectionOffset <= range.end) {
+  //     entitySelection = new SelectionState({
+  //       anchorOffset: range.start,
+  //       anchorKey: blockKey,
+  //       focusOffset: range.end,
+  //       focusKey: blockKey,
+  //       isBackward: false,
+  //       hasFocus: selectionState.getHasFocus(),
+  //     })
+  //   }
+  // })
+  // return entitySelection
 }
