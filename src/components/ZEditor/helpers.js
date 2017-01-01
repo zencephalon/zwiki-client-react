@@ -59,24 +59,25 @@ export function moveToEnd(editorState, text) {
 }
 
 export const getEntitySelectionState = (contentState, entityKey) => {
-  contentState.getBlockMap().forEach(block => {
-    console.log('got a block', block)
+  let entitySelection
+  contentState.getBlockMap().forEach((block) => {
+    if (entitySelection) {
+      return
+    }
+    try {
+      getRangesForDraftEntity(block, entityKey).forEach((range) => {
+        entitySelection = new SelectionState({
+          anchorOffset: range.start,
+          anchorKey: block.getKey(),
+          focusOffset: range.end,
+          focusKey: block.getKey(),
+          isBackward: false,
+          hasFocus: false,
+        })
+      })
+    } catch (e) {
+      console.log(e)
+    }
   })
-  // const block = contentState.getBlockForKey(selectionKey)
-  // const blockKey = block.getKey()
-
-  // let entitySelection
-  // getRangesForDraftEntity(block, entityKey).forEach((range) => {
-  //   if (range.start <= selectionOffset && selectionOffset <= range.end) {
-  //     entitySelection = new SelectionState({
-  //       anchorOffset: range.start,
-  //       anchorKey: blockKey,
-  //       focusOffset: range.end,
-  //       focusKey: blockKey,
-  //       isBackward: false,
-  //       hasFocus: selectionState.getHasFocus(),
-  //     })
-  //   }
-  // })
-  // return entitySelection
+  return entitySelection
 }

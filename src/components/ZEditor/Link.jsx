@@ -4,7 +4,9 @@ import { LINK_REGEX } from '~/constants'
 
 export default class Link extends Component {
   componentWillUnmount() {
-    this.props.removeEntity(this.portalEntityKey)
+    if (this.portalEntityKey) {
+      this.props.removeEntity(this.portalEntityKey)
+    }
   }
 
   onClick = () => {

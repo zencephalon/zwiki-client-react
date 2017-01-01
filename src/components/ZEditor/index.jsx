@@ -6,6 +6,7 @@ import {
   EditorState,
   ContentState,
   getDefaultKeyBinding,
+  Modifier,
 } from 'draft-js'
 import Editor from 'draft-js-plugins-editor'
 
@@ -108,7 +109,18 @@ class ZEditor extends Component {
   }
 
   removeEntity = (entityKey) => {
-    getEntitySelectionState(this.state.editorState.getCurrentContent(), '')
+    const {
+      editorState,
+    } = this.state
+    const content = editorState.getCurrentContent()
+    const entitySelection = getEntitySelectionState(content, entityKey)
+    console.log(entitySelection.serialize())
+    this.setState({
+      editorState: EditorState.push(
+        editorState,
+        Modifier.removeRange(content, entitySelection, 'forward'),
+        'remove-range'),
+    })
   }
 
   blockRenderer = (block) => {
