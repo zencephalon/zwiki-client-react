@@ -129,7 +129,6 @@ export const getEntitySelectionState = (contentState, entityKey) => {
         })
       })
     } catch (e) {
-      console.log(e)
     }
   })
   return entitySelection

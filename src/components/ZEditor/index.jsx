@@ -139,6 +139,7 @@ class ZEditor extends Component {
   parseNode = plainText => (
     {
       content: plainText.replace(/\n\u200B/, ''),
+      // TODO: this will break without a title to find, default to untitled
       name: plainText.split('\n', 1)[0].match(/#+\s*(.*)$/)[1],
     }
   )
