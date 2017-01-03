@@ -3,8 +3,62 @@ import {
   SelectionState,
   AtomicBlockUtils,
   Entity,
+  CharacterMetadata,
+  ContentBlock,
+  BlockMapBuilder,
 } from 'draft-js'
 import getRangesForDraftEntity from 'draft-js/lib/getRangesForDraftEntity'
+import DraftModifier from 'draft-js/lib/DraftModifier'
+import generateRandomKey from 'draft-js/lib/generateRandomKey'
+
+import { List, Repeat } from 'immutable'
+
+export function insertAtomicBlock(editorState, entityKey, character) {
+  const contentState = editorState.getCurrentContent()
+  const selectionState = editorState.getSelection()
+
+  const afterRemoval = DraftModifier.removeRange(
+    contentState,
+    selectionState,
+    'backward',
+  )
+
+  const targetSelection = afterRemoval.getSelectionAfter()
+  const afterSplit = DraftModifier.splitBlock(afterRemoval, targetSelection)
+  const insertionTarget = afterSplit.getSelectionAfter()
+
+  const asAtomicBlock = DraftModifier.setBlockType(
+    afterSplit,
+    insertionTarget,
+    'atomic',
+  )
+
+  const charData = CharacterMetadata.create({ entity: entityKey })
+
+  const fragmentArray = [
+    new ContentBlock({
+      key: generateRandomKey(),
+      type: 'atomic',
+      text: character,
+      characterList: List(Repeat(charData, character.length)),
+    }),
+  ]
+
+  const fragment = BlockMapBuilder.createFromArray(fragmentArray)
+
+  const withAtomicBlock = DraftModifier.replaceWithFragment(
+    asAtomicBlock,
+    insertionTarget,
+    fragment,
+  )
+
+  const newContent = withAtomicBlock.merge({
+    selectionBefore: selectionState,
+    selectionAfter: withAtomicBlock.getSelectionAfter().set('hasFocus', true),
+  })
+
+  return EditorState.push(editorState, newContent, 'insert-fragment')
+}
 
 export function findWithRegex(regex, contentBlock, callback) {
   const text = contentBlock.getText()
@@ -23,7 +77,7 @@ export function insertPortal(editorState, id) {
   )
 
   return {
-    editorState: AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, '\u200B'),
+    editorState: insertAtomicBlock(editorState, entityKey, '\u200B'),
     entityKey,
   }
 }

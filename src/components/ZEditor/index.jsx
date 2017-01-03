@@ -138,7 +138,7 @@ class ZEditor extends Component {
 
   parseNode = plainText => (
     {
-      content: plainText.replace(/\n\u200B\n/, ''),
+      content: plainText.replace(/\n\u200B/, ''),
       name: plainText.split('\n', 1)[0].match(/#+\s*(.*)$/)[1],
     }
   )
