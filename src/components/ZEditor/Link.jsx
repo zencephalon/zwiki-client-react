@@ -10,13 +10,15 @@ export default class Link extends Component {
   }
 
   onClick = () => {
+    const { insertPortal, moveToEnd, decoratedText, removeEntity } = this.props
     if (this.portalEntityKey) {
-      return
+      removeEntity(this.portalEntityKey)
+      this.portalEntityKey = null
+    } else {
+      moveToEnd(decoratedText).then(() => {
+        this.portalEntityKey = insertPortal(LINK_REGEX.exec(decoratedText)[2])
+      })
     }
-    const { insertPortal, moveToEnd, decoratedText } = this.props
-    moveToEnd(decoratedText).then(() => {
-      this.portalEntityKey = insertPortal(LINK_REGEX.exec(decoratedText)[2])
-    })
   }
 
   render() {
@@ -33,6 +35,7 @@ export default class Link extends Component {
 
 Link.propTypes = {
   insertPortal: PropTypes.func.isRequired,
+  removeEntity: PropTypes.func.isRequired,
   moveToEnd: PropTypes.func.isRequired,
   decoratedText: PropTypes.string.isRequired,
 }

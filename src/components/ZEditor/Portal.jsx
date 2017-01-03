@@ -13,7 +13,6 @@ export default class Portal extends Component {
     if (!entityId) {
       return null
     }
-    console.log('in portal', entityId)
     const entity = Entity.get(entityId)
     const id = entity.data.id
     return (
