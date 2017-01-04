@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import ReactDOM from 'react-dom'
 
 import {
   EditorState,
@@ -148,17 +147,13 @@ class ZEditor extends Component {
     this.editor.focus()
   }
 
-  clickFocus = (e) => {
+  hoverFocus = (e) => {
     const { dispatch, focus } = this.props
     const { editorId } = this.state
     if (focus.kind !== EDITOR || focus.id !== editorId) {
       dispatch(SET_FOCUS(EDITOR, editorId))
     }
     e.stopPropagation()
-
-    // TODO we can replay this event, but we need to know the right time to
-    // with a slight delay, I guess.
-    const node = ReactDOM.findDOMNode(this.editor) //.dispatchEvent(e)
   }
 
   handleKeyCommand = (command) => {
@@ -175,7 +170,7 @@ class ZEditor extends Component {
     return (
       <div
         className={classNames('editor', { saved: !timer })}
-        onClick={this.clickFocus}
+        onMouseOver={this.hoverFocus}
       >
         <Editor
           readOnly={!this.editable()}
