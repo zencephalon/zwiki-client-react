@@ -10,6 +10,13 @@ class NodeContainer extends Component {
     GET(id)
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { actions: { GET }, id } = this.props
+    if (nextProps.id !== id) {
+      GET(nextProps.id)
+    }
+  }
+
   render() {
     const { confirmed, requested, failed, node, children, id } = this.props
     return (

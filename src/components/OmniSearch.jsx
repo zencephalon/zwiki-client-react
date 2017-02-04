@@ -2,12 +2,12 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
 
-import { INDEX, SET_QUERY } from '~/apis/nodes/actions'
+import { INDEX, SET_QUERY, POST } from '~/apis/nodes/actions'
 import nodeShape from '~/apis/nodes/shape'
 import { NodeEditPath } from '~/routes'
 
 import { SET_FOCUS } from '~/apis/focus/actions'
-import { OMNI_SEARCH, EDITOR } from '~/constants'
+import { OMNI_SEARCH, EDITOR, ROOT } from '~/constants'
 
 import classNames from 'classnames'
 
@@ -45,7 +45,7 @@ class OmniSearch extends Component {
   }
 
   handleKeyPress = (e) => {
-    const { suggestions, dispatch } = this.props
+    const { suggestions, dispatch, q } = this.props
     const size = suggestions.length
     const { selected } = this.state
 
@@ -63,10 +63,17 @@ class OmniSearch extends Component {
     }
     if (e.key === 'Enter') {
       e.preventDefault()
-      browserHistory.push(NodeEditPath(suggestions[selected].id))
+      if (e.ctrlKey) {
+        dispatch(POST('new-omni', { content: `# ${q}\n\n`, name: q })).then((ret) => {
+          const { data: new_node } = ret
+          browserHistory.push(NodeEditPath(new_node.id))
+        })
+      } else {
+        browserHistory.push(NodeEditPath(suggestions[selected].id))
+      }
       this.input.blur()
       dispatch(SET_QUERY(''))
-      dispatch(SET_FOCUS(EDITOR))
+      dispatch(SET_FOCUS(EDITOR, ROOT))
       this.setState({
         selected: 0,
       })

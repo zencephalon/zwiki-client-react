@@ -36,6 +36,7 @@ function keyBindings(e) {
 
 
 function linkStrategy(contentBlock, callback) {
+  console.log('link strategy called')
   findWithRegex(LINK_REGEX, contentBlock, callback)
 }
 
