@@ -1,7 +1,7 @@
-import React from 'react';
-import { Entity } from 'draft-js';
-import { fromJS } from 'immutable';
-import unionClassNames from 'union-class-names';
+import React from 'react'
+import { Entity } from 'draft-js'
+import { fromJS } from 'immutable'
+import unionClassNames from 'union-class-names'
 
 const MentionLink = ({ mention, children, className }) =>
   <a
@@ -10,7 +10,7 @@ const MentionLink = ({ mention, children, className }) =>
     spellCheck={false}
   >
     {children}
-  </a>;
+  </a>
 
 const MentionText = ({ children, className }) =>
   <span
@@ -18,7 +18,7 @@ const MentionText = ({ children, className }) =>
     spellCheck={false}
   >
     {children}
-  </span>;
+  </span>
 
 const Mention = (props) => {
   const {
@@ -28,14 +28,14 @@ const Mention = (props) => {
     children,
     decoratedText,
     className,
-  } = props;
+  } = props
 
-  const combinedClassName = unionClassNames(theme.mention, className);
-  const mention = fromJS(Entity.get(entityKey).getData().mention);
+  const combinedClassName = unionClassNames(theme.mention, className)
+  const mention = fromJS(Entity.get(entityKey).getData().mention)
 
   const Component = (
     mentionComponent || (mention.has('link') ? MentionLink : MentionText)
-  );
+  )
 
   return (
     <Component
@@ -47,7 +47,7 @@ const Mention = (props) => {
     >
       {children}
     </Component>
-  );
-};
+  )
+}
 
-export default Mention;
+export default Mention

@@ -1,8 +1,8 @@
 /* @flow */
 
-import findWithRegex from 'find-with-regex';
-import { escapeRegExp } from 'lodash';
+import findWithRegex from 'find-with-regex'
+import { escapeRegExp } from 'lodash'
 
 export default (trigger: String, regExp: String) => (contentBlock: Object, callback: Function) => {
-  findWithRegex(new RegExp(`(\\s|^)${escapeRegExp(trigger)}${regExp}`, 'g'), contentBlock, callback);
-};
+  findWithRegex(new RegExp(`(\\s|^)${escapeRegExp(trigger)}${regExp}`, 'g'), contentBlock, callback)
+}

@@ -1,10 +1,10 @@
-import React from 'react';
-import { mount } from 'enzyme';
-import { expect } from 'chai';
-import sinon from 'sinon';
-import { fromJS } from 'immutable';
+import React from 'react'
+import { mount } from 'enzyme'
+import { expect } from 'chai'
+import sinon from 'sinon'
+import { fromJS } from 'immutable'
 
-import MentionSuggestions from '../index';
+import MentionSuggestions from '../index'
 
 const mentions = fromJS([
   {
@@ -37,7 +37,7 @@ const mentions = fromJS([
     link: 'https://twitter.com/psbrandt',
     avatar: 'https://pbs.twimg.com/profile_images/688487813025640448/E6O6I011_400x400.png',
   },
-]);
+])
 
 describe('MentionSuggestions Component', () => {
   it('Closes when suggestions is empty', () => {
@@ -46,19 +46,19 @@ describe('MentionSuggestions Component', () => {
       onUpArrow: sinon.spy(),
       onTab: sinon.spy(),
       onEscape: sinon.spy(),
-      handleReturn: sinon.spy()
-    };
+      handleReturn: sinon.spy(),
+    }
     const store = {
       getAllSearches: sinon.spy(() => ({ has: () => false })),
       getPortalClientRect: sinon.spy(),
       isEscaped: sinon.spy(),
       resetEscapedSearch: sinon.spy(),
       escapeSearch: sinon.spy(),
-    };
-    const ariaProps = {};
-    const onSearchChange = sinon.spy();
-    const onAddMention = sinon.spy();
-    const positionSuggestions = sinon.stub().returns({});
+    }
+    const ariaProps = {}
+    const onSearchChange = sinon.spy()
+    const onAddMention = sinon.spy()
+    const positionSuggestions = sinon.stub().returns({})
     const suggestions = mount(
       <MentionSuggestions
         ariaProps={ariaProps}
@@ -70,14 +70,14 @@ describe('MentionSuggestions Component', () => {
         theme={{}}
         onAddMention={onAddMention}
       />
-    );
+    )
 
-    suggestions.instance().openDropdown();
-    expect(suggestions.state().isActive).to.equal(true);
+    suggestions.instance().openDropdown()
+    expect(suggestions.state().isActive).to.equal(true)
 
     suggestions.setProps({
       suggestions: fromJS([]),
-    });
-    expect(suggestions.state().isActive).to.equal(false);
-  });
-});
+    })
+    expect(suggestions.state().isActive).to.equal(false)
+  })
+})

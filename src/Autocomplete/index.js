@@ -1,16 +1,16 @@
-import decorateComponentWithProps from 'decorate-component-with-props';
-import { Map } from 'immutable';
-import Mention from './Mention';
-import MentionSuggestions from './MentionSuggestions';
-import MentionSuggestionsPortal from './MentionSuggestionsPortal';
-import defaultRegExp from './defaultRegExp';
-import mentionStrategy from './mentionStrategy';
-import mentionSuggestionsStrategy from './mentionSuggestionsStrategy';
-import mentionStyles from './mentionStyles.css';
-import mentionSuggestionsStyles from './mentionSuggestionsStyles.css';
-import mentionSuggestionsEntryStyles from './mentionSuggestionsEntryStyles.css';
-import suggestionsFilter from './utils/defaultSuggestionsFilter';
-import defaultPositionSuggestions from './utils/positionSuggestions';
+import decorateComponentWithProps from 'decorate-component-with-props'
+import { Map } from 'immutable'
+import Mention from './Mention'
+import MentionSuggestions from './MentionSuggestions'
+import MentionSuggestionsPortal from './MentionSuggestionsPortal'
+import defaultRegExp from './defaultRegExp'
+import mentionStrategy from './mentionStrategy'
+import mentionSuggestionsStrategy from './mentionSuggestionsStrategy'
+import mentionStyles from './mentionStyles.css'
+import mentionSuggestionsStyles from './mentionSuggestionsStyles.css'
+import mentionSuggestionsEntryStyles from './mentionSuggestionsEntryStyles.css'
+import suggestionsFilter from './utils/defaultSuggestionsFilter'
+import defaultPositionSuggestions from './utils/positionSuggestions'
 
 export default (config = {}) => {
   const defaultTheme = {
@@ -23,7 +23,7 @@ export default (config = {}) => {
     mentionSuggestionsEntryFocused: mentionSuggestionsEntryStyles.mentionSuggestionsEntryFocused,
     mentionSuggestionsEntryText: mentionSuggestionsEntryStyles.mentionSuggestionsEntryText,
     mentionSuggestionsEntryAvatar: mentionSuggestionsEntryStyles.mentionSuggestionsEntryAvatar,
-  };
+  }
 
   const callbacks = {
     keyBindingFn: undefined,
@@ -34,18 +34,18 @@ export default (config = {}) => {
     onEscape: undefined,
     handleReturn: undefined,
     onChange: undefined,
-  };
+  }
 
   const ariaProps = {
     ariaHasPopup: 'false',
     ariaExpanded: 'false',
     ariaOwneeID: undefined,
     ariaActiveDescendantID: undefined,
-  };
+  }
 
-  let searches = Map();
-  let escapedSearch;
-  let clientRectFunctions = Map();
+  let searches = Map()
+  let escapedSearch
+  let clientRectFunctions = Map()
 
   const store = {
     getEditorState: undefined,
@@ -54,26 +54,26 @@ export default (config = {}) => {
     getAllSearches: () => searches,
     isEscaped: (offsetKey) => escapedSearch === offsetKey,
     escapeSearch: (offsetKey) => {
-      escapedSearch = offsetKey;
+      escapedSearch = offsetKey
     },
 
     resetEscapedSearch: () => {
-      escapedSearch = undefined;
+      escapedSearch = undefined
     },
 
     register: (offsetKey) => {
-      searches = searches.set(offsetKey, offsetKey);
+      searches = searches.set(offsetKey, offsetKey)
     },
 
     updatePortalClientRect: (offsetKey, func) => {
-      clientRectFunctions = clientRectFunctions.set(offsetKey, func);
+      clientRectFunctions = clientRectFunctions.set(offsetKey, func)
     },
 
     unregister: (offsetKey) => {
-      searches = searches.delete(offsetKey);
-      clientRectFunctions = clientRectFunctions.delete(offsetKey);
+      searches = searches.delete(offsetKey)
+      clientRectFunctions = clientRectFunctions.delete(offsetKey)
     },
-  };
+  }
 
   // Styles are overwritten instead of merged as merging causes a lot of confusion.
   //
@@ -89,7 +89,7 @@ export default (config = {}) => {
     entityMutability = 'SEGMENTED',
     mentionTrigger = '@',
     mentionRegExp = defaultRegExp,
-  } = config;
+  } = config
   const mentionSearchProps = {
     ariaProps,
     callbacks,
@@ -99,7 +99,7 @@ export default (config = {}) => {
     positionSuggestions,
     mentionTrigger,
     mentionPrefix,
-  };
+  }
   return {
     MentionSuggestions: decorateComponentWithProps(MentionSuggestions, mentionSearchProps),
     decorators: [
@@ -124,8 +124,8 @@ export default (config = {}) => {
     ),
 
     initialize: ({ getEditorState, setEditorState }) => {
-      store.getEditorState = getEditorState;
-      store.setEditorState = setEditorState;
+      store.getEditorState = getEditorState
+      store.setEditorState = setEditorState
     },
 
     onDownArrow: (keyboardEvent) => callbacks.onDownArrow && callbacks.onDownArrow(keyboardEvent),
@@ -134,10 +134,10 @@ export default (config = {}) => {
     onEscape: (keyboardEvent) => callbacks.onEscape && callbacks.onEscape(keyboardEvent),
     handleReturn: (keyboardEvent) => callbacks.handleReturn && callbacks.handleReturn(keyboardEvent),
     onChange: (editorState) => {
-      if (callbacks.onChange) return callbacks.onChange(editorState);
-      return editorState;
+      if (callbacks.onChange) return callbacks.onChange(editorState)
+      return editorState
     },
-  };
-};
+  }
+}
 
-export const defaultSuggestionsFilter = suggestionsFilter;
+export const defaultSuggestionsFilter = suggestionsFilter

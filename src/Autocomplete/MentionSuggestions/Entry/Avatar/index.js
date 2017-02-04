@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 const Avatar = ({ mention, theme = {} }) => {
   if (mention.has('avatar')) {
@@ -8,10 +8,10 @@ const Avatar = ({ mention, theme = {} }) => {
         className={theme.mentionSuggestionsEntryAvatar}
         role="presentation"
       />
-    );
+    )
   }
 
-  return null;
-};
+  return null
+}
 
-export default Avatar;
+export default Avatar
