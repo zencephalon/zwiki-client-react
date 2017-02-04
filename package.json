@@ -50,9 +50,11 @@
   },
   "dependencies": {
     "classnames": "^2.2.5",
+    "decorate-component-with-props": "^1.0.2",
     "draft-js": "^0.9.1",
     "draft-js-linkify-plugin": "^2.0.0-beta1",
     "draft-js-plugins-editor": "^2.0.0-beta1",
+    "find-with-regex": "^1.0.2",
     "immutable": "^3.8.1",
     "lodash": "^4.17.3",
     "react": "^15.4.1",
@@ -63,6 +65,7 @@
     "react-router-redux": "^4.0.7",
     "redux": "^3.6.0",
     "redux-rest-reducer": "git+ssh://git@github.com/zencephalon/redux-rest-reducer.git#3c849f5e1720f598377e9381fd610d87852531a6",
-    "redux-thunk": "^2.1.0"
+    "redux-thunk": "^2.1.0",
+    "union-class-names": "^1.0.0"
   }
 }

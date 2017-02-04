@@ -19,13 +19,29 @@ import { SET_FOCUS } from '~/apis/focus/actions'
 
 import { OMNI_SEARCH, EDITOR, LINK_REGEX } from '~/constants'
 import { setStatePromise } from '~/helpers'
+import createMentionPlugin, { defaultSuggestionsFilter } from '~/Autocomplete' // eslint-disable-line import/no-unresolved
 import { findWithRegex, moveToEnd, insertPortal, getEntitySelectionState } from './helpers'
 
 import Link from './Link'
 import Portal from './Portal'
+import mentions from './mentions'
+
+import '~/Autocomplete/mentionStyles.css'
+import '~/Autocomplete/mentionSuggestionsStyles.css'
+import '~/Autocomplete/mentionSuggestionsEntryStyles.css'
+
+const mentionPlugin = createMentionPlugin({ theme: {
+  mention: 'mention',
+  mentionSuggestions: 'mentionSuggestions',
+  mentionSuggestionsEntry: 'mentionSuggestionsEntry',
+  mentionSuggestionsEntryFocused: 'mentionSuggestionsEntryFocused',
+  mentionSuggestionsEntryText: 'mentionSuggestionsEntryText',
+  mentionSuggestionsEntryAvatar: 'mentionSuggestionsEntryAvatar',
+} })
+const { MentionSuggestions } = mentionPlugin
 
 // const linkifyPlugin = createLinkifyPlugin()
-const plugins = []
+const plugins = [mentionPlugin]
 
 function keyBindings(e) {
   if (e.key === ' ' && e.ctrlKey) {
@@ -36,7 +52,6 @@ function keyBindings(e) {
 
 
 function linkStrategy(contentBlock, callback) {
-  console.log('link strategy called')
   findWithRegex(LINK_REGEX, contentBlock, callback)
 }
 
@@ -47,6 +62,7 @@ class ZEditor extends Component {
     previousPlainText: this.props.node.content,
     timer: null,
     editorId: this.props.editorId || uniqueId('editor_'),
+    suggestions: mentions,
   }
 
   componentDidMount() {
@@ -83,6 +99,16 @@ class ZEditor extends Component {
       timer: newTimer,
       previousPlainText: plainText,
     })
+  }
+
+  onSearchChange = ({ value }) => {
+    this.setState({
+      suggestions: defaultSuggestionsFilter(value, mentions),
+    })
+  }
+
+  onAddMention = () => {
+    // get the mention object selected
   }
 
   editable = () => {
@@ -194,6 +220,11 @@ class ZEditor extends Component {
             ),
           }]}
           blockRendererFn={this.blockRenderer}
+        />
+        <MentionSuggestions
+          onSearchChange={this.onSearchChange}
+          suggestions={this.state.suggestions}
+          onAddMention={this.onAddMention}
         />
       </div>
     )
