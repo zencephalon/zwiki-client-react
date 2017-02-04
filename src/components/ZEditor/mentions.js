@@ -7,23 +7,23 @@ const mentions = fromJS([
   },
   {
     name: 'Julian Krispel-Samsel',
-    id: 1,
+    id: 2,
   },
   {
     name: 'Jyoti Puri',
-    id: 1,
+    id: 3,
   },
   {
     name: 'Max Stoiber',
-    id: 1,
+    id: 4,
   },
   {
     name: 'Nik Graf',
-    id: 1,
+    id: 5,
   },
   {
     name: 'Pascal Brandt',
-    id: 1,
+    id: 6,
   },
 ])
 

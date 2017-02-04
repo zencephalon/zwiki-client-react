@@ -40,7 +40,7 @@ const mentionPlugin = createMentionPlugin({ theme: {
 const { MentionSuggestions } = mentionPlugin
 
 // const linkifyPlugin = createLinkifyPlugin()
-const plugins = [mentionPlugin]
+const plugins = []
 
 function keyBindings(e) {
   if (e.key === ' ' && e.ctrlKey) {
@@ -48,7 +48,6 @@ function keyBindings(e) {
   }
   return getDefaultKeyBinding(e)
 }
-
 
 function linkStrategy(contentBlock, callback) {
   findWithRegex(LINK_REGEX, contentBlock, callback)
