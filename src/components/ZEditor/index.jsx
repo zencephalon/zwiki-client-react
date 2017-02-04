@@ -36,7 +36,6 @@ const mentionPlugin = createMentionPlugin({ theme: {
   mentionSuggestionsEntry: 'mentionSuggestionsEntry',
   mentionSuggestionsEntryFocused: 'mentionSuggestionsEntryFocused',
   mentionSuggestionsEntryText: 'mentionSuggestionsEntryText',
-  mentionSuggestionsEntryAvatar: 'mentionSuggestionsEntryAvatar',
 } })
 const { MentionSuggestions } = mentionPlugin
 

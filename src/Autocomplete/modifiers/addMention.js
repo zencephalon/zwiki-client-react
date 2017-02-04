@@ -3,8 +3,6 @@ import getSearchText from '../utils/getSearchText'
 import getTypeByTrigger from '../utils/getTypeByTrigger'
 
 const addMention = (editorState, mention, mentionPrefix, mentionTrigger, entityMutability) => {
-  const entityKey = Entity.create(getTypeByTrigger(mentionTrigger), entityMutability, { mention })
-
   const currentSelectionState = editorState.getSelection()
   const { begin, end } = getSearchText(editorState, currentSelectionState)
 
@@ -17,9 +15,7 @@ const addMention = (editorState, mention, mentionPrefix, mentionTrigger, entityM
   let mentionReplacedContent = Modifier.replaceText(
     editorState.getCurrentContent(),
     mentionTextSelection,
-    `${mentionPrefix}${mention.get('name')}`,
-    null, // no inline style needed
-    entityKey
+    `${mentionPrefix}${mention.get('name')}](${mention.get('id')})`,
   )
 
   // If the mention is inserted at the end, a space is appended right after for

@@ -82,12 +82,12 @@ export default (config = {}) => {
   // errors when upgrading as basically every styling change would become a major
   // breaking change. 1px of an increased padding can break a whole layout.
   const {
-    mentionPrefix = '',
+    mentionPrefix = '[',
     theme = defaultTheme,
     positionSuggestions = defaultPositionSuggestions,
     mentionComponent,
     entityMutability = 'SEGMENTED',
-    mentionTrigger = '@',
+    mentionTrigger = '[',
     mentionRegExp = defaultRegExp,
   } = config
   const mentionSearchProps = {
