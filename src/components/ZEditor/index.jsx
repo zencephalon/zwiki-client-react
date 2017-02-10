@@ -40,7 +40,7 @@ const mentionPlugin = createMentionPlugin({ theme: {
 const { MentionSuggestions } = mentionPlugin
 
 // const linkifyPlugin = createLinkifyPlugin()
-const plugins = []
+const plugins = [mentionPlugin]
 
 function keyBindings(e) {
   if (e.key === ' ' && e.ctrlKey) {
