@@ -28,7 +28,6 @@ body {
   margin-bottom: 0em;
   box-shadow: inset 0px 1px 8px -3px #ABABAB;
   background: #fefefe;
-  width: 37em;
 }
 
 .editor.saved {
@@ -75,4 +74,11 @@ figure {
       }
     }
   }
+}
+
+// ==== Flex =====
+
+.flex-writer {
+  display: flex;
+  flex-direction: row;
 }

@@ -5,6 +5,7 @@ import { syncHistoryWithStore } from 'react-router-redux'
 import { configureStore } from '~/store/configureStore'
 import App from './App'
 import NodeEdit from './NodeEdit'
+import Flex from './Flex'
 import { NodeEditPath } from '~/routes'
 
 const store = configureStore()
@@ -17,7 +18,7 @@ const Root = () => (
     <Router history={history}>
       <Route path="/" component={App}>
         <IndexRedirect to={NodeEditPath(1)} />
-        <Route path={NodeEditPath()} component={NodeEdit} />
+        <Route path={NodeEditPath()} component={Flex} />
       </Route>
     </Router>
   </Provider>

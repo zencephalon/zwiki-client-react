@@ -16,15 +16,18 @@ export function insertAtomicBlock(editorState, entityKey, character) {
   const contentState = editorState.getCurrentContent()
   const selectionState = editorState.getSelection()
 
-  const afterRemoval = DraftModifier.removeRange(
-    contentState,
-    selectionState,
-    'backward',
-  )
+  const afterRemoval = contentState
+  // const afterRemoval = DraftModifier.removeRange(
+  //   contentState,
+  //   selectionState,
+  //   'backward',
+  // )
 
   const targetSelection = afterRemoval.getSelectionAfter()
   const afterSplit = DraftModifier.splitBlock(afterRemoval, targetSelection)
   const insertionTarget = afterSplit.getSelectionAfter()
+
+  console.log({ afterRemoval, afterSplit, insertionTarget })
 
   const asAtomicBlock = DraftModifier.setBlockType(
     afterSplit,
