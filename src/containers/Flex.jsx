@@ -20,18 +20,21 @@ class NodeContainer extends Component {
   }
 
   render() {
-    const { columns, visible_columns } = this.props
+    const { columns, visible_columns, focused_column } = this.props
     return (
       <div className="flex-writer">
-        {columns.map((column, index) => (
+        {columns.map((column, columnId) => (
           <div
             className={classNames('flex-column', {
-              hidden: !visible_columns.includes(index),
+              hidden: !visible_columns.includes(columnId),
+              focused: focused_column === columnId,
             })}
-            key={index}
+            key={columnId}
           >
             {column.map(nodeId => (
-              <NodeEdit key={nodeId} params={{ id: nodeId }} />
+              <div className="column-item">
+                <NodeEdit key={`${columnId}-${nodeId}`} params={{ id: nodeId }} />
+              </div>
             ))
             }
           </div>
@@ -45,6 +48,7 @@ NodeContainer.propTypes = {
   id: PropTypes.string.isRequired, // param
   columns: PropTypes.array,
   visible_columns: PropTypes.array,
+  focused_column: PropTypes.number,
   actions: PropTypes.objectOf(PropTypes.func).isRequired,
 }
 

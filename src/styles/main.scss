@@ -3,6 +3,7 @@
 $main-bg-color: #fff;
 $accent-blue: #36AECC;
 $lighter-blue: #d2edf4;
+$lightest-blue: #e9fbff;
 $accent-gray: #e1e0dd;
 $accent-black: #35342f;
 $accent-orange: #ec6b2d;
@@ -87,6 +88,14 @@ figure {
 .flex-column {
   flex-grow: 1;
   flex-basis: 0;
+}
+
+.flex-column.focused {
+  background-color: $lightest-blue;
+}
+
+.column-item {
+  margin: 0em 0.5em;
 }
 
 // ==== Util ====
