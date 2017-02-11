@@ -15,7 +15,7 @@ import classNames from 'classnames'
 import { PUT } from '~/apis/nodes/actions'
 import nodeShape from '~/apis/nodes/shape'
 
-import { SET_FOCUS } from '~/apis/focus/actions'
+import { FOCUS } from '~/apis/flex/actions'
 
 import { OMNI_SEARCH, EDITOR, LINK_REGEX } from '~/constants'
 import { setStatePromise } from '~/helpers'
@@ -143,18 +143,9 @@ class ZEditor extends Component {
     this.editor.focus()
   }
 
-  hoverFocus = (e) => {
-    const { dispatch, focusType } = this.props
-    const { editorId } = this.state
-    if (focusType !== EDITOR || focus.id !== editorId) {
-      dispatch(SET_FOCUS(EDITOR, editorId))
-    }
-    e.stopPropagation()
-  }
-
   handleKeyCommand = (command) => {
     if (command === 'switch-focus') {
-      this.props.dispatch(SET_FOCUS(OMNI_SEARCH))
+      this.props.dispatch(FOCUS({ type: OMNI_SEARCH }))
       this.editor.blur()
       return 'handled'
     }

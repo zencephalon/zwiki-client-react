@@ -6,8 +6,8 @@ import { INDEX, SET_QUERY, POST } from '~/apis/nodes/actions'
 import nodeShape from '~/apis/nodes/shape'
 import { NodeEditPath } from '~/routes'
 
-import { SET_FOCUS } from '~/apis/focus/actions'
-import { OMNI_SEARCH, EDITOR, ROOT } from '~/constants'
+import { FOCUS } from '~/apis/flex/actions'
+import { OMNI_SEARCH, EDITOR } from '~/constants'
 
 import classNames from 'classnames'
 
@@ -73,14 +73,14 @@ class OmniSearch extends Component {
       }
       this.input.blur()
       dispatch(SET_QUERY(''))
-      dispatch(SET_FOCUS(EDITOR, ROOT))
+      dispatch(FOCUS({ type: EDITOR }))
       this.setState({
         selected: 0,
       })
     }
     if (e.key === ' ' && e.ctrlKey) {
       this.input.blur()
-      dispatch(SET_FOCUS(EDITOR))
+      dispatch(FOCUS({ type: EDITOR }))
     }
   }
 
@@ -132,7 +132,7 @@ function mapStateToProps(state) {
     q,
     confirmed,
     suggestions,
-    focusType: state.flex.kind,
+    focusType: state.flex.focusType,
   }
 }
 
