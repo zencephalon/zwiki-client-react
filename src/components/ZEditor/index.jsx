@@ -10,8 +10,10 @@ import Editor from 'draft-js-plugins-editor'
 import { uniqueId } from 'lodash'
 import classNames from 'classnames'
 
-import { PUT } from '~/apis/nodes/actions'
+import { PUT, INDEX, LINK_QUERY } from '~/apis/nodes/actions'
 import nodeShape from '~/apis/nodes/shape'
+
+import { fromJS } from 'immutable'
 
 import {
   FOCUS,
@@ -56,8 +58,8 @@ class ZEditor extends Component {
       ContentState.createFromText(this.props.node.content)),
     previousPlainText: this.props.node.content,
     timer: null,
+    linkTimer: null,
     editorId: this.props.editorId || uniqueId('editor_'),
-    suggestions: mentions,
   }
 
   componentDidMount() {
@@ -98,8 +100,20 @@ class ZEditor extends Component {
   }
 
   onSearchChange = ({ value }) => {
+    const { dispatch } = this.props
+    const { linkTimer: timer } = this.state
+
+    const q = value
+
+    dispatch(LINK_QUERY(q))
+    clearTimeout(timer)
+
     this.setState({
-      suggestions: defaultSuggestionsFilter(value, mentions),
+      timer: setTimeout(() => {
+        dispatch(INDEX(q)).then(() => {
+          this.setState({ timer: null, selected: 0 })
+        })
+      }, 150),
     })
   }
 
@@ -173,7 +187,7 @@ class ZEditor extends Component {
         />
         <MentionSuggestions
           onSearchChange={this.onSearchChange}
-          suggestions={this.state.suggestions}
+          suggestions={this.props.suggestions}
           onAddMention={this.onAddMention}
         />
       </div>
@@ -182,7 +196,20 @@ class ZEditor extends Component {
 }
 
 function mapStateToProps(state) {
+  const { linkQ: q } = state.nodes.query
+
+  const {
+    data: suggestions,
+    confirmed,
+  } = state.nodes.http.collections[q] || {
+    data: [],
+    confirmed: false,
+  }
+
   return {
+    suggestions: fromJS(confirmed ? suggestions : [{ name: 'Loading...' }]),
+    confirmed,
+    q,
     focusType: state.flex.focusType,
   }
 }
