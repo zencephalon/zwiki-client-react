@@ -14,7 +14,19 @@ import classNames from 'classnames'
 import { PUT } from '~/apis/nodes/actions'
 import nodeShape from '~/apis/nodes/shape'
 
-import { FOCUS, CYCLE_DOWN, CYCLE_UP } from '~/apis/flex/actions'
+import {
+  FOCUS,
+  CYCLE_DOWN,
+  CYCLE_UP,
+  SHIFT_DOWN,
+  SHIFT_UP,
+  SLIDE_RIGHT,
+  SLIDE_LEFT,
+} from '~/apis/flex/actions'
+
+import '~/Autocomplete/mentionStyles.css'
+import '~/Autocomplete/mentionSuggestionsStyles.css'
+import '~/Autocomplete/mentionSuggestionsEntryStyles.css'
 
 import { OMNI_SEARCH, EDITOR, LINK_REGEX } from '~/constants'
 import createMentionPlugin, { defaultSuggestionsFilter } from '~/Autocomplete' // eslint-disable-line import/no-unresolved
@@ -22,10 +34,6 @@ import { findWithRegex } from './helpers'
 
 import Link from './Link'
 import mentions from './mentions'
-
-import '~/Autocomplete/mentionStyles.css'
-import '~/Autocomplete/mentionSuggestionsStyles.css'
-import '~/Autocomplete/mentionSuggestionsEntryStyles.css'
 
 const mentionPlugin = createMentionPlugin({ theme: {
   mention: 'mention',
@@ -39,19 +47,27 @@ const { MentionSuggestions } = mentionPlugin
 // const linkifyPlugin = createLinkifyPlugin()
 const plugins = [mentionPlugin]
 
-const SWITCH_FOCUS = 'SWITCH_FOCUS'
-const CYCLE_DOWN_CMD = 'CYCLE_DOWN'
-const CYCLE_UP_CMD = 'CYCLE_UP'
-
 function keyBindings(e) {
   if (e.key === ' ' && e.ctrlKey) {
-    return SWITCH_FOCUS
+    return 'SWITCH_FOCUS'
   }
-  if (e.key === 'j' && e.ctrlKey) {
-    return CYCLE_DOWN_CMD
+  if (e.key === 'j' && e.ctrlKey && !e.shiftKey) {
+    return 'CYCLE_DOWN'
   }
-  if (e.key === 'k' && e.ctrlKey) {
-    return CYCLE_UP_CMD
+  if (e.key === 'k' && e.ctrlKey && !e.shiftKey) {
+    return 'CYCLE_UP'
+  }
+  if (e.key === 'j' && e.ctrlKey && e.shiftKey) {
+    return 'SHIFT_DOWN'
+  }
+  if (e.key === 'k' && e.ctrlKey && e.shiftKey) {
+    return 'SHIFT_UP'
+  }
+  if (e.key === 'l' && e.ctrlKey) {
+    return 'SLIDE_RIGHT'
+  }
+  if (e.key === 'h' && e.ctrlKey) {
+    return 'SLIDE_LEFT'
   }
   return getDefaultKeyBinding(e)
 }
@@ -131,16 +147,28 @@ class ZEditor extends Component {
 
   handleKeyCommand = (command) => {
     const { dispatch } = this.props
-    if (command === SWITCH_FOCUS) {
+    if (command === 'SWITCH_FOCUS') {
       dispatch(FOCUS({ type: OMNI_SEARCH }))
       this.editor.blur()
       return 'handled'
     }
-    if (command === CYCLE_DOWN_CMD) {
+    if (command === 'CYCLE_DOWN') {
       dispatch(CYCLE_DOWN())
     }
-    if (command === CYCLE_UP_CMD) {
+    if (command === 'CYCLE_UP') {
       dispatch(CYCLE_UP())
+    }
+    if (command === 'SHIFT_UP') {
+      dispatch(SHIFT_UP())
+    }
+    if (command === 'SHIFT_DOWN') {
+      dispatch(SHIFT_DOWN())
+    }
+    if (command === 'SLIDE_RIGHT') {
+      dispatch(SLIDE_RIGHT())
+    }
+    if (command === 'SLIDE_LEFT') {
+      dispatch(SLIDE_LEFT())
     }
     return 'not-handled'
   }

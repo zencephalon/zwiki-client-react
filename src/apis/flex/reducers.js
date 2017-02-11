@@ -14,11 +14,20 @@ export default function focus(state = startState, action) {
   const {
     focusedColumnId,
     columns,
+    visibleColumnIds,
   } = state
   const nextColumnId = focusedColumnId + 1
   const nextColumn = columns[nextColumnId]
   const focusedColumn = columns[focusedColumnId]
   switch (action.type) {
+    case t.SLIDE_RIGHT:
+      if (visibleColumnIds.includes(nextColumnId)) {
+        return {
+          ...state,
+          focusedColumnId: nextColumnId,
+        }
+      }
+    case t.SLIDE_LEFT:
     case t.CYCLE_DOWN:
       return {
         ...state,

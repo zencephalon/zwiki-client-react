@@ -8,6 +8,22 @@ export const CYCLE_UP = () => ({
   type: t.CYCLE_UP,
 })
 
+export const SHIFT_DOWN = () => ({
+  type: t.SHIFT_DOWN,
+})
+
+export const SHIFT_UP = () => ({
+  type: t.SHIFT_UP,
+})
+
+export const SLIDE_RIGHT = () => ({
+  type: t.SLIDE_RIGHT,
+})
+
+export const SLIDE_LEFT = () => ({
+  type: t.SLIDE_LEFT,
+})
+
 export const TOGGLE_LINK = ({ nodeId }) => ({
   type: t.TOGGLE_LINK,
   nodeId,

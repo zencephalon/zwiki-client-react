@@ -6,6 +6,10 @@ const types = {
   FOCUS: `${NAME}/FOCUS`,
   CYCLE_UP: `${NAME}/CYCLE_UP`,
   CYCLE_DOWN: `${NAME}/CYCLE_DOWN`,
+  SHIFT_UP: `${NAME}/SHIFT_UP`,
+  SHIFT_DOWN: `${NAME}/SHIFT_DOWN`,
+  SLIDE_RIGHT: `${NAME}/SLIDE_RIGHT`,
+  SLIDE_LEFT: `${NAME}/SLIDE_LEFT`,
 }
 
 export default types
