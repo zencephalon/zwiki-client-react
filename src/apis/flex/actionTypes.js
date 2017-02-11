@@ -1,7 +1,7 @@
 import { NAME } from './constants'
 
 const types = {
-  SET_FOCUS: `${NAME}/SET_FOCUS`,
+  TOGGLE_LINK: `${NAME}/TOGGLE_LINK`,
 }
 
 export default types

@@ -20,20 +20,24 @@ class NodeContainer extends Component {
   }
 
   render() {
-    const { columns, visible_columns, focused_column } = this.props
+    const { columns, visibleColumns, focusedColumn } = this.props
     return (
       <div className="flex-writer">
         {columns.map((column, columnId) => (
           <div
             className={classNames('flex-column', {
-              hidden: !visible_columns.includes(columnId),
-              focused: focused_column === columnId,
+              hidden: !visibleColumns.includes(columnId),
+              focused: focusedColumn === columnId,
             })}
             key={columnId}
           >
-            {column.map(nodeId => (
+            {column.mapStateToProps(nodeId => (
               <div className="column-item">
-                <NodeEdit key={`${columnId}-${nodeId}`} params={{ id: nodeId }} />
+                <NodeEdit
+                  key={`${columnId}-${nodeId}`}
+                  id={nodeId}
+                  editorId={`${columnId}-${nodeId}`}
+                />
               </div>
             ))
             }
@@ -47,22 +51,22 @@ class NodeContainer extends Component {
 NodeContainer.propTypes = {
   id: PropTypes.string.isRequired, // param
   columns: PropTypes.array,
-  visible_columns: PropTypes.array,
-  focused_column: PropTypes.number,
+  visibleColumns: PropTypes.array,
+  focusedColumn: PropTypes.number,
   actions: PropTypes.objectOf(PropTypes.func).isRequired,
 }
 
 function mapStateToProps(state) {
   const {
     columns,
-    visible_columns,
-    focused_column,
+    visibleColumns,
+    focusedColumn,
   } = state.flex
 
   return {
     columns,
-    visible_columns,
-    focused_column,
+    visibleColumns,
+    focusedColumn,
   }
 }
 

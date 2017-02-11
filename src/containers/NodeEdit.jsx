@@ -8,9 +8,9 @@ import ShowConfirmed from '~/components/ShowConfirmed'
 import ZEditor from '~/components/ZEditor'
 
 const NodeEdit = props => (
-  <NodeContainer id={props.params.id}>
+  <NodeContainer id={props.id}>
     <ShowConfirmed>
-      <ZEditor editorId={ROOT} />
+      <ZEditor editorId={props.editorId || ROOT} />
     </ShowConfirmed>
   </NodeContainer>
 )

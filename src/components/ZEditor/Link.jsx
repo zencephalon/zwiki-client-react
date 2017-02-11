@@ -1,8 +1,10 @@
 import React, { Component, PropTypes } from 'react'
+import { connect } from 'react-redux'
 
 import { LINK_REGEX } from '~/constants'
+import { TOGGLE_LINK } from '~/apis/flex/actions'
 
-export default class Link extends Component {
+class Link extends Component {
   componentWillUnmount() {
     if (this.portalEntityKey) {
       this.props.removeEntity(this.portalEntityKey)
@@ -10,15 +12,9 @@ export default class Link extends Component {
   }
 
   onClick = () => {
-    const { insertPortal, moveToEnd, decoratedText, removeEntity } = this.props
-    if (this.portalEntityKey) {
-      removeEntity(this.portalEntityKey)
-      this.portalEntityKey = null
-    } else {
-      moveToEnd(decoratedText).then(() => {
-        this.portalEntityKey = insertPortal(LINK_REGEX.exec(decoratedText)[2])
-      })
-    }
+    const { dispatch, decoratedText } = this.props
+    const nodeId = LINK_REGEX.exec(decoratedText)[2]
+    dispatch(TOGGLE_LINK({ nodeId }))
   }
 
   render() {
@@ -34,8 +30,11 @@ export default class Link extends Component {
 }
 
 Link.propTypes = {
+  dispatch: PropTypes.func.isRequired,
   insertPortal: PropTypes.func.isRequired,
   removeEntity: PropTypes.func.isRequired,
   moveToEnd: PropTypes.func.isRequired,
   decoratedText: PropTypes.string.isRequired,
 }
+
+export default connect()(Link)
