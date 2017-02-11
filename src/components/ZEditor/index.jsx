@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import {
   EditorState,
   ContentState,
-  getDefaultKeyBinding,
 } from 'draft-js'
 import Editor from 'draft-js-plugins-editor'
 
@@ -34,6 +33,7 @@ import { findWithRegex } from './helpers'
 
 import Link from './Link'
 import mentions from './mentions'
+import keyBindings from './keyBindings'
 
 const mentionPlugin = createMentionPlugin({ theme: {
   mention: 'mention',
@@ -44,33 +44,7 @@ const mentionPlugin = createMentionPlugin({ theme: {
 } })
 const { MentionSuggestions } = mentionPlugin
 
-// const linkifyPlugin = createLinkifyPlugin()
 const plugins = [mentionPlugin]
-
-function keyBindings(e) {
-  if (e.key === ' ' && e.ctrlKey) {
-    return 'SWITCH_FOCUS'
-  }
-  if (e.key === 'j' && e.ctrlKey && !e.shiftKey) {
-    return 'CYCLE_DOWN'
-  }
-  if (e.key === 'k' && e.ctrlKey && !e.shiftKey) {
-    return 'CYCLE_UP'
-  }
-  if (e.key === 'j' && e.ctrlKey && e.shiftKey) {
-    return 'SHIFT_DOWN'
-  }
-  if (e.key === 'k' && e.ctrlKey && e.shiftKey) {
-    return 'SHIFT_UP'
-  }
-  if (e.key === 'l' && e.ctrlKey) {
-    return 'SLIDE_RIGHT'
-  }
-  if (e.key === 'h' && e.ctrlKey) {
-    return 'SLIDE_LEFT'
-  }
-  return getDefaultKeyBinding(e)
-}
 
 function linkStrategy(contentBlock, callback) {
   findWithRegex(LINK_REGEX, contentBlock, callback)
