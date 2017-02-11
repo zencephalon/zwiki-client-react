@@ -1,26 +1,23 @@
 import React, { Component, PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import * as NodeActions from '~/apis/nodes/actions'
-import nodeShape from '~/apis/nodes/shape'
+import * as FlexActions from '~/apis/flex/actions'
 import NodeEdit from './NodeEdit'
 import classNames from 'classnames'
 
-class NodeContainer extends Component {
-  componentWillMount() {
-    const { actions: { GET }, id } = this.props
-    GET(id)
-  }
+import { EDITOR } from '~/constants'
 
-  componentWillReceiveProps(nextProps) {
-    const { actions: { GET }, id } = this.props
-    if (nextProps.id !== id) {
-      GET(nextProps.id)
-    }
-  }
-
+class Flex extends Component {
   render() {
-    const { columns, visibleColumns, focusedColumn } = this.props
+    const {
+      columns,
+      visibleColumns,
+      focusedColumn,
+      focusedRow,
+      actions: {
+        FOCUS,
+      },
+    } = this.props
     return (
       <div className="flex-writer">
         {columns.map((column, columnId) => (
@@ -31,12 +28,16 @@ class NodeContainer extends Component {
             })}
             key={columnId}
           >
-            {column.map(nodeId => (
-              <div className="column-item">
+            {column.map((nodeId, rowId) => (
+              <div
+                className="column-item"
+                key={`${columnId}-${nodeId}`}
+                onClick={() => FOCUS({ rowId, columnId, type: EDITOR })}
+              >
                 <NodeEdit
-                  key={`${columnId}-${nodeId}`}
                   id={nodeId}
                   editorId={`${columnId}-${nodeId}`}
+                  focused={focusedColumn === columnId && rowId === focusedRow}
                 />
               </div>
             ))
@@ -48,11 +49,12 @@ class NodeContainer extends Component {
   }
 }
 
-NodeContainer.propTypes = {
+Flex.propTypes = {
   id: PropTypes.string.isRequired, // param
   columns: PropTypes.array,
   visibleColumns: PropTypes.array,
   focusedColumn: PropTypes.number,
+  focusedRow: PropTypes.number,
   actions: PropTypes.objectOf(PropTypes.func).isRequired,
 }
 
@@ -61,22 +63,24 @@ function mapStateToProps(state) {
     columns,
     visibleColumns,
     focusedColumn,
+    focusedRow,
   } = state.flex
 
   return {
     columns,
     visibleColumns,
     focusedColumn,
+    focusedRow,
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(NodeActions, dispatch),
+    actions: bindActionCreators(FlexActions, dispatch),
   }
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(NodeContainer)
+)(Flex)

@@ -63,13 +63,13 @@ class ZEditor extends Component {
   }
 
   componentDidMount() {
-    if (this.editable()) {
+    if (this.props.focused) {
       setTimeout(this.focus, 10)
     }
   }
 
   componentDidUpdate(lastProps) {
-    if (this.editable() && lastProps.focus.kind !== EDITOR) {
+    if (this.props.focused && lastProps.focusType !== EDITOR) {
       this.focus()
     }
   }
@@ -108,12 +108,6 @@ class ZEditor extends Component {
     // get the mention object selected
   }
 
-  editable = () => {
-    const { focus } = this.props
-    const { editorId } = this.state
-    return focus.kind === EDITOR && focus.id === editorId
-  }
-
   moveToEnd = (text) => {
     const { editorState } = this.state
 
@@ -150,9 +144,9 @@ class ZEditor extends Component {
   }
 
   hoverFocus = (e) => {
-    const { dispatch, focus } = this.props
+    const { dispatch, focusType } = this.props
     const { editorId } = this.state
-    if (focus.kind !== EDITOR || focus.id !== editorId) {
+    if (focusType !== EDITOR || focus.id !== editorId) {
       dispatch(SET_FOCUS(EDITOR, editorId))
     }
     e.stopPropagation()
@@ -169,13 +163,12 @@ class ZEditor extends Component {
 
   render() {
     const { timer } = this.state
+    const { focused } = this.props
     return (
       <div
-        className={classNames('editor', { saved: !timer })}
-        onMouseOver={this.hoverFocus}
+        className={classNames('editor', { saved: !timer, focused })}
       >
         <Editor
-          readOnly={!this.editable()}
           editorState={this.state.editorState}
           onChange={this.onChange}
           plugins={plugins}
@@ -206,7 +199,7 @@ class ZEditor extends Component {
 
 function mapStateToProps(state) {
   return {
-    focus: state.focus,
+    focusType: state.flex.focusType,
   }
 }
 
@@ -214,6 +207,8 @@ ZEditor.propTypes = {
   node: nodeShape,
   dispatch: PropTypes.func.isRequired,
   editorId: PropTypes.string,
+  focused: PropTypes.bool.isRequired,
+  focusType: PropTypes.string.isRequired,
 }
 
 export default connect(mapStateToProps)(ZEditor)

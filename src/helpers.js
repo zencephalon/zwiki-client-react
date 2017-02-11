@@ -5,3 +5,7 @@ export function setStatePromise(that, newState) {
     })
   })
 }
+
+export function defVal(value, def) {
+  return value === undefined ? def : value
+}

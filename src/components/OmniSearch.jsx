@@ -21,7 +21,7 @@ class OmniSearch extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.focus.kind === OMNI_SEARCH) {
+    if (nextProps.focusType === OMNI_SEARCH) {
       this.input.focus()
     }
   }
@@ -132,7 +132,7 @@ function mapStateToProps(state) {
     q,
     confirmed,
     suggestions,
-    focus: state.focus,
+    focusType: state.flex.kind,
   }
 }
 
@@ -141,7 +141,7 @@ OmniSearch.propTypes = {
   dispatch: PropTypes.func.isRequired,
   confirmed: PropTypes.bool.isRequired,
   suggestions: PropTypes.arrayOf(nodeShape),
-  focus: PropTypes.object,
+  focusType: PropTypes.string,
 }
 
 export default connect(mapStateToProps)(OmniSearch)
