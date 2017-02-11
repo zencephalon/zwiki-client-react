@@ -3,12 +3,17 @@ import t from './actionTypes'
 
 const httpReducer = http.reducerFactory(t)
 
-function queryReducer(state = { q: '' }, action) {
+function queryReducer(state = { omniQ: '', linkQ: '' }, action) {
   switch (action.type) {
-    case t.SET_QUERY:
+    case t.OMNI_QUERY:
       return {
         ...state,
-        q: action.q,
+        omniQ: action.q,
+      }
+    case t.LINK_QUERY:
+      return {
+        ...state,
+        linkQ: action.q,
       }
     default:
       return state

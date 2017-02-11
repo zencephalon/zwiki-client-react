@@ -14,7 +14,12 @@ export const {
   INDEX,
 } = acts
 
-export const SET_QUERY = q => ({
-  type: t.SET_QUERY,
+export const OMNI_QUERY = q => ({
+  type: t.OMNI_QUERY,
+  q,
+})
+
+export const LINK_QUERY = q => ({
+  type: t.LINK_QUERY,
   q,
 })

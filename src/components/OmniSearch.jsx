@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
 
-import { INDEX, SET_QUERY, POST } from '~/apis/nodes/actions'
+import { INDEX, OMNI_QUERY, POST } from '~/apis/nodes/actions'
 import nodeShape from '~/apis/nodes/shape'
 import { NodeEditPath } from '~/routes'
 
@@ -32,7 +32,7 @@ class OmniSearch extends Component {
 
     const q = e.target.value
 
-    dispatch(SET_QUERY(q))
+    dispatch(OMNI_QUERY(q))
     clearTimeout(timer)
 
     this.setState({
@@ -72,7 +72,7 @@ class OmniSearch extends Component {
         dispatch(OPEN_NODE({ nodeId: suggestions[selected].id }))
       }
       this.input.blur()
-      dispatch(SET_QUERY(''))
+      dispatch(OMNI_QUERY(''))
       dispatch(FOCUS({ type: EDITOR }))
       this.setState({
         selected: 0,
@@ -118,7 +118,7 @@ class OmniSearch extends Component {
 }
 
 function mapStateToProps(state) {
-  const { q } = state.nodes.query
+  const { omniQ: q } = state.nodes.query
 
   const {
     data: suggestions,
