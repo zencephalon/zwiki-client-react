@@ -1,10 +1,8 @@
 import decorateComponentWithProps from 'decorate-component-with-props'
 import { Map } from 'immutable'
-import Mention from './Mention'
 import MentionSuggestions from './MentionSuggestions'
 import MentionSuggestionsPortal from './MentionSuggestionsPortal'
 import defaultRegExp from './defaultRegExp'
-import mentionStrategy from './mentionStrategy'
 import mentionSuggestionsStrategy from './mentionSuggestionsStrategy'
 import mentionStyles from './mentionStyles.css'
 import mentionSuggestionsStyles from './mentionSuggestionsStyles.css'
@@ -103,10 +101,6 @@ export default (config = {}) => {
   return {
     MentionSuggestions: decorateComponentWithProps(MentionSuggestions, mentionSearchProps),
     decorators: [
-      {
-        strategy: mentionStrategy(mentionTrigger),
-        component: decorateComponentWithProps(Mention, { theme, mentionComponent }),
-      },
       {
         strategy: mentionSuggestionsStrategy(mentionTrigger, mentionRegExp),
         component: decorateComponentWithProps(MentionSuggestionsPortal, { store }),
