@@ -17,6 +17,7 @@ export default function focus(state = startState, action) {
     visibleColumnIds,
   } = state
   const nextColumnId = focusedColumnId + 1
+  const leftColumnId = focusedColumnId - 1
   const nextColumn = columns[nextColumnId]
   const focusedColumn = columns[focusedColumnId]
   switch (action.type) {
@@ -37,6 +38,23 @@ export default function focus(state = startState, action) {
         ],
       }
     case t.SLIDE_LEFT:
+      if (focusedColumnId === 0) {
+        return state
+      }
+      if (visibleColumnIds.includes(leftColumnId)) {
+        return {
+          ...state,
+          focusedColumnId: leftColumnId,
+        }
+      }
+      return {
+        ...state,
+        focusedColumnId: leftColumnId,
+        visibleColumnIds: [
+          leftColumnId,
+          ...visibleColumnIds.slice(0, visibleColumnIds.length - 1),
+        ]
+      }
     case t.CYCLE_DOWN:
       return {
         ...state,
