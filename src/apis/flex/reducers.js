@@ -15,7 +15,9 @@ export default function focus(state = startState, action) {
     focusedColumnId,
     columns,
   } = state
-  const nextColumn = focusedColumnId + 1
+  const nextColumnId = focusedColumnId + 1
+  const nextColumn = columns[nextColumnId]
+  const focusedColumn = columns[focusedColumnId]
   switch (action.type) {
     case t.FOCUS:
       return {
@@ -25,9 +27,19 @@ export default function focus(state = startState, action) {
         focusType: defVal(action.focusType, state.focusType),
       }
     case t.OPEN_NODE:
-
+      return {
+        ...state,
+        columns: [
+          ...columns.slice(0, focusedColumnId),
+          [
+            action.nodeId,
+            ...focusedColumn.filter(id => id !== action.nodeId),
+          ],
+          ...columns.slice(nextColumnId, columns.length),
+        ],
+      }
     case t.TOGGLE_LINK:
-      if (!columns[nextColumn]) {
+      if (!nextColumn) {
         return {
           ...state,
           columns: [
@@ -36,22 +48,22 @@ export default function focus(state = startState, action) {
           ],
         }
       }
-      if (!columns[nextColumn].includes(action.nodeId)) {
+      if (!nextColumn.includes(action.nodeId)) {
         return {
           ...state,
           columns: [
-            ...columns.slice(0, nextColumn),
-            [...columns[nextColumn], action.nodeId],
-            ...columns.slice(nextColumn, columns.length),
+            ...columns.slice(0, nextColumnId),
+            [action.nodeId, ...nextColumn],
+            ...columns.slice(nextColumnId, columns.length),
           ],
         }
       }
       return {
         ...state,
         columns: [
-          ...columns.slice(0, nextColumn),
-          columns[nextColumn].filter(id => id !== action.nodeId),
-          ...columns.slice(nextColumn, columns.length),
+          ...columns.slice(0, nextColumnId),
+          nextColumn.filter(id => id !== action.nodeId),
+          ...columns.slice(nextColumnId, columns.length),
         ],
       }
     default:

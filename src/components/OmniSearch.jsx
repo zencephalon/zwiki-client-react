@@ -6,7 +6,7 @@ import { INDEX, SET_QUERY, POST } from '~/apis/nodes/actions'
 import nodeShape from '~/apis/nodes/shape'
 import { NodeEditPath } from '~/routes'
 
-import { FOCUS } from '~/apis/flex/actions'
+import { FOCUS, OPEN_NODE } from '~/apis/flex/actions'
 import { OMNI_SEARCH, EDITOR } from '~/constants'
 
 import classNames from 'classnames'
@@ -66,10 +66,11 @@ class OmniSearch extends Component {
       if (e.ctrlKey) {
         dispatch(POST('new-omni', { content: `# ${q}\n\n`, name: q })).then((ret) => {
           const { data: new_node } = ret
-          browserHistory.push(NodeEditPath(new_node.id))
+          dispatch(OPEN_NODE({ nodeId: new_node.id }))
         })
       } else {
         browserHistory.push(NodeEditPath(suggestions[selected].id))
+        dispatch(OPEN_NODE({ nodeId: suggestions[selected].id }))
       }
       this.input.blur()
       dispatch(SET_QUERY(''))
