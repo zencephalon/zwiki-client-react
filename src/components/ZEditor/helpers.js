@@ -1,7 +1,7 @@
 import {
   EditorState,
   SelectionState,
-  Entity,
+  Modifier,
   CharacterMetadata,
   ContentBlock,
   BlockMapBuilder,
@@ -122,4 +122,13 @@ export const getEntitySelectionState = (contentState, entityKey) => {
     }
   })
   return entitySelection
+}
+
+removeEntity = (editorState, entityKey) => {
+  const content = editorState.getCurrentContent()
+  const entitySelection = getEntitySelectionState(content, entityKey)
+  return EditorState.push(
+      editorState,
+      Modifier.removeRange(content, entitySelection, 'forward'),
+      'remove-range')
 }

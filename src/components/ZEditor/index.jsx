@@ -5,7 +5,6 @@ import {
   EditorState,
   ContentState,
   getDefaultKeyBinding,
-  Modifier,
 } from 'draft-js'
 import Editor from 'draft-js-plugins-editor'
 
@@ -20,7 +19,7 @@ import { FOCUS } from '~/apis/flex/actions'
 import { OMNI_SEARCH, EDITOR, LINK_REGEX } from '~/constants'
 import { setStatePromise } from '~/helpers'
 import createMentionPlugin, { defaultSuggestionsFilter } from '~/Autocomplete' // eslint-disable-line import/no-unresolved
-import { findWithRegex, moveToEnd, getEntitySelectionState } from './helpers'
+import { findWithRegex, moveToEnd } from './helpers'
 
 import Link from './Link'
 import mentions from './mentions'
@@ -117,20 +116,6 @@ class ZEditor extends Component {
     })
   }
 
-  removeEntity = (entityKey) => {
-    const {
-      editorState,
-    } = this.state
-    const content = editorState.getCurrentContent()
-    const entitySelection = getEntitySelectionState(content, entityKey)
-    console.log(entitySelection.serialize())
-    this.setState({
-      editorState: EditorState.push(
-        editorState,
-        Modifier.removeRange(content, entitySelection, 'forward'),
-        'remove-range'),
-    })
-  }
 
   parseNode = plainText => (
     {
@@ -174,7 +159,6 @@ class ZEditor extends Component {
               <Link
                 {...props}
                 moveToEnd={this.moveToEnd}
-                removeEntity={this.removeEntity}
               />
             ),
           }]}
