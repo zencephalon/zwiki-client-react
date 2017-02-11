@@ -82,12 +82,12 @@ export default (config = {}) => {
   // errors when upgrading as basically every styling change would become a major
   // breaking change. 1px of an increased padding can break a whole layout.
   const {
-    mentionPrefix = '[',
     theme = defaultTheme,
     positionSuggestions = defaultPositionSuggestions,
     mentionComponent,
     entityMutability = 'SEGMENTED',
     mentionTrigger = '[',
+    replaceTemplate = ({ name, id }) => `[${name}](${id})`,
     mentionRegExp = defaultRegExp,
   } = config
   const mentionSearchProps = {
@@ -98,7 +98,7 @@ export default (config = {}) => {
     entityMutability,
     positionSuggestions,
     mentionTrigger,
-    mentionPrefix,
+    replaceTemplate,
   }
   return {
     MentionSuggestions: decorateComponentWithProps(MentionSuggestions, mentionSearchProps),

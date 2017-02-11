@@ -2,7 +2,7 @@ import { Modifier, EditorState, Entity } from 'draft-js'
 import getSearchText from '../utils/getSearchText'
 import getTypeByTrigger from '../utils/getTypeByTrigger'
 
-const addMention = (editorState, mention, mentionPrefix, mentionTrigger, entityMutability) => {
+const addMention = (editorState, mention, replaceTemplate, mentionTrigger, entityMutability) => {
   const currentSelectionState = editorState.getSelection()
   const { begin, end } = getSearchText(editorState, currentSelectionState)
 
@@ -15,7 +15,7 @@ const addMention = (editorState, mention, mentionPrefix, mentionTrigger, entityM
   let mentionReplacedContent = Modifier.replaceText(
     editorState.getCurrentContent(),
     mentionTextSelection,
-    `${mentionPrefix}${mention.get('name')}](${mention.get('id')})`,
+    replaceTemplate({ name: mention.get('name'), id: mention.get('id') }),
   )
 
   // If the mention is inserted at the end, a space is appended right after for

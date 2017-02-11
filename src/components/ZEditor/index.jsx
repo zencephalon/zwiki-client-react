@@ -37,16 +37,32 @@ import Link from './Link'
 import mentions from './mentions'
 import keyBindings from './keyBindings'
 
-const mentionPlugin = createMentionPlugin({ theme: {
-  mention: 'mention',
-  mentionSuggestions: 'mentionSuggestions',
-  mentionSuggestionsEntry: 'mentionSuggestionsEntry',
-  mentionSuggestionsEntryFocused: 'mentionSuggestionsEntryFocused',
-  mentionSuggestionsEntryText: 'mentionSuggestionsEntryText',
-} })
+const mentionPlugin = createMentionPlugin({
+  theme: {
+    mention: 'mention',
+    mentionSuggestions: 'mentionSuggestions',
+    mentionSuggestionsEntry: 'mentionSuggestionsEntry',
+    mentionSuggestionsEntryFocused: 'mentionSuggestionsEntryFocused',
+    mentionSuggestionsEntryText: 'mentionSuggestionsEntryText',
+  },
+  mentionTrigger: '[',
+  replaceTemplate: ({ name, id }) => `[${name}](${id})`,
+})
+const mentionPluginTwo = createMentionPlugin({
+  theme: {
+    mention: 'mention',
+    mentionSuggestions: 'mentionSuggestions',
+    mentionSuggestionsEntry: 'mentionSuggestionsEntry',
+    mentionSuggestionsEntryFocused: 'mentionSuggestionsEntryFocused',
+    mentionSuggestionsEntryText: 'mentionSuggestionsEntryText',
+  },
+  mentionTrigger: '](',
+  replaceTemplate: ({ name, id }) => `](${id})`,
+})
 const { MentionSuggestions } = mentionPlugin
+const { MentionSuggestions: MentionSuggestionsTwo } = mentionPluginTwo
 
-const plugins = [mentionPlugin]
+const plugins = [mentionPlugin, mentionPluginTwo]
 
 function linkStrategy(contentBlock, callback) {
   findWithRegex(LINK_REGEX, contentBlock, callback)
@@ -101,17 +117,17 @@ class ZEditor extends Component {
 
   onSearchChange = ({ value }) => {
     const { dispatch } = this.props
-    const { linkTimer: timer } = this.state
+    const { linkTimer } = this.state
 
     const q = value
 
     dispatch(LINK_QUERY(q))
-    clearTimeout(timer)
+    clearTimeout(linkTimer)
 
     this.setState({
-      timer: setTimeout(() => {
+      linkTimer: setTimeout(() => {
         dispatch(INDEX(q)).then(() => {
-          this.setState({ timer: null, selected: 0 })
+          this.setState({ linkTimer: null, selected: 0 })
         })
       }, 150),
     })
@@ -190,6 +206,11 @@ class ZEditor extends Component {
           suggestions={this.props.suggestions}
           onAddMention={this.onAddMention}
         />
+        <MentionSuggestionsTwo
+          onSearchChange={this.onSearchChange}
+          suggestions={this.props.suggestions}
+          onAddMention={this.onAddMention}
+        />
       </div>
     )
   }
@@ -207,7 +228,7 @@ function mapStateToProps(state) {
   }
 
   return {
-    suggestions: fromJS(confirmed ? suggestions : [{ name: 'Loading...' }]),
+    suggestions: fromJS(confirmed ? suggestions : [{ name: '…' }]),
     confirmed,
     q,
     focusType: state.flex.focusType,

@@ -41,7 +41,7 @@ const Flex = (props) => {
             </div>
           ))
           }
-          <div>ILUVU</div>
+          <div className="column-item column-filler">❧</div>
         </div>
       ))}
     </div>

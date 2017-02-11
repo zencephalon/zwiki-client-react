@@ -34,7 +34,7 @@ class NodeContainer extends Component {
 }
 
 NodeContainer.propTypes = {
-  id: PropTypes.string.isRequired, // param
+  id: PropTypes.number.isRequired, // param
   confirmed: PropTypes.bool.isRequired,
   requested: PropTypes.bool.isRequired,
   failed: PropTypes.bool.isRequired,
