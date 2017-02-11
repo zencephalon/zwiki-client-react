@@ -7,70 +7,67 @@ import classNames from 'classnames'
 
 import { EDITOR } from '~/constants'
 
-class Flex extends Component {
-  render() {
-    const {
-      columns,
-      visibleColumns,
-      focusedColumn,
-      focusedRow,
-      actions: {
-        FOCUS,
-      },
-    } = this.props
-    return (
-      <div className="flex-writer">
-        {columns.map((column, columnId) => (
-          <div
-            className={classNames('flex-column', {
-              hidden: !visibleColumns.includes(columnId),
-              focused: focusedColumn === columnId,
-            })}
-            key={columnId}
-          >
-            {column.map((nodeId, rowId) => (
-              <div
-                className="column-item"
-                key={`${columnId}-${nodeId}`}
-                onClick={() => FOCUS({ rowId, columnId, type: EDITOR })}
-              >
-                <NodeEdit
-                  id={nodeId}
-                  editorId={`${columnId}-${nodeId}`}
-                  focused={focusedColumn === columnId && rowId === focusedRow}
-                />
-              </div>
-            ))
-            }
-          </div>
-        ))}
-      </div>
-    )
-  }
+const Flex = (props) => {
+  const {
+    columns,
+    visibleColumnIds,
+    focusedColumnId,
+    focusedRowId,
+    actions: {
+      FOCUS,
+    },
+  } = props
+  return (
+    <div className="flex-writer">
+      {columns.map((column, columnId) => (
+        <div
+          className={classNames('flex-column', {
+            hidden: !visibleColumnIds.includes(columnId),
+            focused: focusedColumnId === columnId,
+          })}
+          key={columnId}
+        >
+          {column.map((nodeId, rowId) => (
+            <div
+              className="column-item"
+              key={`${columnId}-${nodeId}`}
+              onClick={() => FOCUS({ rowId, columnId, type: EDITOR })}
+            >
+              <NodeEdit
+                id={nodeId}
+                editorId={`${columnId}-${nodeId}`}
+                focused={focusedColumnId === columnId && rowId === focusedRowId}
+              />
+            </div>
+          ))
+          }
+        </div>
+      ))}
+    </div>
+  )
 }
 
 Flex.propTypes = {
-  id: PropTypes.string.isRequired, // param
   columns: PropTypes.array,
-  visibleColumns: PropTypes.array,
-  focusedColumn: PropTypes.number,
-  focusedRow: PropTypes.number,
+  visibleColumnIds: PropTypes.array,
+  focusedColumnId: PropTypes.number,
+  focusedRowId: PropTypes.number,
   actions: PropTypes.objectOf(PropTypes.func).isRequired,
 }
 
 function mapStateToProps(state) {
   const {
     columns,
-    visibleColumns,
-    focusedColumn,
-    focusedRow,
+    visibleColumnIds,
+    focusedColumnId,
+    focusedRowId,
   } = state.flex
 
   return {
     columns,
-    visibleColumns,
-    focusedColumn,
-    focusedRow,
+    visibleColumnIds,
+    focusedColumnId,
+    focusedRowId,
   }
 }
 

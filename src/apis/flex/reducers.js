@@ -1,29 +1,31 @@
-import t from './actionTypes'
-import { OMNI_SEARCH, EDITOR, ROOT } from '~/constants'
+import { EDITOR } from '~/constants'
 import { defVal } from '~/helpers'
+import t from './actionTypes'
 
 const startState = {
   columns: [[1], []],
-  visibleColumns: [0, 1],
-  focusedColumn: 0,
-  focusedRow: 0,
+  visibleColumnIds: [0, 1],
+  focusedColumnId: 0,
+  focusedRowId: 0,
   focusType: EDITOR,
 }
 
 export default function focus(state = startState, action) {
   const {
-    focusedColumn,
+    focusedColumnId,
     columns,
   } = state
-  const nextColumn = focusedColumn + 1
+  const nextColumn = focusedColumnId + 1
   switch (action.type) {
     case t.FOCUS:
       return {
         ...state,
-        focusedRow: defVal(action.rowId, state.focusedRow),
-        focusedColumn: defVal(action.columnId, state.focusedColumn),
+        focusedColumnId: defVal(action.columnId, state.focusedColumnId),
+        focusedRowId: defVal(action.rowId, state.focusedRowId),
         focusType: defVal(action.focusType, state.focusType),
       }
+    case t.OPEN_NODE:
+
     case t.TOGGLE_LINK:
       if (!columns[nextColumn]) {
         return {
