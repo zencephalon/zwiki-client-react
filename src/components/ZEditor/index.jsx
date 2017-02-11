@@ -14,12 +14,12 @@ import classNames from 'classnames'
 import { PUT } from '~/apis/nodes/actions'
 import nodeShape from '~/apis/nodes/shape'
 
-import { FOCUS } from '~/apis/flex/actions'
+import { FOCUS, CYCLE_DOWN, CYCLE_UP } from '~/apis/flex/actions'
 
 import { OMNI_SEARCH, EDITOR, LINK_REGEX } from '~/constants'
 import { setStatePromise } from '~/helpers'
 import createMentionPlugin, { defaultSuggestionsFilter } from '~/Autocomplete' // eslint-disable-line import/no-unresolved
-import { findWithRegex, moveToEnd } from './helpers'
+import { findWithRegex } from './helpers'
 
 import Link from './Link'
 import mentions from './mentions'
@@ -40,9 +40,19 @@ const { MentionSuggestions } = mentionPlugin
 // const linkifyPlugin = createLinkifyPlugin()
 const plugins = [mentionPlugin]
 
+const SWITCH_FOCUS = 'SWITCH_FOCUS'
+const CYCLE_DOWN_CMD = 'CYCLE_DOWN'
+const CYCLE_UP_CMD = 'CYCLE_UP'
+
 function keyBindings(e) {
   if (e.key === ' ' && e.ctrlKey) {
-    return 'switch-focus'
+    return SWITCH_FOCUS
+  }
+  if (e.key === 'j' && e.ctrlKey) {
+    return CYCLE_DOWN_CMD
+  }
+  if (e.key === 'k' && e.ctrlKey) {
+    return CYCLE_UP_CMD
   }
   return getDefaultKeyBinding(e)
 }
@@ -108,15 +118,6 @@ class ZEditor extends Component {
     // get the mention object selected
   }
 
-  moveToEnd = (text) => {
-    const { editorState } = this.state
-
-    return setStatePromise(this, {
-      editorState: moveToEnd(editorState, text),
-    })
-  }
-
-
   parseNode = plainText => (
     {
       content: plainText.replace(/\n\u200B/, ''),
@@ -130,10 +131,14 @@ class ZEditor extends Component {
   }
 
   handleKeyCommand = (command) => {
-    if (command === 'switch-focus') {
-      this.props.dispatch(FOCUS({ type: OMNI_SEARCH }))
+    const { dispatch } = this.props
+    if (command === SWITCH_FOCUS) {
+      dispatch(FOCUS({ type: OMNI_SEARCH }))
       this.editor.blur()
       return 'handled'
+    }
+    if (command === CYCLE_DOWN_CMD) {
+      dispatch(CYCLE_DOWN())
     }
     return 'not-handled'
   }
@@ -158,7 +163,6 @@ class ZEditor extends Component {
             component: props => (
               <Link
                 {...props}
-                moveToEnd={this.moveToEnd}
               />
             ),
           }]}

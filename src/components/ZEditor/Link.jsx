@@ -31,7 +31,6 @@ class Link extends Component {
 
 Link.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  removeEntity: PropTypes.func.isRequired,
   decoratedText: PropTypes.string.isRequired,
 }
 

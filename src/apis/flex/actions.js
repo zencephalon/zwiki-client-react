@@ -1,5 +1,13 @@
 import t from './actionTypes'
 
+export const CYCLE_DOWN = () => ({
+  type: t.CYCLE_DOWN,
+})
+
+export const CYCLE_UP = () => ({
+  type: t.CYCLE_UP,
+})
+
 export const TOGGLE_LINK = ({ nodeId }) => ({
   type: t.TOGGLE_LINK,
   nodeId,

@@ -124,7 +124,7 @@ export const getEntitySelectionState = (contentState, entityKey) => {
   return entitySelection
 }
 
-removeEntity = (editorState, entityKey) => {
+export const removeEntity = (editorState, entityKey) => {
   const content = editorState.getCurrentContent()
   const entitySelection = getEntitySelectionState(content, entityKey)
   return EditorState.push(

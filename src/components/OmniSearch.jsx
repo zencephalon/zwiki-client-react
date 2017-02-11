@@ -69,7 +69,6 @@ class OmniSearch extends Component {
           dispatch(OPEN_NODE({ nodeId: new_node.id }))
         })
       } else {
-        browserHistory.push(NodeEditPath(suggestions[selected].id))
         dispatch(OPEN_NODE({ nodeId: suggestions[selected].id }))
       }
       this.input.blur()

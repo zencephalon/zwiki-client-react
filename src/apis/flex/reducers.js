@@ -19,6 +19,19 @@ export default function focus(state = startState, action) {
   const nextColumn = columns[nextColumnId]
   const focusedColumn = columns[focusedColumnId]
   switch (action.type) {
+    case t.CYCLE_DOWN:
+      return {
+        ...state,
+        columns: [
+          ...columns.slice(0, focusedColumnId),
+          [
+            focusedColumn[focusedColumn.length - 1],
+            ...focusedColumn.slice(0, focusedColumn.length - 1),
+          ],
+          ...columns.slice(nextColumnId, columns.length),
+        ],
+      }
+    case t.CYCLE_UP:
     case t.FOCUS:
       return {
         ...state,

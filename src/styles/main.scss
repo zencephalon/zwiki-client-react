@@ -95,7 +95,7 @@ figure {
 }
 
 .flex-column.focused {
-  // background-color: $lightest-blue;
+  border-left: 2px dashed $accent-blue;
 }
 
 .column-item {
