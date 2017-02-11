@@ -27,6 +27,15 @@ export default function focus(state = startState, action) {
           focusedColumnId: nextColumnId,
         }
       }
+      return {
+        ...state,
+        columns: nextColumn ? columns : [...columns, []],
+        focusedColumnId: nextColumnId,
+        visibleColumnIds: [
+          ...visibleColumnIds.slice(1, visibleColumnIds.length),
+          nextColumnId,
+        ],
+      }
     case t.SLIDE_LEFT:
     case t.CYCLE_DOWN:
       return {
