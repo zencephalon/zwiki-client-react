@@ -20,10 +20,9 @@ import { SET_FOCUS } from '~/apis/focus/actions'
 import { OMNI_SEARCH, EDITOR, LINK_REGEX } from '~/constants'
 import { setStatePromise } from '~/helpers'
 import createMentionPlugin, { defaultSuggestionsFilter } from '~/Autocomplete' // eslint-disable-line import/no-unresolved
-import { findWithRegex, moveToEnd, insertPortal, getEntitySelectionState } from './helpers'
+import { findWithRegex, moveToEnd, getEntitySelectionState } from './helpers'
 
 import Link from './Link'
-import Portal from './Portal'
 import mentions from './mentions'
 
 import '~/Autocomplete/mentionStyles.css'
@@ -123,15 +122,6 @@ class ZEditor extends Component {
     })
   }
 
-  insertPortal = (id) => {
-    const { editorState } = this.state
-    const { editorState: newEditorState, entityKey } = insertPortal(editorState, id)
-    this.setState({
-      editorState: newEditorState,
-    })
-    return entityKey
-  }
-
   removeEntity = (entityKey) => {
     const {
       editorState,
@@ -145,19 +135,6 @@ class ZEditor extends Component {
         Modifier.removeRange(content, entitySelection, 'forward'),
         'remove-range'),
     })
-  }
-
-  blockRenderer = (block) => {
-    if (block.getType() === 'atomic') {
-      return {
-        component: Portal,
-        editable: false,
-        props: {
-          parentSetReadOnly: this.setReadOnly,
-        },
-      }
-    }
-    return null
   }
 
   parseNode = plainText => (
@@ -211,13 +188,11 @@ class ZEditor extends Component {
             component: props => (
               <Link
                 {...props}
-                insertPortal={this.insertPortal}
                 moveToEnd={this.moveToEnd}
                 removeEntity={this.removeEntity}
               />
             ),
           }]}
-          blockRendererFn={this.blockRenderer}
         />
         <MentionSuggestions
           onSearchChange={this.onSearchChange}

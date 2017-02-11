@@ -71,19 +71,6 @@ export function findWithRegex(regex, contentBlock, callback) {
   }
 }
 
-export function insertPortal(editorState, id) {
-  const entityKey = Entity.create(
-    'PORTAL',
-    'MUTABLE',
-    { id },
-  )
-
-  return {
-    editorState: insertAtomicBlock(editorState, entityKey, '\u200B'),
-    entityKey,
-  }
-}
-
 export function moveToEnd(editorState, text) {
   const selection = editorState.getSelection()
   const key = selection.getStartKey()

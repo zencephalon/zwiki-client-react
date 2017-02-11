@@ -31,7 +31,7 @@ class NodeContainer extends Component {
             })}
             key={columnId}
           >
-            {column.mapStateToProps(nodeId => (
+            {column.map(nodeId => (
               <div className="column-item">
                 <NodeEdit
                   key={`${columnId}-${nodeId}`}
