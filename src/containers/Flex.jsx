@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import * as NodeActions from '~/apis/nodes/actions'
 import nodeShape from '~/apis/nodes/shape'
 import NodeEdit from './NodeEdit'
+import classNames from 'classnames'
 
 class NodeContainer extends Component {
   componentWillMount() {
@@ -19,12 +20,20 @@ class NodeContainer extends Component {
   }
 
   render() {
-    const { columns } = this.props
+    const { columns, visible_columns } = this.props
     return (
       <div className="flex-writer">
         {columns.map((column, index) => (
-          <div className="flex-column">
-            <NodeEdit key={index} params={{ id: 1 }} />
+          <div
+            className={classNames('flex-column', {
+              hidden: !visible_columns.includes(index),
+            })}
+            key={index}
+          >
+            {column.map(nodeId => (
+              <NodeEdit key={nodeId} params={{ id: nodeId }} />
+            ))
+            }
           </div>
         ))}
       </div>
@@ -34,10 +43,8 @@ class NodeContainer extends Component {
 
 NodeContainer.propTypes = {
   id: PropTypes.string.isRequired, // param
-  confirmed: PropTypes.bool.isRequired,
-  requested: PropTypes.bool.isRequired,
-  failed: PropTypes.bool.isRequired,
-  node: nodeShape,
+  columns: PropTypes.array,
+  visible_columns: PropTypes.array,
   actions: PropTypes.objectOf(PropTypes.func).isRequired,
 }
 
