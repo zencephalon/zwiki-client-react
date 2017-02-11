@@ -17,7 +17,6 @@ import nodeShape from '~/apis/nodes/shape'
 import { FOCUS, CYCLE_DOWN, CYCLE_UP } from '~/apis/flex/actions'
 
 import { OMNI_SEARCH, EDITOR, LINK_REGEX } from '~/constants'
-import { setStatePromise } from '~/helpers'
 import createMentionPlugin, { defaultSuggestionsFilter } from '~/Autocomplete' // eslint-disable-line import/no-unresolved
 import { findWithRegex } from './helpers'
 
@@ -139,6 +138,9 @@ class ZEditor extends Component {
     }
     if (command === CYCLE_DOWN_CMD) {
       dispatch(CYCLE_DOWN())
+    }
+    if (command === CYCLE_UP_CMD) {
+      dispatch(CYCLE_UP())
     }
     return 'not-handled'
   }

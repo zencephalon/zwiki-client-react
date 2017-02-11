@@ -32,6 +32,18 @@ export default function focus(state = startState, action) {
         ],
       }
     case t.CYCLE_UP:
+      return {
+        ...state,
+        columns: [
+          ...columns.slice(0, focusedColumnId),
+          [
+            ...focusedColumn.slice(1, focusedColumn.length),
+            focusedColumn[0],
+          ],
+          ...columns.slice(nextColumnId, columns.length),
+        ],
+      }
+    case t.CYCLE_UP:
     case t.FOCUS:
       return {
         ...state,
