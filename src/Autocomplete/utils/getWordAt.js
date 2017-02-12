@@ -13,7 +13,6 @@ const getWordAt = (string, position, mentionTrigger) => {
   const word = str.slice(left)
   const triggerLeft = word.search(new RegExp(`${escapeRegExp(mentionTrigger)}`))
 
-  console.log({ str, left, right, pos, triggerLeft })
   // The last word in the string is a special case.
   if (right < 0) {
     return {

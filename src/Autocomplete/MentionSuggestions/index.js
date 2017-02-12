@@ -171,9 +171,7 @@ export default class MentionSuggestions extends Component {
   onSearchChange = (editorState, selection, activeOffsetKey, lastActiveOffsetKey) => {
     const { mentionTrigger } = this.props
     const { word } = getSearchText(editorState, selection, mentionTrigger)
-    console.log('word changed', { word })
     const searchValue = word.substring(mentionTrigger.length, word.length)
-    console.log('search value', { searchValue })
     if (this.lastSearchValue !== searchValue || activeOffsetKey !== lastActiveOffsetKey) {
       this.lastSearchValue = searchValue
       this.props.onSearchChange({ value: searchValue })
