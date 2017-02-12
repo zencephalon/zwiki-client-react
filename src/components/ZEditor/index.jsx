@@ -34,41 +34,39 @@ import createMentionPlugin, { defaultSuggestionsFilter } from '~/Autocomplete' /
 import { findWithRegex } from './helpers'
 
 import Link from './Link'
-import mentions from './mentions'
 import keyBindings from './keyBindings'
-
-const mentionPlugin = createMentionPlugin({
-  theme: {
-    mention: 'mention',
-    mentionSuggestions: 'mentionSuggestions',
-    mentionSuggestionsEntry: 'mentionSuggestionsEntry',
-    mentionSuggestionsEntryFocused: 'mentionSuggestionsEntryFocused',
-    mentionSuggestionsEntryText: 'mentionSuggestionsEntryText',
-  },
-  mentionTrigger: '[',
-  replaceTemplate: ({ name, id }) => `[${name}](${id})`,
-})
-const mentionPluginTwo = createMentionPlugin({
-  theme: {
-    mention: 'mention',
-    mentionSuggestions: 'mentionSuggestions',
-    mentionSuggestionsEntry: 'mentionSuggestionsEntry',
-    mentionSuggestionsEntryFocused: 'mentionSuggestionsEntryFocused',
-    mentionSuggestionsEntryText: 'mentionSuggestionsEntryText',
-  },
-  mentionTrigger: '](',
-  replaceTemplate: ({ name, id }) => `](${id})`,
-})
-const { MentionSuggestions } = mentionPlugin
-const { MentionSuggestions: MentionSuggestionsTwo } = mentionPluginTwo
-
-const plugins = [mentionPlugin, mentionPluginTwo]
 
 function linkStrategy(contentBlock, callback) {
   findWithRegex(LINK_REGEX, contentBlock, callback)
 }
 
 class ZEditor extends Component {
+  constructor(props) {
+    super(props)
+
+    this.mentionPlugin = createMentionPlugin({
+      theme: {
+        mention: 'mention',
+        mentionSuggestions: 'mentionSuggestions',
+        mentionSuggestionsEntry: 'mentionSuggestionsEntry',
+        mentionSuggestionsEntryFocused: 'mentionSuggestionsEntryFocused',
+        mentionSuggestionsEntryText: 'mentionSuggestionsEntryText',
+      },
+      mentionTrigger: '[',
+      replaceTemplate: ({ name, id }) => `[${name}](${id})`,
+    })
+    this.mentionPluginTwo = createMentionPlugin({
+      theme: {
+        mention: 'mention',
+        mentionSuggestions: 'mentionSuggestions',
+        mentionSuggestionsEntry: 'mentionSuggestionsEntry',
+        mentionSuggestionsEntryFocused: 'mentionSuggestionsEntryFocused',
+        mentionSuggestionsEntryText: 'mentionSuggestionsEntryText',
+      },
+      mentionTrigger: '](',
+      replaceTemplate: ({ name, id }) => `](${id})`,
+    })
+  }
   state = {
     editorState: EditorState.createWithContent(
       ContentState.createFromText(this.props.node.content)),
@@ -86,7 +84,9 @@ class ZEditor extends Component {
 
   componentDidUpdate(lastProps) {
     const { focused, focusType } = this.props
-    if (focused && focusType === EDITOR && lastProps.focusType !== EDITOR) {
+    if (focused &&
+        focusType === EDITOR &&
+        (lastProps.focusType !== EDITOR || !lastProps.focused)) {
       this.focus()
     }
   }
@@ -180,6 +180,8 @@ class ZEditor extends Component {
   render() {
     const { timer } = this.state
     const { focused } = this.props
+    const { MentionSuggestions } = this.mentionPlugin
+    const { MentionSuggestions: MentionSuggestionsTwo } = this.mentionPluginTwo
     return (
       <div
         className={classNames('editor', { saved: !timer, focused })}
@@ -187,7 +189,7 @@ class ZEditor extends Component {
         <Editor
           editorState={this.state.editorState}
           onChange={this.onChange}
-          plugins={plugins}
+          plugins={[this.mentionPlugin, this.mentionPluginTwo]}
           ref={(element) => { this.editor = element }}
           defaultKeyBindings={false}
           handleKeyCommand={this.handleKeyCommand}
@@ -201,16 +203,20 @@ class ZEditor extends Component {
             ),
           }]}
         />
-        <MentionSuggestions
-          onSearchChange={this.onSearchChange}
-          suggestions={this.props.suggestions}
-          onAddMention={this.onAddMention}
-        />
-        <MentionSuggestionsTwo
-          onSearchChange={this.onSearchChange}
-          suggestions={this.props.suggestions}
-          onAddMention={this.onAddMention}
-        />
+        {focused &&
+          <MentionSuggestions
+            onSearchChange={this.onSearchChange}
+            suggestions={this.props.suggestions}
+            onAddMention={this.onAddMention}
+          />
+        }
+        {focused &&
+          <MentionSuggestionsTwo
+            onSearchChange={this.onSearchChange}
+            suggestions={this.props.suggestions}
+            onAddMention={this.onAddMention}
+          />
+        }
       </div>
     )
   }
