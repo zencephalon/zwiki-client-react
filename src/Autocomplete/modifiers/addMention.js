@@ -4,7 +4,7 @@ import getTypeByTrigger from '../utils/getTypeByTrigger'
 
 const addMention = (editorState, mention, replaceTemplate, mentionTrigger, entityMutability) => {
   const currentSelectionState = editorState.getSelection()
-  const { begin, end } = getSearchText(editorState, currentSelectionState)
+  const { begin, end } = getSearchText(editorState, currentSelectionState, mentionTrigger)
 
   // get selection of the @mention search text
   const mentionTextSelection = currentSelectionState.merge({
