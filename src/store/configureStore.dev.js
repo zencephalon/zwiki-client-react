@@ -13,7 +13,7 @@ const logger = createLogger()
 
 const finalCreateStore = compose(
   // Middleware you want to use in development:
-  applyMiddleware(thunk),
+  applyMiddleware(logger, thunk),
 )(createStore)
 
 module.exports = function configureStore(initialState) {
