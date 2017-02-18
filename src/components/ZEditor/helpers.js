@@ -71,6 +71,47 @@ export function findWithRegex(regex, contentBlock, callback) {
   }
 }
 
+export function findNextMatch(editorState, regex) {
+  let currentBlockFound = false
+  const selection = editorState.getSelection()
+  const endKey = selection.getEndKey()
+  const endOffset = selection.getEndOffset()
+  const content = editorState.getCurrentContent()
+
+  let nextMatch = null
+  let firstMatchFromTop = null
+
+  for (const entry of content.getBlockMap().entries()) {
+    const [k, block] = entry
+    const text = block.getText()
+    let searchText = text
+
+    if (k === endKey) {
+      currentBlockFound = true
+      searchText = text.slice(endOffset)
+    }
+    console.log('match', regex.exec(searchText))
+    const match = regex.exec(searchText)
+    if (match) {
+      const matchObj = { k, start: match.index, length: match[0].length }
+      if (!firstMatchFromTop) {
+        firstMatchFromTop = matchObj
+      }
+      if (k === endKey) {
+        nextMatch = matchObj
+        break
+      }
+    }
+
+    console.log({ k, text })
+  }
+  nextMatch = nextMatch || firstMatchFromTop
+}
+
+export function selectNextMatch(editorState, regex) {
+  const match = findNextMatch(editorState, regex)
+}
+
 export function moveToEnd(editorState, text) {
   const selection = editorState.getSelection()
   const key = selection.getStartKey()

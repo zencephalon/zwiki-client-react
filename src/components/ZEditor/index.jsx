@@ -31,7 +31,7 @@ import '~/Autocomplete/mentionSuggestionsEntryStyles.css'
 
 import { OMNI_SEARCH, EDITOR, LINK_REGEX } from '~/constants'
 import createMentionPlugin from '~/Autocomplete' // eslint-disable-line import/no-unresolved
-import { findWithRegex } from './helpers'
+import { findWithRegex, selectNextMatch } from './helpers'
 
 import Link from './Link'
 import keyBindings from './keyBindings'
@@ -190,6 +190,7 @@ class ZEditor extends Component {
           defaultKeyBindings={false}
           handleKeyCommand={this.handleKeyCommand}
           keyBindingFn={keyBindings}
+          onTab={(e) => { selectNextMatch(this.state.editorState, LINK_REGEX); e.preventDefault() }}
           decorators={[{
             strategy: linkStrategy,
             component: props => (
