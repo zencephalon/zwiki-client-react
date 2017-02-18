@@ -191,15 +191,9 @@ class ZEditor extends Component {
           handleKeyCommand={this.handleKeyCommand}
           keyBindingFn={keyBindings}
           onTab={(e) => {
-            if (e.shiftKey) {
-              this.setState({
-                editorState: selectMatch(this.state.editorState, LINK_REGEX, false),
-              })
-            } else {
-              this.setState({
-                editorState: selectMatch(this.state.editorState, LINK_REGEX),
-              })
-            }
+            this.setState({
+              editorState: selectMatch(this.state.editorState, LINK_REGEX, !e.shiftKey),
+            })
             e.preventDefault()
           }}
           decorators={[{

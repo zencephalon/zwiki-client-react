@@ -72,7 +72,6 @@ export function findWithRegex(regex, contentBlock, callback) {
 }
 
 export function findPrevMatch(editorState, regex) {
-  let currentBlockFound = false
   const selection = editorState.getSelection()
   const startKey = selection.getStartKey()
   const startOffset = selection.getStartOffset()
@@ -87,17 +86,17 @@ export function findPrevMatch(editorState, regex) {
     let searchText = text
 
     if (k === startKey) {
-      currentBlockFound = true
       // restrict to the text that comes before the selection
       searchText = text.slice(0, startOffset)
     }
-    console.log({k, searchText, startOffset})
+
     let lastMatch
     let match
+
     while ((match = regex.exec(searchText)) !== null) {
       lastMatch = match
     }
-    console.log('lastMatch', lastMatch)
+
     if (lastMatch) {
       const matchObj = {
         k,
@@ -112,7 +111,7 @@ export function findPrevMatch(editorState, regex) {
       break
     }
   }
-  console.log({ prevMatch, firstMatchFromBottom })
+
   return prevMatch || firstMatchFromBottom || { k: null, start: null, length: null }
 }
 
