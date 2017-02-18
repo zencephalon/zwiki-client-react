@@ -71,6 +71,51 @@ export function findWithRegex(regex, contentBlock, callback) {
   }
 }
 
+export function findPrevMatch(editorState, regex) {
+  let currentBlockFound = false
+  const selection = editorState.getSelection()
+  const startKey = selection.getStartKey()
+  const startOffset = selection.getStartOffset()
+  const content = editorState.getCurrentContent()
+
+  let prevMatch = null
+  let firstMatchFromBottom = null
+
+  for (const entry of content.getBlockMap().entries()) {
+    const [k, block] = entry
+    const text = block.getText()
+    let searchText = text
+
+    if (k === startKey) {
+      currentBlockFound = true
+      // restrict to the text that comes before the selection
+      searchText = text.slice(0, startOffset)
+    }
+    console.log({k, searchText, startOffset})
+    let lastMatch
+    let match
+    while ((match = regex.exec(searchText)) !== null) {
+      lastMatch = match
+    }
+    console.log('lastMatch', lastMatch)
+    if (lastMatch) {
+      const matchObj = {
+        k,
+        start: lastMatch.index,
+        length: lastMatch[0].length,
+      }
+
+      prevMatch = matchObj
+      firstMatchFromBottom = matchObj
+    }
+    if (k === startKey && prevMatch) {
+      break
+    }
+  }
+  console.log({ prevMatch, firstMatchFromBottom })
+  return prevMatch || firstMatchFromBottom || { k: null, start: null, length: null }
+}
+
 export function findNextMatch(editorState, regex) {
   let currentBlockFound = false
   const selection = editorState.getSelection()
@@ -88,14 +133,19 @@ export function findNextMatch(editorState, regex) {
 
     if (k === endKey) {
       currentBlockFound = true
+      // restrict to the text that comes after the selection
       searchText = text.slice(endOffset)
     }
+
     const match = regex.exec(searchText)
     if (match) {
-      console.log('got match')
-      const matchObj = { k, start: match.index, length: match[0].length }
+      const matchObj = {
+        k,
+        start: match.index + (k === endKey ? endOffset : 0),
+        length: match[0].length,
+      }
+
       if (!firstMatchFromTop) {
-        console.log('setting first from top')
         firstMatchFromTop = matchObj
       }
       if (currentBlockFound) {
@@ -103,14 +153,13 @@ export function findNextMatch(editorState, regex) {
         break
       }
     }
-
-    console.log({ k, text })
   }
+
   return nextMatch || firstMatchFromTop || { k: null, start: null, length: null }
 }
 
-export function selectNextMatch(editorState, regex) {
-  const { k, start, length } = findNextMatch(editorState, regex)
+export function selectMatch(editorState, regex, forward = true) {
+  const { k, start, length } = forward ? findNextMatch(editorState, regex) : findPrevMatch(editorState, regex)
   if (k) {
     const selectionState = SelectionState.createEmpty(k).merge({
       focusKey: k,
