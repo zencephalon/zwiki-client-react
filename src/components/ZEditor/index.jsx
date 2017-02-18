@@ -190,7 +190,12 @@ class ZEditor extends Component {
           defaultKeyBindings={false}
           handleKeyCommand={this.handleKeyCommand}
           keyBindingFn={keyBindings}
-          onTab={(e) => { selectNextMatch(this.state.editorState, LINK_REGEX); e.preventDefault() }}
+          onTab={(e) => {
+            this.setState({
+              editorState: selectNextMatch(this.state.editorState, LINK_REGEX)
+            })
+            e.preventDefault()
+          }}
           decorators={[{
             strategy: linkStrategy,
             component: props => (

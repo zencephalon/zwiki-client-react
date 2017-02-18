@@ -90,14 +90,15 @@ export function findNextMatch(editorState, regex) {
       currentBlockFound = true
       searchText = text.slice(endOffset)
     }
-    console.log('match', regex.exec(searchText))
     const match = regex.exec(searchText)
     if (match) {
+      console.log('got match')
       const matchObj = { k, start: match.index, length: match[0].length }
       if (!firstMatchFromTop) {
+        console.log('setting first from top')
         firstMatchFromTop = matchObj
       }
-      if (k === endKey) {
+      if (currentBlockFound) {
         nextMatch = matchObj
         break
       }
@@ -105,11 +106,21 @@ export function findNextMatch(editorState, regex) {
 
     console.log({ k, text })
   }
-  nextMatch = nextMatch || firstMatchFromTop
+  return nextMatch || firstMatchFromTop || { k: null, start: null, length: null }
 }
 
 export function selectNextMatch(editorState, regex) {
-  const match = findNextMatch(editorState, regex)
+  const { k, start, length } = findNextMatch(editorState, regex)
+  if (k) {
+    const selectionState = SelectionState.createEmpty(k).merge({
+      focusKey: k,
+      anchorKey: k,
+      anchorOffset: start,
+      focusOffset: start + length,
+    })
+    return EditorState.forceSelection(editorState, selectionState)
+  }
+  return editorState
 }
 
 export function moveToEnd(editorState, text) {
