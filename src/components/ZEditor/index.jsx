@@ -30,7 +30,7 @@ import '~/Autocomplete/mentionSuggestionsStyles.css'
 import '~/Autocomplete/mentionSuggestionsEntryStyles.css'
 
 import { OMNI_SEARCH, EDITOR, LINK_REGEX } from '~/constants'
-import createMentionPlugin, { defaultSuggestionsFilter } from '~/Autocomplete' // eslint-disable-line import/no-unresolved
+import createMentionPlugin from '~/Autocomplete' // eslint-disable-line import/no-unresolved
 import { findWithRegex } from './helpers'
 
 import Link from './Link'
@@ -40,31 +40,27 @@ function linkStrategy(contentBlock, callback) {
   findWithRegex(LINK_REGEX, contentBlock, callback)
 }
 
+const theme = {
+  mention: 'mention',
+  mentionSuggestions: 'mentionSuggestions',
+  mentionSuggestionsEntry: 'mentionSuggestionsEntry',
+  mentionSuggestionsEntryFocused: 'mentionSuggestionsEntryFocused',
+  mentionSuggestionsEntryText: 'mentionSuggestionsEntryText',
+}
+
 class ZEditor extends Component {
   constructor(props) {
     super(props)
 
     this.mentionPlugin = createMentionPlugin({
-      theme: {
-        mention: 'mention',
-        mentionSuggestions: 'mentionSuggestions',
-        mentionSuggestionsEntry: 'mentionSuggestionsEntry',
-        mentionSuggestionsEntryFocused: 'mentionSuggestionsEntryFocused',
-        mentionSuggestionsEntryText: 'mentionSuggestionsEntryText',
-      },
+      theme,
       mentionTrigger: '[',
       replaceTemplate: ({ name, id }) => `[${name}](${id})`,
     })
     this.mentionPluginTwo = createMentionPlugin({
-      theme: {
-        mention: 'mention',
-        mentionSuggestions: 'mentionSuggestions',
-        mentionSuggestionsEntry: 'mentionSuggestionsEntry',
-        mentionSuggestionsEntryFocused: 'mentionSuggestionsEntryFocused',
-        mentionSuggestionsEntryText: 'mentionSuggestionsEntryText',
-      },
+      theme,
       mentionTrigger: '](',
-      replaceTemplate: ({ name, id }) => `](${id})`,
+      replaceTemplate: ({ id }) => `](${id})`,
     })
   }
   state = {
