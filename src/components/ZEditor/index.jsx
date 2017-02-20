@@ -191,8 +191,14 @@ class ZEditor extends Component {
         name: nodeTitle,
       })).then(({ data: { id } }) => {
         dispatch(TOGGLE_LINK({ nodeId: id }))
+        dispatch(SLIDE_RIGHT())
       })
       return 'handled'
+    }
+    if (command === 'OPEN_LINK') {
+      const nodeId = getSelectionNodeId(editorState)
+      dispatch(TOGGLE_LINK({ nodeId }))
+      dispatch(SLIDE_RIGHT())
     }
     return 'not-handled'
   }
@@ -216,16 +222,11 @@ class ZEditor extends Component {
           keyBindingFn={keyBindings}
           onTab={(e) => {
             const { editorState } = this.state
-            const { dispatch } = this.props
+
             e.preventDefault()
-            if (e.ctrlKey) {
-              const nodeId = getSelectionNodeId(editorState)
-              dispatch(TOGGLE_LINK({ nodeId }))
-              return
-            }
 
             this.setState({
-              editorState: selectMatch(this.state.editorState, LINK_REGEX, !e.shiftKey),
+              editorState: selectMatch(editorState, LINK_REGEX, !e.shiftKey),
             })
           }}
           decorators={[{
