@@ -107,6 +107,9 @@ export default function focus(state = startState, action) {
             ...columns,
             [action.nodeId],
           ],
+          visibleColumnIds: visibleColumnIds.includes(nextColumnId) ?
+            visibleColumnIds :
+            [...visibleColumnIds.slice(1), nextColumnId],
         }
       }
       if (!nextColumn.includes(action.nodeId)) {
@@ -117,6 +120,9 @@ export default function focus(state = startState, action) {
             [action.nodeId, ...nextColumn],
             ...columns.slice(nextColumnId, columns.length),
           ],
+          visibleColumnIds: visibleColumnIds.includes(nextColumnId) ?
+            visibleColumnIds :
+            [...visibleColumnIds.slice(1), nextColumnId],
         }
       }
       return {
