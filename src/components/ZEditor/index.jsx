@@ -36,6 +36,7 @@ import {
   findWithRegex,
   selectMatch,
   getNodeTitle,
+  getSelectionNodeId,
 } from './helpers'
 
 import Link from './Link'
@@ -214,10 +215,18 @@ class ZEditor extends Component {
           handleKeyCommand={this.handleKeyCommand}
           keyBindingFn={keyBindings}
           onTab={(e) => {
+            const { editorState } = this.state
+            const { dispatch } = this.props
+            e.preventDefault()
+            if (e.ctrlKey) {
+              const nodeId = getSelectionNodeId(editorState)
+              dispatch(TOGGLE_LINK({ nodeId }))
+              return
+            }
+
             this.setState({
               editorState: selectMatch(this.state.editorState, LINK_REGEX, !e.shiftKey),
             })
-            e.preventDefault()
           }}
           decorators={[{
             strategy: linkStrategy,
