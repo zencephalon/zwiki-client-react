@@ -10,7 +10,7 @@ import Editor from 'draft-js-plugins-editor'
 import { uniqueId } from 'lodash'
 import classNames from 'classnames'
 
-import { PUT, INDEX, LINK_QUERY } from '~/apis/nodes/actions'
+import { POST, PUT, INDEX, LINK_QUERY } from '~/apis/nodes/actions'
 import nodeShape from '~/apis/nodes/shape'
 
 import { fromJS } from 'immutable'
@@ -23,6 +23,7 @@ import {
   SHIFT_UP,
   SLIDE_RIGHT,
   SLIDE_LEFT,
+  TOGGLE_LINK,
 } from '~/apis/flex/actions'
 
 import '~/Autocomplete/mentionStyles.css'
@@ -31,7 +32,11 @@ import '~/Autocomplete/mentionSuggestionsEntryStyles.css'
 
 import { OMNI_SEARCH, EDITOR, LINK_REGEX } from '~/constants'
 import createMentionPlugin from '~/Autocomplete' // eslint-disable-line import/no-unresolved
-import { findWithRegex, selectMatch } from './helpers'
+import {
+  findWithRegex,
+  selectMatch,
+  getNodeTitle,
+} from './helpers'
 
 import Link from './Link'
 import keyBindings from './keyBindings'
@@ -147,6 +152,8 @@ class ZEditor extends Component {
 
   handleKeyCommand = (command) => {
     const { dispatch } = this.props
+    const { editorState } = this.state
+
     if (command === 'SWITCH_FOCUS') {
       dispatch(FOCUS({ type: OMNI_SEARCH }))
       this.editor.blur()
@@ -154,21 +161,37 @@ class ZEditor extends Component {
     }
     if (command === 'CYCLE_DOWN') {
       dispatch(CYCLE_DOWN())
+      return 'handled'
     }
     if (command === 'CYCLE_UP') {
       dispatch(CYCLE_UP())
+      return 'handled'
     }
     if (command === 'SHIFT_UP') {
       dispatch(SHIFT_UP())
+      return 'handled'
     }
     if (command === 'SHIFT_DOWN') {
       dispatch(SHIFT_DOWN())
+      return 'handled'
     }
     if (command === 'SLIDE_RIGHT') {
       dispatch(SLIDE_RIGHT())
+      return 'handled'
     }
     if (command === 'SLIDE_LEFT') {
       dispatch(SLIDE_LEFT())
+      return 'handled'
+    }
+    if (command === 'NEW_NODE') {
+      const nodeTitle = getNodeTitle(editorState)
+      dispatch(POST('NEW_NODE', {
+        content: `# ${nodeTitle}\n\n`,
+        name: nodeTitle,
+      })).then(({ data: { id } }) => {
+        dispatch(TOGGLE_LINK({ nodeId: id }))
+      })
+      return 'handled'
     }
     return 'not-handled'
   }

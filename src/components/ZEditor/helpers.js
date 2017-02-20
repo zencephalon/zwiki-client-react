@@ -232,3 +232,34 @@ export const removeEntity = (editorState, entityKey) => {
       Modifier.removeRange(content, entitySelection, 'forward'),
       'remove-range')
 }
+
+export const getCurrentBlockTextToCursor = (editorState) => {
+  const selection = editorState.getSelection()
+  const key = selection.getEndKey()
+  const offset = selection.getEndOffset()
+  const content = editorState.getCurrentContent()
+  const block = content.getBlockForKey(key)
+  return block.getText().slice(0, offset)
+}
+
+export const getNodeTitle = (editorState) => {
+  const blockText = getCurrentBlockTextToCursor(editorState)
+  // Probably impinging on some other link, break early
+  const breakChars = [']', ')', '(']
+  let startFound
+  let i
+
+  for (i = blockText.length - 1; i >= 0; i -= 1) {
+    const char = blockText[i]
+    if (breakChars.includes(char)) {
+      break
+    }
+    if (char === '[') {
+      startFound = true
+      break
+    }
+  }
+
+  // Slice off the leading [
+  return startFound ? blockText.slice(i + 1) : null
+}

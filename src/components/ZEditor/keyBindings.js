@@ -22,5 +22,8 @@ export default function keyBindings(e) {
   if (e.key === 'h' && e.ctrlKey) {
     return 'SLIDE_LEFT'
   }
+  if (e.key === 'n' && e.ctrlKey) {
+    return 'NEW_NODE'
+  }
   return getDefaultKeyBinding(e)
 }
