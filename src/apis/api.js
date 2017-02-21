@@ -1,5 +1,5 @@
 import { configureAPI } from 'redux-rest-reducer'
 
-const api = configureAPI('http://localhost:8000/')
+const api = configureAPI('http://api.iluvu.ninja/')
 
 export default api
