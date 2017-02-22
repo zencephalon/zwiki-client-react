@@ -281,3 +281,15 @@ export const getSelectionNodeId = (editorState) => {
   const match = LINK_REGEX.exec(selectedText)
   return match ? match[2] : null
 }
+
+export const insertLinkCompletion = (editorState, nodeId) => {
+  return EditorState.push(
+    editorState,
+    Modifier.insertText(
+      editorState.getCurrentContent(),
+      editorState.getSelection(),
+      `](${nodeId})`,
+    ),
+    'insert-characters',
+  )
+}

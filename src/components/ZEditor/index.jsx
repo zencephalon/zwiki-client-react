@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import {
   EditorState,
   ContentState,
+  Modifier,
 } from 'draft-js'
 import Editor from 'draft-js-plugins-editor'
 
@@ -37,6 +38,7 @@ import {
   selectMatch,
   getNodeTitle,
   getSelectionNodeId,
+  insertLinkCompletion,
 } from './helpers'
 
 import Link from './Link'
@@ -190,6 +192,9 @@ class ZEditor extends Component {
         content: `# ${nodeTitle}\n\n`,
         name: nodeTitle,
       })).then(({ data: { id } }) => {
+        this.setState({
+          editorState: insertLinkCompletion(editorState, id)
+        })
         dispatch(TOGGLE_LINK({ nodeId: id }))
         dispatch(SLIDE_RIGHT())
       })
