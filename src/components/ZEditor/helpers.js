@@ -306,7 +306,7 @@ export const selectBlock = (editorState, block) => {
   return EditorState.forceSelection(editorState, newSelectionState)
 }
 
-export const selectBlockDown = (editorState) => {
+export const selectBlockDir = (editorState, down) => {
   const selectionState = editorState.getSelection()
   const currentKey = selectionState.getAnchorKey()
   const currentContent = editorState.getCurrentContent()
@@ -318,12 +318,22 @@ export const selectBlockDown = (editorState) => {
   if (start !== 0 || end !== length) {
     return selectBlock(editorState, currentContentBlock)
   }
-
-  let nextContentBlock =
-    currentContent.getBlockAfter(currentKey) || currentContent.getFirstBlock()
+  let nextContentBlock = down ?
+    (currentContent.getBlockAfter(currentKey) || currentContent.getFirstBlock()) :
+    (currentContent.getBlockBefore(currentKey) || currentContent.getLastBlock())
   while (nextContentBlock.getLength() === 0) {
-    nextContentBlock = currentContent.getBlockAfter(nextContentBlock.getKey())
+    nextContentBlock = down ?
+      currentContent.getBlockAfter(nextContentBlock.getKey()) :
+      currentContent.getBlockBefore(nextContentBlock.getKey())
   }
 
   return selectBlock(editorState, nextContentBlock)
+}
+
+export const selectBlockDown = (editorState) => {
+  return selectBlockDir(editorState, true)
+}
+
+export const selectBlockUp = (editorState) => {
+  return selectBlockDir(editorState, false)
 }

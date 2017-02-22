@@ -7,10 +7,10 @@ export default function keyBindings(e) {
   if (e.key === ' ' && e.ctrlKey) {
     return 'SWITCH_FOCUS'
   }
-  if (e.key === 'q' && e.ctrlKey && !e.shiftKey) {
+  if (e.key === 'q' && e.ctrlKey) {
     return 'SELECT_BLOCK_DOWN'
   }
-  if (e.key === 'q' && e.ctrlKey && e.shiftKey) {
+  if (e.key === 'Q' && e.ctrlKey) {
     return 'SELECT_BLOCK_UP'
   }
   if (e.key === 'j' && e.ctrlKey && !e.shiftKey) {

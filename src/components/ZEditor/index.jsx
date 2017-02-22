@@ -39,6 +39,7 @@ import {
   getSelectionNodeId,
   insertLinkCompletion,
   selectBlockDown,
+  selectBlockUp,
 } from './helpers'
 
 import Link from './Link'
@@ -165,6 +166,13 @@ class ZEditor extends Component {
     if (command === 'SELECT_BLOCK_DOWN') {
       this.setState({
         editorState: selectBlockDown(editorState),
+      })
+      return 'handled'
+    }
+    if (command === 'SELECT_BLOCK_UP') {
+      console.log('got select block up')
+      this.setState({
+        editorState: selectBlockUp(editorState),
       })
       return 'handled'
     }
