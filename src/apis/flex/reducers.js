@@ -118,7 +118,7 @@ export default function focus(state = startState, action) {
           columns: [
             ...columns.slice(0, nextColumnId),
             [action.nodeId, ...nextColumn],
-            ...columns.slice(nextColumnId, columns.length),
+            ...columns.slice(nextColumnId + 1, columns.length),
           ],
           // visibleColumnIds: visibleColumnIds.includes(nextColumnId) ?
           //   visibleColumnIds :

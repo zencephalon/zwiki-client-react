@@ -71,6 +71,7 @@ class ZEditor extends Component {
       replaceTemplate: ({ id }) => `](${id})`,
     })
   }
+
   state = {
     editorState: EditorState.createWithContent(
       ContentState.createFromText(this.props.node.content)),
