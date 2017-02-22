@@ -12,7 +12,7 @@ import generateRandomKey from 'draft-js/lib/generateRandomKey'
 
 import { List, Repeat } from 'immutable'
 
-import { LINK_REGEX } from '~/constants'
+import { LINK_REGEX, LINK_REGEX_NO_G } from '~/constants'
 
 export function insertAtomicBlock(editorState, entityKey, character) {
   const contentState = editorState.getCurrentContent()
@@ -278,7 +278,8 @@ export const getSelectedText = (editorState) => {
 
 export const getSelectionNodeId = (editorState) => {
   const selectedText = getSelectedText(editorState)
-  const match = LINK_REGEX.exec(selectedText)
+  const match = LINK_REGEX_NO_G.exec(selectedText)
+  console.log({ match, selectedText })
   return match ? match[2] : null
 }
 
