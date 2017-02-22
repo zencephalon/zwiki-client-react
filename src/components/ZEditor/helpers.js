@@ -322,18 +322,15 @@ export const selectBlockDir = (editorState, down) => {
     (currentContent.getBlockAfter(currentKey) || currentContent.getFirstBlock()) :
     (currentContent.getBlockBefore(currentKey) || currentContent.getLastBlock())
   while (nextContentBlock.getLength() === 0) {
+    const thisKey = nextContentBlock.getKey()
     nextContentBlock = down ?
-      currentContent.getBlockAfter(nextContentBlock.getKey()) :
-      currentContent.getBlockBefore(nextContentBlock.getKey())
+      currentContent.getBlockAfter(thisKey) :
+      currentContent.getBlockBefore(thisKey)
   }
 
   return selectBlock(editorState, nextContentBlock)
 }
 
-export const selectBlockDown = (editorState) => {
-  return selectBlockDir(editorState, true)
-}
+export const selectBlockDown = editorState => selectBlockDir(editorState, true)
 
-export const selectBlockUp = (editorState) => {
-  return selectBlockDir(editorState, false)
-}
+export const selectBlockUp = editorState => selectBlockDir(editorState, false)
