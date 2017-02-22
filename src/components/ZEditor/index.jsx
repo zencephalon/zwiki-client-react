@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import {
   EditorState,
   ContentState,
-  Modifier,
 } from 'draft-js'
 import Editor from 'draft-js-plugins-editor'
 
@@ -39,6 +38,7 @@ import {
   getNodeTitle,
   getSelectionNodeId,
   insertLinkCompletion,
+  selectBlockDown,
 } from './helpers'
 
 import Link from './Link'
@@ -162,6 +162,12 @@ class ZEditor extends Component {
     const { dispatch } = this.props
     const { editorState } = this.state
 
+    if (command === 'SELECT_BLOCK_DOWN') {
+      this.setState({
+        editorState: selectBlockDown(editorState),
+      })
+      return 'handled'
+    }
     if (command === 'SWITCH_FOCUS') {
       dispatch(FOCUS({ type: OMNI_SEARCH }))
       this.editor.blur()

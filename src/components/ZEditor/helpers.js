@@ -160,7 +160,8 @@ export function findNextMatch(editorState, regex) {
 }
 
 export function selectMatch(editorState, regex, forward = true) {
-  const { k, start, length } = forward ? findNextMatch(editorState, regex) : findPrevMatch(editorState, regex)
+  const { k, start, length } = forward ?
+    findNextMatch(editorState, regex) : findPrevMatch(editorState, regex)
   if (k) {
     const selectionState = SelectionState.createEmpty(k).merge({
       focusKey: k,
@@ -292,4 +293,27 @@ export const insertLinkCompletion = (editorState, nodeId) => {
     ),
     'insert-characters',
   )
+}
+
+export const selectBlockDown = (editorState) => {
+  const selectionState = editorState.getSelection()
+  const anchorKey = selectionState.getAnchorKey()
+  const currentContent = editorState.getCurrentContent()
+  const currentContentBlock = currentContent.getBlockForKey(anchorKey)
+  const start = selectionState.getStartOffset()
+  const end = selectionState.getEndOffset()
+  const length = currentContentBlock.getLength()
+
+  console.log({ start, end, length })
+  if (start !== 0 || end !== length) {
+    console.log('YOLO...')
+    const newSelectionState = SelectionState.createEmpty(anchorKey).merge({
+      focusKey: anchorKey,
+      anchorKey,
+      anchorOffset: 0,
+      focusOffset: length,
+    })
+    return EditorState.forceSelection(editorState, newSelectionState)
+  }
+  return editorState
 }
