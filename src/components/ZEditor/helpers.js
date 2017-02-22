@@ -295,6 +295,17 @@ export const insertLinkCompletion = (editorState, nodeId) => {
   )
 }
 
+export const selectBlock = (editorState, block) => {
+  const key = block.getKey()
+  const newSelectionState = SelectionState.createEmpty(key).merge({
+    focusKey: key,
+    anchorKey: key,
+    anchorOffset: 0,
+    focusOffset: block.getLength(),
+  })
+  return EditorState.forceSelection(editorState, newSelectionState)
+}
+
 export const selectBlockDown = (editorState) => {
   const selectionState = editorState.getSelection()
   const currentKey = selectionState.getAnchorKey()
@@ -305,13 +316,7 @@ export const selectBlockDown = (editorState) => {
   const length = currentContentBlock.getLength()
 
   if (start !== 0 || end !== length) {
-    const newSelectionState = SelectionState.createEmpty(currentKey).merge({
-      focusKey: currentKey,
-      anchorKey: currentKey,
-      anchorOffset: 0,
-      focusOffset: length,
-    })
-    return EditorState.forceSelection(editorState, newSelectionState)
+    return selectBlock(editorState, currentContentBlock)
   }
 
   let nextContentBlock =
@@ -320,13 +325,5 @@ export const selectBlockDown = (editorState) => {
     nextContentBlock = currentContent.getBlockAfter(nextContentBlock.getKey())
   }
 
-  const nextKey = nextContentBlock.getKey()
-  const nextLength = nextContentBlock.getLength()
-  const newSelectionState = SelectionState.createEmpty(nextKey).merge({
-    focusKey: nextKey,
-    anchorKey: nextKey,
-    anchorOffset: 0,
-    focusOffset: nextLength,
-  })
-  return EditorState.forceSelection(editorState, newSelectionState)
+  return selectBlock(editorState, nextContentBlock)
 }
