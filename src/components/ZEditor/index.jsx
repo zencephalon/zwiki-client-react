@@ -97,7 +97,6 @@ class ZEditor extends Component {
   }
 
   onChange = (editorState) => {
-    const { node, dispatch } = this.props
     const { timer, previousPlainText } = this.state
     let newTimer
 
@@ -107,9 +106,7 @@ class ZEditor extends Component {
 
     if (plainText !== previousPlainText) {
       newTimer = setTimeout(() => {
-        dispatch(PUT(node.id, this.parseNode(plainText))).then(() => {
-          this.setState({ timer: null })
-        })
+        this.saveToServer(plainText)
       }, 1500)
     }
 
@@ -140,6 +137,13 @@ class ZEditor extends Component {
 
   onAddMention = () => {
     // get the mention object selected
+  }
+
+  saveToServer = (plainText) => {
+    const { node, dispatch } = this.props
+    dispatch(PUT(node.id, this.parseNode(plainText))).then(() => {
+      this.setState({ timer: null })
+    })
   }
 
   parseNode = plainText => (
@@ -234,6 +238,9 @@ class ZEditor extends Component {
             this.setState({
               editorState: selectMatch(editorState, LINK_REGEX, !e.shiftKey),
             })
+          }}
+          onBlur={() => {
+            this.saveToServer(this.state.editorState.getCurrentContent().getPlainText())
           }}
           decorators={[{
             strategy: linkStrategy,

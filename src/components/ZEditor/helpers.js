@@ -279,8 +279,7 @@ export const getSelectedText = (editorState) => {
 export const getSelectionNodeId = (editorState) => {
   const selectedText = getSelectedText(editorState)
   const match = LINK_REGEX_NO_G.exec(selectedText)
-  console.log({ match, selectedText })
-  return match ? match[2] : null
+  return match ? parseInt(match[2], 10) : null
 }
 
 export const insertLinkCompletion = (editorState, nodeId) => {
