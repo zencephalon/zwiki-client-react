@@ -140,20 +140,12 @@ class ZEditor extends Component {
     // get the mention object selected
   }
 
-  saveToServer = (plainText) => {
+  saveToServer = (content) => {
     const { node, dispatch } = this.props
-    dispatch(PUT(node.id, this.parseNode(plainText))).then(() => {
+    dispatch(PUT(node.id, { content })).then(() => {
       this.setState({ timer: null })
     })
   }
-
-  parseNode = plainText => (
-    {
-      content: plainText.replace(/\n\u200B/, ''),
-      // TODO: this will break without a title to find, default to untitled
-      name: plainText.split('\n', 1)[0].match(/#+\s*(.*)$/)[1],
-    }
-  )
 
   focus = () => {
     this.editor.focus()
