@@ -4,6 +4,9 @@ export default function keyBindings(e) {
   if (e.key === 'Enter' && e.ctrlKey) {
     return 'OPEN_LINK'
   }
+  if (e.key === 'f' && e.ctrlKey) {
+    return 'REFOCUS'
+  }
   if (e.key === ' ' && e.ctrlKey) {
     return 'SWITCH_FOCUS'
   }

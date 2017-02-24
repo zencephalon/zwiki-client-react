@@ -10,6 +10,7 @@ const types = {
   SHIFT_DOWN: `${NAME}/SHIFT_DOWN`,
   SLIDE_RIGHT: `${NAME}/SLIDE_RIGHT`,
   SLIDE_LEFT: `${NAME}/SLIDE_LEFT`,
+  REFOCUS: `${NAME}/REFOCUS`,
 }
 
 export default types

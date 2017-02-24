@@ -34,6 +34,11 @@ export const OPEN_NODE = ({ nodeId }) => ({
   nodeId,
 })
 
+export const REFOCUS = ({ nodeId }) => ({
+  type: t .REFOCUS,
+  nodeId,
+})
+
 export const FOCUS = ({ columnId, rowId, type }) => ({
   type: t.FOCUS,
   columnId,

@@ -140,27 +140,19 @@ class ZEditor extends Component {
     // get the mention object selected
   }
 
-  saveToServer = (plainText) => {
+  saveToServer = (content) => {
     const { node, dispatch } = this.props
-    dispatch(PUT(node.id, this.parseNode(plainText))).then(() => {
+    dispatch(PUT(node.id, { content })).then(() => {
       this.setState({ timer: null })
     })
   }
-
-  parseNode = plainText => (
-    {
-      content: plainText.replace(/\n\u200B/, ''),
-      // TODO: this will break without a title to find, default to untitled
-      name: plainText.split('\n', 1)[0].match(/#+\s*(.*)$/)[1],
-    }
-  )
 
   focus = () => {
     this.editor.focus()
   }
 
   handleKeyCommand = (command) => {
-    const { dispatch } = this.props
+    const { dispatch, node } = this.props
     const { editorState } = this.state
 
     if (command === 'SELECT_BLOCK_DOWN') {
@@ -223,6 +215,11 @@ class ZEditor extends Component {
       const nodeId = getSelectionNodeId(editorState)
       dispatch(TOGGLE_LINK({ nodeId }))
       dispatch(SLIDE_RIGHT())
+      return 'handled'
+    }
+    if (command === 'REFOCUS') {
+      dispatch(REFOCUS({ nodeId: node.id }))
+      return 'handled'
     }
     return 'not-handled'
   }

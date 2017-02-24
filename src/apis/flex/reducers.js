@@ -133,6 +133,14 @@ export default function focus(state = startState, action) {
           ...columns.slice(nextColumnId, columns.length),
         ],
       }
+    case t.REFOCUS:
+      return {
+        columns: [[action.nodeId], []],
+        visibleColumnIds: [0, 1],
+        focusedColumnId: 0,
+        focusedRowId: 0,
+        focusType: EDITOR,
+      }
     default:
       return state
   }
