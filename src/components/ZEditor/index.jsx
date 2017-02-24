@@ -13,8 +13,6 @@ import classNames from 'classnames'
 import { POST, PUT, INDEX, LINK_QUERY } from '~/apis/nodes/actions'
 import nodeShape from '~/apis/nodes/shape'
 
-import Fuse from 'fuse.js'
-
 import { fromJS } from 'immutable'
 
 import {
@@ -34,6 +32,7 @@ import '~/Autocomplete/mentionSuggestionsStyles.css'
 import '~/Autocomplete/mentionSuggestionsEntryStyles.css'
 
 import { OMNI_SEARCH, EDITOR, LINK_REGEX } from '~/constants'
+import { fuseSort } from '~/helpers'
 import createMentionPlugin from '~/Autocomplete' // eslint-disable-line import/no-unresolved
 import {
   findWithRegex,
@@ -298,25 +297,6 @@ class ZEditor extends Component {
   }
 }
 
-const fuseOptions = {
-  shouldSort: true,
-  threshold: 0.6,
-  location: 0,
-  distance: 100,
-  maxPatternLength: 32,
-  minMatchCharLength: 1,
-  keys: [
-    {
-      name: 'name',
-      weight: 0.8,
-    },
-    {
-      name: 'content',
-      weight: 0.2
-    },
-  ],
-}
-
 function mapStateToProps(state) {
   const { linkQ: q } = state.nodes.query
 
@@ -328,7 +308,7 @@ function mapStateToProps(state) {
     confirmed: false,
   }
 
-  const sortedSuggestions = confirmed ? new Fuse(suggestions, fuseOptions).search(q) : [{ name: '…' }]
+  const sortedSuggestions = confirmed ? fuseSort(suggestions, q) : [{ name: '…' }]
 
   return {
     suggestions: fromJS(sortedSuggestions),

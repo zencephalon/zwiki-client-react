@@ -8,6 +8,7 @@ import { NodeEditPath } from '~/routes'
 
 import { FOCUS, OPEN_NODE } from '~/apis/flex/actions'
 import { OMNI_SEARCH, EDITOR } from '~/constants'
+import { fuseSort } from '~/helpers'
 
 import classNames from 'classnames'
 
@@ -127,12 +128,14 @@ function mapStateToProps(state) {
   const { omniQ: q } = state.nodes.query
 
   const {
-    data: suggestions,
+    data: suggs,
     confirmed,
   } = state.nodes.http.collections[q] || {
     data: [],
     confirmed: false,
   }
+
+  const suggestions = fuseSort(suggs, q)
 
   return {
     q,
