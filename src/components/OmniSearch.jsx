@@ -84,6 +84,11 @@ class OmniSearch extends Component {
     }
   }
 
+  handleBlur = () => {
+    this.input.blur()
+    dispatch(OMNI_QUERY(''))
+  }
+
   render() {
     const { q, confirmed, suggestions } = this.props
     const { selected } = this.state
@@ -92,6 +97,7 @@ class OmniSearch extends Component {
       <div className="omni-search">
         <input
           type="text"
+          onBlur={this.handleBlur}
           onChange={this.qChange}
           onKeyDown={this.handleKeyPress}
           value={q}
