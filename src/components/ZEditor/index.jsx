@@ -296,6 +296,25 @@ class ZEditor extends Component {
   }
 }
 
+const fuseOptions = {
+  shouldSort: true,
+  threshold: 0.6,
+  location: 0,
+  distance: 100,
+  maxPatternLength: 32,
+  minMatchCharLength: 1,
+  keys: [
+    {
+      name: 'name',
+      weight: 0.8,
+    },
+    {
+      name: 'content',
+      weight: 0.2
+    },
+  ],
+}
+
 function mapStateToProps(state) {
   const { linkQ: q } = state.nodes.query
 
@@ -307,8 +326,10 @@ function mapStateToProps(state) {
     confirmed: false,
   }
 
+  const sortedSuggestions = confirmed ? new Fuse(suggestions, options).search(q) : [{ name: '…' }]
+
   return {
-    suggestions: fromJS(confirmed ? suggestions : [{ name: '…' }]),
+    suggestions: fromJS(sortedSuggestions),
     confirmed,
     q,
     focusType: state.flex.focusType,
