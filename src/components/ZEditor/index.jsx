@@ -152,7 +152,7 @@ class ZEditor extends Component {
   }
 
   handleKeyCommand = (command) => {
-    const { dispatch } = this.props
+    const { dispatch, node } = this.props
     const { editorState } = this.state
 
     if (command === 'SELECT_BLOCK_DOWN') {
@@ -215,6 +215,11 @@ class ZEditor extends Component {
       const nodeId = getSelectionNodeId(editorState)
       dispatch(TOGGLE_LINK({ nodeId }))
       dispatch(SLIDE_RIGHT())
+      return 'handled'
+    }
+    if (command === 'REFOCUS') {
+      dispatch(REFOCUS({ nodeId: node.id }))
+      return 'handled'
     }
     return 'not-handled'
   }
