@@ -24,6 +24,7 @@ import {
   SLIDE_RIGHT,
   SLIDE_LEFT,
   TOGGLE_LINK,
+  REFOCUS,
 } from '~/apis/flex/actions'
 
 import '~/Autocomplete/mentionStyles.css'
