@@ -328,7 +328,7 @@ function mapStateToProps(state) {
     confirmed: false,
   }
 
-  const sortedSuggestions = confirmed ? new Fuse(suggestions, options).search(q) : [{ name: '…' }]
+  const sortedSuggestions = confirmed ? new Fuse(suggestions, fuseOptions).search(q) : [{ name: '…' }]
 
   return {
     suggestions: fromJS(sortedSuggestions),
