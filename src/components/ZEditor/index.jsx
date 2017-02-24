@@ -101,6 +101,10 @@ class ZEditor extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.saveToServer(this.state.editorState.getCurrentContent().getPlainText())
+  }
+
   onChange = (editorState) => {
     const { timer, previousPlainText } = this.state
     let newTimer
@@ -234,7 +238,6 @@ class ZEditor extends Component {
       return 'handled'
     }
     if (command === 'REFOCUS') {
-      this.saveToServer(editorState.getCurrentContent().getPlainText())
       dispatch(REFOCUS({ nodeId: node.id }))
       return 'handled'
     }
