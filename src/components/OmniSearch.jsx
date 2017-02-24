@@ -86,7 +86,7 @@ class OmniSearch extends Component {
 
   handleBlur = () => {
     this.input.blur()
-    dispatch(OMNI_QUERY(''))
+    this.props.dispatch(OMNI_QUERY(''))
   }
 
   render() {
