@@ -13,6 +13,8 @@ import classNames from 'classnames'
 import { POST, PUT, INDEX, LINK_QUERY } from '~/apis/nodes/actions'
 import nodeShape from '~/apis/nodes/shape'
 
+import Fuse from 'fuse.js'
+
 import { fromJS } from 'immutable'
 
 import {
