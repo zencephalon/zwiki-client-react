@@ -234,6 +234,7 @@ class ZEditor extends Component {
       return 'handled'
     }
     if (command === 'REFOCUS') {
+      this.saveToServer(editorState.getCurrentContent().getPlainText())
       dispatch(REFOCUS({ nodeId: node.id }))
       return 'handled'
     }
