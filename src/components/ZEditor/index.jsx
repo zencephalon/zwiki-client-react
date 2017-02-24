@@ -41,6 +41,8 @@ import {
   insertLinkCompletion,
   selectBlockDown,
   selectBlockUp,
+  insertTimeStamp,
+  insertDateStamp,
 } from './helpers'
 
 import Link from './Link'
@@ -156,6 +158,18 @@ class ZEditor extends Component {
     const { dispatch, node } = this.props
     const { editorState } = this.state
 
+    if (command === 'INSERT_TIME_STAMP') {
+      this.setState({
+        editorState: insertTimeStamp(editorState),
+      })
+      return 'handled'
+    }
+    if (command === 'INSERT_DATE_STAMP') {
+      this.setState({
+        editorState: insertDateStamp(editorState),
+      })
+      return 'handled'
+    }
     if (command === 'SELECT_BLOCK_DOWN') {
       this.setState({
         editorState: selectBlockDown(editorState),

@@ -295,6 +295,30 @@ export const insertLinkCompletion = (editorState, nodeId) => {
   )
 }
 
+export const insertTimeStamp = (editorState) => {
+  return EditorState.push(
+    editorState,
+    Modifier.insertText(
+      editorState.getCurrentContent(),
+      editorState.getSelection(),
+      `${new Date().toLocaleTimeString()}: `,
+    ),
+    'insert-characters',
+  )
+}
+
+export const insertDateStamp = (editorState) => {
+  return EditorState.push(
+    editorState,
+    Modifier.insertText(
+      editorState.getCurrentContent(),
+      editorState.getSelection(),
+      (new Date).toString().split(" ").slice(0, 4).join(" "),
+    ),
+    'insert-characters',
+  )
+}
+
 export const selectBlock = (editorState, block) => {
   const key = block.getKey()
   const newSelectionState = SelectionState.createEmpty(key).merge({

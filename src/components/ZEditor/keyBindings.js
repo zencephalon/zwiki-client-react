@@ -1,6 +1,12 @@
 import { getDefaultKeyBinding } from 'draft-js'
 
 export default function keyBindings(e) {
+  if (e.key === 'd' && e.ctrlKey) {
+    return 'INSERT_TIME_STAMP'
+  }
+  if (e.key === 'D' && e.ctrlKey) {
+    return 'INSERT_DATE_STAMP'
+  }
   if (e.key === 'Enter' && e.ctrlKey) {
     return 'OPEN_LINK'
   }
