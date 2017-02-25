@@ -58,7 +58,7 @@ figure {
     font-size: 1em;
     line-height: 1.5em;
     font-family: 'Vollkorn', serif;
-    width: 37em;
+    width: 49em;
     padding: 0px;
     border-width: 0px;
   }
@@ -85,6 +85,7 @@ figure {
 // ==== Flex =====
 
 .flex-writer {
+  width: 49em;
   display: flex;
   flex-direction: row;
 }
