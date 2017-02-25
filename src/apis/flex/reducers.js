@@ -130,7 +130,7 @@ export default function focus(state = startState, action) {
         columns: [
           ...columns.slice(0, nextColumnId),
           nextColumn.filter(id => id !== action.nodeId),
-          ...columns.slice(nextColumnId, columns.length),
+          ...columns.slice(nextColumnId + 1, columns.length),
         ],
       }
     case t.REFOCUS:
