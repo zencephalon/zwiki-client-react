@@ -258,6 +258,7 @@ class ZEditor extends Component {
           defaultKeyBindings={false}
           handleKeyCommand={this.handleKeyCommand}
           keyBindingFn={keyBindings}
+          spellCheck
           onTab={(e) => {
             const { editorState } = this.state
 
