@@ -17,6 +17,7 @@ const Flex = (props) => {
       FOCUS,
     },
   } = props
+  const firstVisibleColumnId = visibleColumnIds[0]
   return (
     <div className="flex-writer">
       {columns.map((column, columnId) => (
@@ -24,6 +25,7 @@ const Flex = (props) => {
           className={classNames('flex-column', {
             hidden: !visibleColumnIds.includes(columnId),
             focused: focusedColumnId === columnId,
+            'first-visible': firstVisibleColumnId === columnId,
           })}
           key={columnId}
         >

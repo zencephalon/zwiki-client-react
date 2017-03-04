@@ -97,8 +97,11 @@ figure {
   flex-basis: 0;
 }
 
-.flex-column.focused {
+.flex-column.first-visible {
   position: static;
+}
+
+.flex-column.focused {
   border-left: 2px dashed $accent-blue;
 }
 
