@@ -8,6 +8,8 @@ import OmniSearch from '~/components/OmniSearch'
 import { FOCUS, SLIDE_RIGHT, SLIDE_LEFT } from '~/apis/flex/actions'
 import { OMNI_SEARCH } from '~/constants'
 
+import { throttle } from 'lodash'
+
 class App extends Component {
   componentWillMount() {
     const { dispatch, bindShortcut } = this.props
@@ -20,6 +22,9 @@ class App extends Component {
     bindShortcut('ctrl+h', () => {
       dispatch(SLIDE_LEFT())
     })
+    window.onscroll = throttle(() => {
+      $('.flex-column:not(.focused)').css('top', window.scrollY)
+    }, 200)
   }
 
   render() {

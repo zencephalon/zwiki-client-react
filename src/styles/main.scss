@@ -91,11 +91,14 @@ figure {
 }
 
 .flex-column {
+  position: relative;
+  transition: top 0.2s linear;
   flex-grow: 1;
   flex-basis: 0;
 }
 
 .flex-column.focused {
+  position: static;
   border-left: 2px dashed $accent-blue;
 }
 
