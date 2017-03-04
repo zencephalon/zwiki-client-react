@@ -22,8 +22,8 @@ class App extends Component {
     bindShortcut('ctrl+h', () => {
       dispatch(SLIDE_LEFT())
     })
-    window.onscroll = throttle(() => {
-      $('.flex-column:not(.focused)').css('top', window.scrollY)
+    setInterval(() => {
+      $('.flex-column').css('top', window.scrollY)
     }, 200)
   }
 
