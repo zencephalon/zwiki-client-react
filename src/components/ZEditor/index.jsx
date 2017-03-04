@@ -98,6 +98,7 @@ class ZEditor extends Component {
         focusType === EDITOR &&
         (lastProps.focusType !== EDITOR || !lastProps.focused)) {
       this.focus()
+      $.event.trigger({ type: 'keypress' })
     }
   }
 
