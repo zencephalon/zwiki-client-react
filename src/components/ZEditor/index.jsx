@@ -146,7 +146,7 @@ class ZEditor extends Component {
 
   saveToServer = (content) => {
     const { node, dispatch } = this.props
-    dispatch(PUT(node.id, { content })).then(() => {
+    dispatch(PUT(node.id, { content, version: node.version + 1 })).then(() => {
       this.setState({ timer: null })
     })
   }
