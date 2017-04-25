@@ -10,7 +10,7 @@ import Editor from 'draft-js-plugins-editor'
 import { uniqueId } from 'lodash'
 import classNames from 'classnames'
 
-import { POST, PUT, INDEX, LINK_QUERY } from '~/apis/nodes/actions'
+import { GET, POST, PUT, INDEX, LINK_QUERY } from '~/apis/nodes/actions'
 import nodeShape from '~/apis/nodes/shape'
 
 import { fromJS } from 'immutable'
@@ -148,6 +148,8 @@ class ZEditor extends Component {
     const { node, dispatch } = this.props
     dispatch(PUT(node.id, { content, version: node.version + 1 })).then(() => {
       this.setState({ timer: null })
+    }).fail(() => {
+      dispatch(GET(node.id))
     })
   }
 
