@@ -149,7 +149,7 @@ class ZEditor extends Component {
     dispatch(PUT(node.id, { content, version: node.version + 1 })).then(() => {
       this.setState({ timer: null })
     }).catch(() => {
-      window.location.reload()
+      console.log('ILUVU, versions out of sync.')
     })
   }
 
