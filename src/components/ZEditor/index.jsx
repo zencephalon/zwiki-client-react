@@ -10,7 +10,7 @@ import Editor from 'draft-js-plugins-editor'
 import { uniqueId } from 'lodash'
 import classNames from 'classnames'
 
-import { GET, POST, PUT, INDEX, LINK_QUERY } from '~/apis/nodes/actions'
+import { POST, PUT, INDEX, LINK_QUERY } from '~/apis/nodes/actions'
 import nodeShape from '~/apis/nodes/shape'
 
 import { fromJS } from 'immutable'
@@ -44,6 +44,7 @@ import {
   selectBlockUp,
   insertTimeStamp,
   insertDateStamp,
+  toggleTodo,
 } from './helpers'
 
 import Link from './Link'
@@ -173,6 +174,12 @@ class ZEditor extends Component {
       })
       return 'handled'
     }
+    if (command === 'TOGGLE_TODO') {
+      this.setState({
+        editorState: toggleTodo(editorState),
+      })
+      return 'handled'
+    }
     if (command === 'SELECT_BLOCK_DOWN') {
       this.setState({
         editorState: selectBlockDown(editorState),
@@ -180,7 +187,6 @@ class ZEditor extends Component {
       return 'handled'
     }
     if (command === 'SELECT_BLOCK_UP') {
-      console.log('got select block up')
       this.setState({
         editorState: selectBlockUp(editorState),
       })
@@ -222,7 +228,7 @@ class ZEditor extends Component {
         name: nodeTitle,
       })).then(({ data: { id } }) => {
         this.setState({
-          editorState: insertLinkCompletion(editorState, id)
+          editorState: insertLinkCompletion(editorState, id),
         })
         dispatch(TOGGLE_LINK({ nodeId: id }))
         dispatch(SLIDE_RIGHT())

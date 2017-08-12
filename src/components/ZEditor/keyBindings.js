@@ -7,6 +7,9 @@ export default function keyBindings(e) {
   if (e.key === 'D' && e.ctrlKey) {
     return 'INSERT_DATE_STAMP'
   }
+  if (e.key === 'z' && e.ctrlKey) {
+    return 'TOGGLE_TODO'
+  }
   if (e.key === 'Enter' && e.ctrlKey) {
     return 'OPEN_LINK'
   }
