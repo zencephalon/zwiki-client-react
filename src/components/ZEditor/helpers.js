@@ -12,10 +12,10 @@ import generateRandomKey from 'draft-js/lib/generateRandomKey'
 
 import { List, Repeat } from 'immutable'
 
-import { LINK_REGEX, LINK_REGEX_NO_G } from '~/constants'
+import { LINK_REGEX_NO_G } from '~/constants'
 
-const NOT_DONE_TODO = '♡'
-const DONE_TODO = '♥'
+const NOT_DONE_TODO = '☐'
+const DONE_TODO = '☑'
 
 export function insertAtomicBlock(editorState, entityKey, character) {
   const contentState = editorState.getCurrentContent()
@@ -348,12 +348,12 @@ export const selectBlock = (editorState, block) => {
   return EditorState.forceSelection(editorState, newSelectionState)
 }
 
-const replaceTodoText = (currentKey, todoOffset, editorState, character) => {
+const replaceTodoText = (currentKey, editorState, character) => {
   const todoSelectionState = SelectionState.createEmpty(currentKey).merge({
     focusKey: currentKey,
     anchorKey: currentKey,
-    anchorOffset: todoOffset,
-    focusOffset: todoOffset + 1,
+    anchorOffset: 0,
+    focusOffset: 1,
   })
 
   return EditorState.push(
@@ -376,29 +376,39 @@ export const toggleTodo = (editorState) => {
   const postSelectEditorState = selectBlock(editorState, currentContentBlock)
   const selectedText = getSelectedText(postSelectEditorState)
 
-  let todoOffset = selectedText.indexOf(NOT_DONE_TODO)
-  if (todoOffset) {
-    return replaceTodoText(currentKey, todoOffset, postSelectEditorState, DONE_TODO)
-  }
+  const postToggleEditorState = (selectedText.indexOf(NOT_DONE_TODO) === 0) ?
+    replaceTodoText(currentKey, postSelectEditorState, DONE_TODO)
+    :
+    (
+      (selectedText.indexOf(DONE_TODO) === 0) ?
+        replaceTodoText(currentKey, postSelectEditorState, NOT_DONE_TODO)
+        :
+        EditorState.push(
+          postSelectEditorState,
+          Modifier.insertText(
+            postSelectEditorState.getCurrentContent(),
+            SelectionState.createEmpty(currentKey).merge({
+              focusKey: currentKey,
+              anchorKey: currentKey,
+              anchorOffset: 0,
+              focusOffset: 0,
+            }),
+            NOT_DONE_TODO,
+          ),
+          'insert-characters',
+        )
+    )
 
-  todoOffset = selectedText.indexOf(DONE_TODO)
-  if (todoOffset) {
-    return replaceTodoText(currentKey, todoOffset, postSelectEditorState, NOT_DONE_TODO)
-  }
+  const endOffset = postToggleEditorState.getCurrentContent().getBlockForKey(currentKey).getLength()
 
-  return EditorState.push(
-    postSelectEditorState,
-    Modifier.insertText(
-      postSelectEditorState.getCurrentContent(),
-      SelectionState.createEmpty(currentKey).merge({
-        focusKey: currentKey,
-        anchorKey: currentKey,
-        anchorOffset: 0,
-        focusOffset: 0,
-      }),
-      NOT_DONE_TODO,
-    ),
-    'insert-characters',
+  return EditorState.forceSelection(
+    postToggleEditorState,
+    SelectionState.createEmpty(currentKey).merge({
+      focusKey: currentKey,
+      anchorKey: currentKey,
+      anchorOffset: endOffset,
+      focusOffset: endOffset,
+    }),
   )
 }
 
