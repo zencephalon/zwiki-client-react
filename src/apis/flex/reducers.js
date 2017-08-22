@@ -3,7 +3,7 @@ import { defVal } from '~/helpers'
 import t from './actionTypes'
 
 const startState = {
-  columns: [[1], []],
+  columns: [['a'], []],
   visibleColumnIds: [0, 1],
   focusedColumnId: 0,
   focusedRowId: 0,
