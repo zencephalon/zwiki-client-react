@@ -25,17 +25,17 @@ export default function keyBindings(e) {
   if (e.key === 'Q' && e.ctrlKey) {
     return 'SELECT_BLOCK_UP'
   }
-  if (e.key === 'j' && e.ctrlKey && !e.shiftKey) {
-    return 'CYCLE_DOWN'
-  }
-  if (e.key === 'k' && e.ctrlKey && !e.shiftKey) {
-    return 'CYCLE_UP'
-  }
-  if (e.key === 'j' && e.ctrlKey && e.shiftKey) {
+  if (e.key === 'J' && e.ctrlKey) {
     return 'SHIFT_DOWN'
   }
-  if (e.key === 'k' && e.ctrlKey && e.shiftKey) {
+  if (e.key === 'K' && e.ctrlKey) {
     return 'SHIFT_UP'
+  }
+  if (e.key === 'j' && e.ctrlKey) {
+    return 'CYCLE_DOWN'
+  }
+  if (e.key === 'k' && e.ctrlKey) {
+    return 'CYCLE_UP'
   }
   if (e.key === 'l' && e.ctrlKey) {
     return 'SLIDE_RIGHT'

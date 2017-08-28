@@ -20,12 +20,22 @@ export default function focus(state = startState, action) {
   const leftColumnId = focusedColumnId - 1
   const nextColumn = columns[nextColumnId]
   const focusedColumn = columns[focusedColumnId]
+  const rowsInLeftColumn = state.columns[leftColumnId] ? state.columns[leftColumnId].length : 0
+  const rowsInRightColumn = state.columns[nextColumnId] ? state.columns[nextColumnId].length : 0
+  const leftNextRowId = state.focusedRowId >= rowsInLeftColumn ?
+    rowsInLeftColumn - 1 :
+    state.focusedRowId
+  const rightNextRowId = state.focusedRowId >= rowsInRightColumn ?
+    rowsInRightColumn - 1 :
+    state.focusedRowId
+
   switch (action.type) {
     case t.SLIDE_RIGHT:
       if (visibleColumnIds.includes(nextColumnId)) {
         return {
           ...state,
           focusedColumnId: nextColumnId,
+          focusedRowId: rightNextRowId,
         }
       }
       return {
@@ -36,6 +46,7 @@ export default function focus(state = startState, action) {
           ...visibleColumnIds.slice(1, visibleColumnIds.length),
           nextColumnId,
         ],
+        focusedRowId: rightNextRowId,
       }
     case t.SLIDE_LEFT:
       if (focusedColumnId === 0) {
@@ -45,6 +56,7 @@ export default function focus(state = startState, action) {
         return {
           ...state,
           focusedColumnId: leftColumnId,
+          focusedRowId: leftNextRowId,
         }
       }
       return {
@@ -53,11 +65,26 @@ export default function focus(state = startState, action) {
         visibleColumnIds: [
           leftColumnId,
           ...visibleColumnIds.slice(0, visibleColumnIds.length - 1),
-        ]
+        ],
+        focusedRowId: leftNextRowId,
+      }
+    case t.CYCLE_UP:
+      return {
+        ...state,
+        focusedRowId: state.focusedRowId === 0 ? focusedColumn.length - 1 :
+          state.focusedRowId - 1,
       }
     case t.CYCLE_DOWN:
       return {
         ...state,
+        focusedRowId: state.focusedRowId === focusedColumn.length - 1 ? 0 :
+          state.focusedRowId + 1,
+      }
+    case t.SHIFT_DOWN:
+      return {
+        ...state,
+        focusedRowId: state.focusedRowId === focusedColumn.length - 1 ? 0 :
+          state.focusedRowId + 1,
         columns: [
           ...columns.slice(0, focusedColumnId),
           [
@@ -67,9 +94,11 @@ export default function focus(state = startState, action) {
           ...columns.slice(nextColumnId, columns.length),
         ],
       }
-    case t.CYCLE_UP:
+    case t.SHIFT_UP:
       return {
         ...state,
+        focusedRowId: state.focusedRowId === 0 ? focusedColumn.length - 1 :
+          state.focusedRowId - 1,
         columns: [
           ...columns.slice(0, focusedColumnId),
           [
@@ -79,7 +108,6 @@ export default function focus(state = startState, action) {
           ...columns.slice(nextColumnId, columns.length),
         ],
       }
-    case t.CYCLE_UP:
     case t.FOCUS:
       return {
         ...state,
