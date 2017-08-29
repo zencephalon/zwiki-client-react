@@ -46,5 +46,17 @@ export default function keyBindings(e) {
   if (e.key === 'n' && e.ctrlKey) {
     return 'NEW_NODE'
   }
+  if (e.key === '!' && e.ctrlKey) {
+    return 'ONE_COLUMN'
+  }
+  if (e.key === '@' && e.ctrlKey) {
+    return 'TWO_COLUMN'
+  }
+  if (e.key === '#' && e.ctrlKey) {
+    return 'THREE_COLUMN'
+  }
+  if (e.key === '$' && e.ctrlKey) {
+    return 'FOUR_COLUMN'
+  }
   return getDefaultKeyBinding(e)
 }

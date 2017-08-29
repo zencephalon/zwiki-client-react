@@ -3,7 +3,7 @@ import { defVal } from '~/helpers'
 import t from './actionTypes'
 
 const startState = {
-  columns: [['a'], []],
+  columns: [['a'], [], [], []],
   visibleColumnIds: [0, 1],
   focusedColumnId: 0,
   focusedRowId: 0,
@@ -177,6 +177,27 @@ export default function focus(state = startState, action) {
         focusedColumnId: 0,
         focusedRowId: 0,
         focusType: EDITOR,
+      }
+    case t.ONE_COLUMN:
+      return {
+        ...state,
+        visibleColumnIds: [focusedColumnId],
+      }
+    case t.TWO_COLUMN:
+      return {
+        ...state,
+        visibleColumnIds: [focusedColumnId, focusedColumnId + 1],
+      }
+    case t.THREE_COLUMN:
+      return {
+        ...state,
+        visibleColumnIds: [focusedColumnId, focusedColumnId + 1, focusedColumnId + 2],
+      }
+    case t.FOUR_COLUMN:
+      return {
+        ...state,
+        visibleColumnIds: [focusedColumnId, focusedColumnId + 1,
+          focusedColumnId + 2, focusedColumnId + 3],
       }
     default:
       return state

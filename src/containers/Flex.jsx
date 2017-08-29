@@ -18,8 +18,9 @@ const Flex = (props) => {
     },
   } = props
   const firstVisibleColumnId = visibleColumnIds[0]
+  const numVisible = visibleColumnIds.length
   return (
-    <div className="flex-writer">
+    <div className={`flex-writer columns-${numVisible}`}>
       {columns.map((column, columnId) => (
         <div
           className={classNames('flex-column', {

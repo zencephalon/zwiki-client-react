@@ -25,6 +25,10 @@ import {
   SLIDE_LEFT,
   TOGGLE_LINK,
   REFOCUS,
+  ONE_COLUMN,
+  TWO_COLUMN,
+  THREE_COLUMN,
+  FOUR_COLUMN,
 } from '~/apis/flex/actions'
 
 import '~/Autocomplete/mentionStyles.css'
@@ -245,6 +249,18 @@ class ZEditor extends Component {
       this.saveToServer(editorState.getCurrentContent().getPlainText())
       dispatch(REFOCUS({ nodeId: node.id }))
       return 'handled'
+    }
+    if (command === 'ONE_COLUMN') {
+      dispatch(ONE_COLUMN())
+    }
+    if (command === 'TWO_COLUMN') {
+      dispatch(TWO_COLUMN())
+    }
+    if (command === 'THREE_COLUMN') {
+      dispatch(THREE_COLUMN())
+    }
+    if (command === 'FOUR_COLUMN') {
+      dispatch(FOUR_COLUMN())
     }
     return 'not-handled'
   }
