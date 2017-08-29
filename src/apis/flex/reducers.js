@@ -106,10 +106,14 @@ export default function focus(state = startState, action) {
         focusedRowId: upNextRowId,
         columns: [
           ...columns.slice(0, focusedColumnId),
-          [
-            ...focusedColumn.slice(1, focusedColumn.length),
-            focusedColumn[0],
-          ],
+          ((col) => {
+            const nc = [...col]
+            const a = nc[focusedRowId]
+            const b = nc[upNextRowId]
+            nc[focusedRowId] = b
+            nc[upNextRowId] = a
+            return nc
+          })(columns[focusedColumnId]),
           ...columns.slice(nextColumnId, columns.length),
         ],
       }
