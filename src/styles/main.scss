@@ -112,11 +112,8 @@ figure {
 
 .flex-column {
   position: relative;
-  transition: top 0.2s linear;
   flex-grow: 1;
   flex-basis: 0;
-  overflow-y: scroll;
-  height: 100vh;
 }
 
 .flex-column.first-visible {
