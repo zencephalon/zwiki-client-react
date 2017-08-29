@@ -15,6 +15,7 @@ export default function focus(state = startState, action) {
     focusedColumnId,
     columns,
     visibleColumnIds,
+    focusedRowId,
   } = state
   const nextColumnId = focusedColumnId + 1
   const leftColumnId = focusedColumnId - 1
@@ -22,12 +23,16 @@ export default function focus(state = startState, action) {
   const focusedColumn = columns[focusedColumnId]
   const rowsInLeftColumn = state.columns[leftColumnId] ? state.columns[leftColumnId].length : 0
   const rowsInRightColumn = state.columns[nextColumnId] ? state.columns[nextColumnId].length : 0
-  const leftNextRowId = state.focusedRowId >= rowsInLeftColumn ?
+  const leftNextRowId = focusedRowId >= rowsInLeftColumn ?
     rowsInLeftColumn - 1 :
-    state.focusedRowId
-  const rightNextRowId = state.focusedRowId >= rowsInRightColumn ?
+    focusedRowId
+  const rightNextRowId = focusedRowId >= rowsInRightColumn ?
     rowsInRightColumn - 1 :
-    state.focusedRowId
+    focusedRowId
+  const upNextRowId = focusedRowId === 0 ? focusedColumn.length - 1 :
+          focusedRowId - 1
+  const downNextRowId = focusedRowId === focusedColumn.length - 1 ? 0 :
+          focusedRowId + 1
 
   switch (action.type) {
     case t.SLIDE_RIGHT:
@@ -71,34 +76,34 @@ export default function focus(state = startState, action) {
     case t.CYCLE_UP:
       return {
         ...state,
-        focusedRowId: state.focusedRowId === 0 ? focusedColumn.length - 1 :
-          state.focusedRowId - 1,
+        focusedRowId: upNextRowId,
       }
     case t.CYCLE_DOWN:
       return {
         ...state,
-        focusedRowId: state.focusedRowId === focusedColumn.length - 1 ? 0 :
-          state.focusedRowId + 1,
+        focusedRowId: downNextRowId,
       }
     case t.SHIFT_DOWN:
       return {
         ...state,
-        focusedRowId: state.focusedRowId === focusedColumn.length - 1 ? 0 :
-          state.focusedRowId + 1,
+        focusedRowId: downNextRowId,
         columns: [
           ...columns.slice(0, focusedColumnId),
-          [
-            focusedColumn[focusedColumn.length - 1],
-            ...focusedColumn.slice(0, focusedColumn.length - 1),
-          ],
+          ((col) => {
+            const nc = [...col]
+            const a = nc[focusedRowId]
+            const b = nc[downNextRowId]
+            nc[focusedRowId] = b
+            nc[downNextRowId] = a
+            return nc
+          })(columns[focusedColumnId]),
           ...columns.slice(nextColumnId, columns.length),
         ],
       }
     case t.SHIFT_UP:
       return {
         ...state,
-        focusedRowId: state.focusedRowId === 0 ? focusedColumn.length - 1 :
-          state.focusedRowId - 1,
+        focusedRowId: upNextRowId,
         columns: [
           ...columns.slice(0, focusedColumnId),
           [
