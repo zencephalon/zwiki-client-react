@@ -29,9 +29,9 @@ export default function focus(state = startState, action) {
   const rightNextRowId = focusedRowId >= rowsInRightColumn ?
     rowsInRightColumn - 1 :
     focusedRowId
-  const upNextRowId = focusedRowId === 0 ? focusedColumn.length - 1 :
+  const upNextRowId = focusedRowId <= 0 ? focusedColumn.length - 1 :
           focusedRowId - 1
-  const downNextRowId = focusedRowId === focusedColumn.length - 1 ? 0 :
+  const downNextRowId = focusedRowId >= focusedColumn.length - 1 ? 0 :
           focusedRowId + 1
 
   switch (action.type) {

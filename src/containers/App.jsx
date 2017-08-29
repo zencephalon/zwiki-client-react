@@ -22,9 +22,6 @@ class App extends Component {
     bindShortcut('ctrl+h', () => {
       dispatch(SLIDE_LEFT())
     })
-    setInterval(() => {
-      $('.flex-column').css('top', window.scrollY)
-    }, 200)
   }
 
   render() {
