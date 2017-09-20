@@ -8,8 +8,6 @@ import OmniSearch from '~/components/OmniSearch'
 import { FOCUS, SLIDE_RIGHT, SLIDE_LEFT } from '~/apis/flex/actions'
 import { OMNI_SEARCH } from '~/constants'
 
-import Auth from '~/apis/auth'
-
 
 class App extends Component {
   componentWillMount() {
@@ -29,7 +27,10 @@ class App extends Component {
     return (
       <div className="main-app-container">
         <div>
-          <button onClick={() => this.props.auth.login()}>Login</button>
+          {this.props.auth.isAuthenticated() ?
+            <button onClick={() => this.props.auth.logout()}>Logout</button> :
+            <button onClick={() => this.props.auth.login()}>Login</button>
+          }
         </div>
         <OmniSearch />
         {this.props.children}
