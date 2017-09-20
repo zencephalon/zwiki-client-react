@@ -8,9 +8,15 @@ import OmniSearch from '~/components/OmniSearch'
 import { FOCUS, SLIDE_RIGHT, SLIDE_LEFT } from '~/apis/flex/actions'
 import { OMNI_SEARCH } from '~/constants'
 
-import { throttle } from 'lodash'
+import Auth from '~/apis/auth'
+
 
 class App extends Component {
+  constructor(props) {
+    super(props)
+    this.auth = new Auth()
+  }
+
   componentWillMount() {
     const { dispatch, bindShortcut } = this.props
     bindShortcut('ctrl+space', () => {
@@ -27,6 +33,9 @@ class App extends Component {
   render() {
     return (
       <div className="main-app-container">
+        <div>
+          <button onClick={() => this.auth.login()} />
+        </div>
         <OmniSearch />
         {this.props.children}
       </div>
@@ -37,6 +46,7 @@ class App extends Component {
 App.propTypes = {
   dispatch: PropTypes.func.isRequired,
   bindShortcut: PropTypes.func.isRequired,
+  children: PropTypes.element.isRequired,
 }
 
 export default mouseTrap(connect()(App))

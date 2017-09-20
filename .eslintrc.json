@@ -4,7 +4,8 @@
     // Put things like jQuery, etc
     "jQuery": true,
     "$": true,
-    "document": true
+    "document": true,
+    "localStorage": true
   },
   "extends": "airbnb",
   "rules": {
