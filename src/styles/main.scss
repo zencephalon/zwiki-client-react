@@ -112,6 +112,9 @@ figure {
 
 .flex-column {
   position: relative;
+  transition: top 0.2s ease;
+  height: 100vh;
+  overflow-y: scroll;
   flex-grow: 1;
   flex-basis: 0;
 }
