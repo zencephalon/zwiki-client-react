@@ -12,11 +12,6 @@ import Auth from '~/apis/auth'
 
 
 class App extends Component {
-  constructor(props) {
-    super(props)
-    this.auth = new Auth()
-  }
-
   componentWillMount() {
     const { dispatch, bindShortcut } = this.props
     bindShortcut('ctrl+space', () => {
@@ -34,7 +29,7 @@ class App extends Component {
     return (
       <div className="main-app-container">
         <div>
-          <button onClick={() => this.auth.login()} />
+          <button onClick={() => this.props.auth.login()}>Login</button>
         </div>
         <OmniSearch />
         {this.props.children}
