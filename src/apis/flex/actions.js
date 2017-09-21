@@ -24,6 +24,22 @@ export const SLIDE_LEFT = () => ({
   type: t.SLIDE_LEFT,
 })
 
+export const ONE_COLUMN = () => ({
+  type: t.ONE_COLUMN,
+})
+
+export const TWO_COLUMN = () => ({
+  type: t.TWO_COLUMN,
+})
+
+export const THREE_COLUMN = () => ({
+  type: t.THREE_COLUMN,
+})
+
+export const FOUR_COLUMN = () => ({
+  type: t.FOUR_COLUMN,
+})
+
 export const TOGGLE_LINK = ({ nodeId }) => ({
   type: t.TOGGLE_LINK,
   nodeId,

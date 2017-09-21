@@ -12,7 +12,10 @@ import generateRandomKey from 'draft-js/lib/generateRandomKey'
 
 import { List, Repeat } from 'immutable'
 
-import { LINK_REGEX, LINK_REGEX_NO_G } from '~/constants'
+import { LINK_REGEX_NO_G } from '~/constants'
+
+const NOT_DONE_TODO = '☐'
+const DONE_TODO = '☑'
 
 export function insertAtomicBlock(editorState, entityKey, character) {
   const contentState = editorState.getCurrentContent()
@@ -29,7 +32,7 @@ export function insertAtomicBlock(editorState, entityKey, character) {
   const afterSplit = DraftModifier.splitBlock(afterRemoval, targetSelection)
   const insertionTarget = afterSplit.getSelectionAfter()
 
-  console.log({ afterRemoval, afterSplit, insertionTarget })
+  // console.log({ afterRemoval, afterSplit, insertionTarget })
 
   const asAtomicBlock = DraftModifier.setBlockType(
     afterSplit,
@@ -280,11 +283,11 @@ export const getSelectedText = (editorState) => {
 export const getSelectionNodeId = (editorState) => {
   const selectedText = getSelectedText(editorState)
   const match = LINK_REGEX_NO_G.exec(selectedText)
-  return match ? parseInt(match[2], 10) : null
+  return match ? match[2] : null
 }
 
-export const insertLinkCompletion = (editorState, nodeId) => {
-  return EditorState.push(
+export const insertLinkCompletion = (editorState, nodeId) => (
+  EditorState.push(
     editorState,
     Modifier.insertText(
       editorState.getCurrentContent(),
@@ -293,10 +296,10 @@ export const insertLinkCompletion = (editorState, nodeId) => {
     ),
     'insert-characters',
   )
-}
+)
 
-export const insertTimeStamp = (editorState) => {
-  return EditorState.push(
+export const insertTimeStamp = editorState => (
+  EditorState.push(
     editorState,
     Modifier.insertText(
       editorState.getCurrentContent(),
@@ -305,18 +308,33 @@ export const insertTimeStamp = (editorState) => {
     ),
     'insert-characters',
   )
-}
+)
 
-export const insertDateStamp = (editorState) => {
-  return EditorState.push(
+export const insertDateStamp = editorState => (
+  EditorState.push(
     editorState,
     Modifier.insertText(
       editorState.getCurrentContent(),
       editorState.getSelection(),
-      (new Date).toString().split(" ").slice(0, 4).join(" "),
+      (new Date())
+      .toString()
+      .split(' ')
+      .slice(0, 4)
+      .join(' '),
     ),
     'insert-characters',
   )
+)
+
+export const selectBlockStart = (editorState, block) => {
+  const key = block.getKey()
+  const newSelectionState = SelectionState.createEmpty(key).merge({
+    focusKey: key,
+    anchorKey: key,
+    anchorOffset: 0,
+    focusOffset: 0,
+  })
+  return EditorState.forceSelection(editorState, newSelectionState)
 }
 
 export const selectBlock = (editorState, block) => {
@@ -328,6 +346,70 @@ export const selectBlock = (editorState, block) => {
     focusOffset: block.getLength(),
   })
   return EditorState.forceSelection(editorState, newSelectionState)
+}
+
+const replaceTodoText = (currentKey, editorState, character) => {
+  const todoSelectionState = SelectionState.createEmpty(currentKey).merge({
+    focusKey: currentKey,
+    anchorKey: currentKey,
+    anchorOffset: 0,
+    focusOffset: 1,
+  })
+
+  return EditorState.push(
+    editorState,
+    Modifier.replaceText(
+      editorState.getCurrentContent(),
+      todoSelectionState,
+      character,
+    ),
+    'insert-characters',
+  )
+}
+
+export const toggleTodo = (editorState) => {
+  const selectionState = editorState.getSelection()
+  const currentKey = selectionState.getAnchorKey()
+  const currentContent = editorState.getCurrentContent()
+  const currentContentBlock = currentContent.getBlockForKey(currentKey)
+
+  const postSelectEditorState = selectBlock(editorState, currentContentBlock)
+  const selectedText = getSelectedText(postSelectEditorState)
+
+  const postToggleEditorState = (selectedText.indexOf(NOT_DONE_TODO) === 0) ?
+    replaceTodoText(currentKey, postSelectEditorState, DONE_TODO)
+    :
+    (
+      (selectedText.indexOf(DONE_TODO) === 0) ?
+        replaceTodoText(currentKey, postSelectEditorState, NOT_DONE_TODO)
+        :
+        EditorState.push(
+          postSelectEditorState,
+          Modifier.insertText(
+            postSelectEditorState.getCurrentContent(),
+            SelectionState.createEmpty(currentKey).merge({
+              focusKey: currentKey,
+              anchorKey: currentKey,
+              anchorOffset: 0,
+              focusOffset: 0,
+            }),
+            NOT_DONE_TODO,
+          ),
+          'insert-characters',
+        )
+    )
+
+  const endOffset = postToggleEditorState.getCurrentContent().getBlockForKey(currentKey).getLength()
+
+  return EditorState.forceSelection(
+    postToggleEditorState,
+    SelectionState.createEmpty(currentKey).merge({
+      focusKey: currentKey,
+      anchorKey: currentKey,
+      anchorOffset: endOffset,
+      focusOffset: endOffset,
+    }),
+  )
 }
 
 export const selectBlockDir = (editorState, down) => {

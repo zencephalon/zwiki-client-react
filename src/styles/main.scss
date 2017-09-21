@@ -15,7 +15,7 @@ body {
   display: flex;
   justify-content: center;
   font-family: 'Vollkorn', serif;
-  font-size: 2vw;
+  font-size: 3vw;
   margin: 0.5em 1.5em;
 }
 
@@ -58,7 +58,7 @@ figure {
     font-size: 1em;
     line-height: 1.5em;
     font-family: 'Vollkorn', serif;
-    width: 37em;
+    width: 33em;
     padding: 0px;
     border-width: 0px;
   }
@@ -84,14 +84,44 @@ figure {
 
 // ==== Flex =====
 
+// 33 ems per column
+.columns-1 {
+  font-size: 100%;
+  width: 33em;
+}
+// 25 ems per column
+.columns-2 {
+  font-size: 66%;
+  width: 50em;
+}
+// 22 ems per column
+.columns-3 {
+  font-size: 50%;
+  width: 66em;
+}
+// 25 ems per column
+.columns-4 {
+  font-size: 33%;
+  width: 100em;
+}
+
 .flex-writer {
   display: flex;
   flex-direction: row;
 }
 
 .flex-column {
+  position: relative;
+  transition: top 0.2s ease;
+  height: 100vh;
+  overflow-y: scroll;
   flex-grow: 1;
   flex-basis: 0;
+}
+
+.flex-column.first-visible {
+  position: static;
+  height: 100%;
 }
 
 .flex-column.focused {

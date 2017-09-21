@@ -25,6 +25,10 @@ import {
   SLIDE_LEFT,
   TOGGLE_LINK,
   REFOCUS,
+  ONE_COLUMN,
+  TWO_COLUMN,
+  THREE_COLUMN,
+  FOUR_COLUMN,
 } from '~/apis/flex/actions'
 
 import '~/Autocomplete/mentionStyles.css'
@@ -44,6 +48,7 @@ import {
   selectBlockUp,
   insertTimeStamp,
   insertDateStamp,
+  toggleTodo,
 } from './helpers'
 
 import Link from './Link'
@@ -150,8 +155,10 @@ class ZEditor extends Component {
 
   saveToServer = (content) => {
     const { node, dispatch } = this.props
-    dispatch(PUT(node.id, { content })).then(() => {
+    dispatch(PUT(node.id, { content, version: node.version + 1 })).then(() => {
       this.setState({ timer: null })
+    }).catch(() => {
+      console.log('ILUVU, versions out of sync.')
     })
   }
 
@@ -175,6 +182,12 @@ class ZEditor extends Component {
       })
       return 'handled'
     }
+    if (command === 'TOGGLE_TODO') {
+      this.setState({
+        editorState: toggleTodo(editorState),
+      })
+      return 'handled'
+    }
     if (command === 'SELECT_BLOCK_DOWN') {
       this.setState({
         editorState: selectBlockDown(editorState),
@@ -182,7 +195,6 @@ class ZEditor extends Component {
       return 'handled'
     }
     if (command === 'SELECT_BLOCK_UP') {
-      console.log('got select block up')
       this.setState({
         editorState: selectBlockUp(editorState),
       })
@@ -224,7 +236,7 @@ class ZEditor extends Component {
         name: nodeTitle,
       })).then(({ data: { id } }) => {
         this.setState({
-          editorState: insertLinkCompletion(editorState, id)
+          editorState: insertLinkCompletion(editorState, id),
         })
         dispatch(TOGGLE_LINK({ nodeId: id }))
         dispatch(SLIDE_RIGHT())
@@ -240,6 +252,18 @@ class ZEditor extends Component {
     if (command === 'REFOCUS') {
       dispatch(REFOCUS({ nodeId: node.id }))
       return 'handled'
+    }
+    if (command === 'ONE_COLUMN') {
+      dispatch(ONE_COLUMN())
+    }
+    if (command === 'TWO_COLUMN') {
+      dispatch(TWO_COLUMN())
+    }
+    if (command === 'THREE_COLUMN') {
+      dispatch(THREE_COLUMN())
+    }
+    if (command === 'FOUR_COLUMN') {
+      dispatch(FOUR_COLUMN())
     }
     return 'not-handled'
   }
@@ -261,6 +285,7 @@ class ZEditor extends Component {
           defaultKeyBindings={false}
           handleKeyCommand={this.handleKeyCommand}
           keyBindingFn={keyBindings}
+          spellCheck
           onTab={(e) => {
             const { editorState } = this.state
 
