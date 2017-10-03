@@ -84,6 +84,7 @@ export default class MentionSuggestions extends Component {
 
   onEditorStateChange = (editorState) => {
     const searches = this.props.store.getAllSearches()
+    console.log({ searches: searches.size })
 
     // if no search portal is active there is no need to show the popover
     if (searches.size === 0) {
@@ -102,10 +103,12 @@ export default class MentionSuggestions extends Component {
     const anchorOffset = selection.getAnchorOffset()
 
     // the list should not be visible if a range is selected or the editor has no focus
-    if (!selection.isCollapsed() || !selection.getHasFocus()) return removeList()
+    // if (!selection.isCollapsed() || !selection.getHasFocus()) return removeList()
 
     // identify the start & end positon of each search-text
     const offsetDetails = searches.map((offsetKey) => decodeOffsetKey(offsetKey))
+
+    console.log({ offsetDetails })
 
     // a leave can be empty when it is removed due e.g. using backspace
     const leaves = offsetDetails
@@ -118,7 +121,7 @@ export default class MentionSuggestions extends Component {
 
     // if all leaves are undefined the popover should be removed
     if (leaves.every((leave) => leave === undefined)) {
-      return removeList()
+      // return removeList()
     }
 
     // Checks that the cursor is after the @ character but still somewhere in
@@ -131,7 +134,7 @@ export default class MentionSuggestions extends Component {
         (anchorOffset > start + 1 && anchorOffset <= end) // @ is in the text or at the end
       ))
 
-    if (selectionIsInsideWord.every((isInside) => isInside === false)) return removeList()
+    // if (selectionIsInsideWord.every((isInside) => isInside === false)) return removeList()
 
     const lastActiveOffsetKey = this.activeOffsetKey
     this.activeOffsetKey = selectionIsInsideWord
@@ -140,11 +143,12 @@ export default class MentionSuggestions extends Component {
       .first()
 
     this.onSearchChange(editorState, selection, this.activeOffsetKey, lastActiveOffsetKey)
+    this.openDropdown()
 
     // make sure the escaped search is reseted in the cursor since the user
     // already switched to another mention search
     if (!this.props.store.isEscaped(this.activeOffsetKey)) {
-      this.props.store.resetEscapedSearch()
+      // this.props.store.resetEscapedSearch()
     }
 
     // If none of the above triggered to close the window, it's safe to assume
