@@ -1,4 +1,4 @@
-import { getLeftEdge } from '../getWordAt'
+import { getLeftEdge, getRightEdge } from '../getWordAt'
 
 test('getLeftEdge works at start of string', () => {
   expect(getLeftEdge('[ILUVU ILUVU', 5, '[')).toBe(1)
@@ -14,6 +14,22 @@ test('getLeftEdge gets the right most left edge not past the cursor', () => {
 
 test('getLeftEdge gets the end of a string', () => {
   expect(getLeftEdge('I[', 2, '[')).toBe(2)
+})
+
+test('getRightEdge gets the end of a string', () => {
+  expect(getRightEdge('ILUVU', 1)).toBe(5)
+})
+
+test('getRightEdge gets the end of a word', () => {
+  expect(getRightEdge('ILUVU fool', 1)).toBe(5)
+})
+
+test("getRightEdge won't go too far", () => {
+  expect(getRightEdge('ILUVU fool goodbye', 5)).toBe(5)
+})
+
+test("getRightEdge will get the next word", () => {
+  expect(getRightEdge('ILUVU fool goodbye', 6)).toBe(10)
 })
 
 // test('finds a word in between sentences', () => {

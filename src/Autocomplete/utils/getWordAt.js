@@ -21,6 +21,11 @@ export const getLeftEdge = (string, position, mentionTrigger) => {
   return left
 }
 
+export const getRightEdge = (string, position) => {
+  const space = string.slice(position).search(/\s/)
+  return space >= 0 ? position + space : string.length
+}
+
 const getWordAt = (string, position, mentionTrigger) => {
   // Perform type conversions.
   const str = String(string)
