@@ -5,7 +5,9 @@
     "jQuery": true,
     "$": true,
     "document": true,
-    "window": true
+    "window": true,
+    "expect": true,
+    "test": true
   },
   "extends": "airbnb",
   "rules": {
