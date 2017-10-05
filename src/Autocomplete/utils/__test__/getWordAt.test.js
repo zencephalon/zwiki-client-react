@@ -12,6 +12,10 @@ test('getLeftEdge gets the right most left edge not past the cursor', () => {
   expect(getLeftEdge('[ILUVU](5) [ILUVU still] [and still', 15, '[')).toBe(12)
 })
 
+test('getLeftEdge gets the end of a string', () => {
+  expect(getLeftEdge('I[', 2, '[')).toBe(2)
+})
+
 // test('finds a word in between sentences', () => {
 //   const expected = {
 //     word: 'is',
