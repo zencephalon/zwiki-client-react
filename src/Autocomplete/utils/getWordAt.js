@@ -7,14 +7,13 @@ export const getLeftEdge = (string, position, mentionTrigger) => {
 
   while (true) {
     let leftIncrement = leftSearchString.search(triggerRegex)
-    console.log({ leftSearchString, leftIncrement })
-    if (leftIncrement < 0) {
-      break
-    }
+
+    if (leftIncrement < 0) break
+
     leftIncrement += mentionTrigger.length
-    if (left + leftIncrement > position) {
-      break
-    }
+
+    if (left + leftIncrement > position) break
+
     left += leftIncrement
     leftSearchString = leftSearchString.slice(leftIncrement)
   }
