@@ -1,5 +1,26 @@
 import { escapeRegExp } from 'lodash'
 
+export const getFromTriggerToWordEnd = (string, position, mentionTrigger) => {
+  let left = 0
+  const triggerRegex = new RegExp(`${escapeRegExp(mentionTrigger)}`)
+  let leftSearchString = string
+
+  while (true) {
+    const leftIncrement = leftSearchString.search(triggerRegex)
+    if (left + leftIncrement > position) {
+      break
+    }
+    if (leftIncrement > 0) {
+      left += leftIncrement
+      leftSearchString = leftSearchString.slice(leftIncrement + mentionTrigger.length)
+    } else {
+      break
+    }
+  }
+
+  return left
+}
+
 const getWordAt = (string, position, mentionTrigger) => {
   // Perform type conversions.
   const str = String(string)
@@ -7,7 +28,7 @@ const getWordAt = (string, position, mentionTrigger) => {
   const pos = Number(position) >>> 0
 
   // Search for the word's beginning and end.
-  const left = str.slice(0, pos + 1).search(/(\S|])+$/)
+  const left = position //str.slice(0, pos + 1).search(/(\S|])+$/)
   const right = str.slice(pos).search(/\s/)
 
   const word = str.slice(left)
