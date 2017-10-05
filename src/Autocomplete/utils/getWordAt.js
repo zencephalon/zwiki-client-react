@@ -1,21 +1,22 @@
 import { escapeRegExp } from 'lodash'
 
-export const getFromTriggerToWordEnd = (string, position, mentionTrigger) => {
+export const getLeftEdge = (string, position, mentionTrigger) => {
   let left = 0
   const triggerRegex = new RegExp(`${escapeRegExp(mentionTrigger)}`)
   let leftSearchString = string
 
   while (true) {
-    const leftIncrement = leftSearchString.search(triggerRegex)
+    let leftIncrement = leftSearchString.search(triggerRegex)
+    console.log({ leftSearchString, leftIncrement })
+    if (leftIncrement < 0) {
+      break
+    }
+    leftIncrement += mentionTrigger.length
     if (left + leftIncrement > position) {
       break
     }
-    if (leftIncrement > 0) {
-      left += leftIncrement
-      leftSearchString = leftSearchString.slice(leftIncrement + mentionTrigger.length)
-    } else {
-      break
-    }
+    left += leftIncrement
+    leftSearchString = leftSearchString.slice(leftIncrement)
   }
 
   return left
