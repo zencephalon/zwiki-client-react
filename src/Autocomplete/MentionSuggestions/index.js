@@ -39,7 +39,7 @@ export default class MentionSuggestions extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.suggestions.size === 0 && this.state.isActive) {
-      this.closeDropdown()
+      // this.closeDropdown()
     }
   }
 
@@ -93,7 +93,7 @@ export default class MentionSuggestions extends Component {
 
     const removeList = () => {
       this.props.store.resetEscapedSearch()
-      this.closeDropdown()
+      // this.closeDropdown()
       return editorState
     }
 
@@ -209,7 +209,7 @@ export default class MentionSuggestions extends Component {
       .keySeq()
       .first()
     this.props.store.escapeSearch(activeOffsetKey)
-    this.closeDropdown()
+    // this.closeDropdown()
 
     // to force a re-render of the outer component to change the aria props
     this.props.store.setEditorState(this.props.store.getEditorState())
@@ -226,7 +226,7 @@ export default class MentionSuggestions extends Component {
       this.props.onAddMention(mention)
     }
 
-    this.closeDropdown()
+    // this.closeDropdown()
     const newEditorState = addMention(
       this.props.store.getEditorState(),
       mention,
