@@ -32,29 +32,16 @@ const getWordAt = (string, position, mentionTrigger) => {
   // eslint-disable-next-line no-bitwise
   const pos = Number(position) >>> 0
 
-  // Search for the word's beginning and end.
-  const left = position //str.slice(0, pos + 1).search(/(\S|])+$/)
-  const right = str.slice(pos).search(/\s/)
-
-  const word = str.slice(left)
-  const triggerLeft = word.search(new RegExp(`${escapeRegExp(mentionTrigger)}`))
-
-  console.log({ str, pos, left, right, word, triggerLeft })
-
-  // The last word in the string is a special case.
-  if (right < 0) {
-    return {
-      word: str.slice(left + triggerLeft),
-      begin: left + triggerLeft,
-      end: str.length,
-    }
-  }
+  const left = getLeftEdge(string, pos, mentionTrigger)
+  const right = getRightEdge(string, pos)
+  const word = str.substring(left, right)
 
   // Return the word, using the located bounds to extract it from the string.
+  console.log({ left, right, word })
   return {
-    word: str.slice(left + triggerLeft, right + pos),
-    begin: left + triggerLeft,
-    end: right + pos,
+    word: word,
+    begin: left,
+    end: right,
   }
 }
 

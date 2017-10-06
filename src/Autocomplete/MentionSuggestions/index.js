@@ -39,7 +39,7 @@ export default class MentionSuggestions extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.suggestions.size === 0 && this.state.isActive) {
-      // this.closeDropdown()
+      this.closeDropdown()
     }
   }
 
@@ -93,7 +93,7 @@ export default class MentionSuggestions extends Component {
 
     const removeList = () => {
       this.props.store.resetEscapedSearch()
-      // this.closeDropdown()
+      this.closeDropdown()
       return editorState
     }
 
@@ -103,7 +103,7 @@ export default class MentionSuggestions extends Component {
     const anchorOffset = selection.getAnchorOffset()
 
     // the list should not be visible if a range is selected or the editor has no focus
-    // if (!selection.isCollapsed() || !selection.getHasFocus()) return removeList()
+    if (!selection.isCollapsed() || !selection.getHasFocus()) return removeList()
 
     // identify the start & end positon of each search-text
     const offsetDetails = searches.map((offsetKey) => decodeOffsetKey(offsetKey))
@@ -121,7 +121,7 @@ export default class MentionSuggestions extends Component {
 
     // if all leaves are undefined the popover should be removed
     if (leaves.every((leave) => leave === undefined)) {
-      // return removeList()
+      return removeList()
     }
 
     // Checks that the cursor is after the @ character but still somewhere in
@@ -148,7 +148,7 @@ export default class MentionSuggestions extends Component {
     // make sure the escaped search is reseted in the cursor since the user
     // already switched to another mention search
     if (!this.props.store.isEscaped(this.activeOffsetKey)) {
-      // this.props.store.resetEscapedSearch()
+      this.props.store.resetEscapedSearch()
     }
 
     // If none of the above triggered to close the window, it's safe to assume
@@ -175,7 +175,7 @@ export default class MentionSuggestions extends Component {
   onSearchChange = (editorState, selection, activeOffsetKey, lastActiveOffsetKey) => {
     const { mentionTrigger } = this.props
     const { word } = getSearchText(editorState, selection, mentionTrigger)
-    const searchValue = word.substring(mentionTrigger.length, word.length)
+    const searchValue = word //word.substring(mentionTrigger.length, word.length)
     if (this.lastSearchValue !== searchValue || activeOffsetKey !== lastActiveOffsetKey) {
       this.lastSearchValue = searchValue
       this.props.onSearchChange({ value: searchValue })
@@ -209,7 +209,7 @@ export default class MentionSuggestions extends Component {
       .keySeq()
       .first()
     this.props.store.escapeSearch(activeOffsetKey)
-    // this.closeDropdown()
+    this.closeDropdown()
 
     // to force a re-render of the outer component to change the aria props
     this.props.store.setEditorState(this.props.store.getEditorState())
@@ -218,6 +218,9 @@ export default class MentionSuggestions extends Component {
   onMentionSelect = (mention) => {
     // Note: This can happen in case a user typed @xxx (invalid mention) and
     // then hit Enter. Then the mention will be undefined.
+
+    console.log('ILUVU', { mention })
+
     if (!mention) {
       return
     }
@@ -226,7 +229,7 @@ export default class MentionSuggestions extends Component {
       this.props.onAddMention(mention)
     }
 
-    // this.closeDropdown()
+    this.closeDropdown()
     const newEditorState = addMention(
       this.props.store.getEditorState(),
       mention,
