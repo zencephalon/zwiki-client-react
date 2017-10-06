@@ -108,9 +108,7 @@ export default class MentionSuggestions extends Component {
     if (!selection.isCollapsed() || !selection.getHasFocus()) return removeList()
 
     // identify the start & end positon of each search-text
-    const offsetDetails = searches.map((offsetKey) => decodeOffsetKey(offsetKey))
-
-    console.log("mention", { offsetDetails: offsetDetails.toJS() })
+    const offsetDetails = searches.map(offsetKey => decodeOffsetKey(offsetKey))
 
     // a leave can be empty when it is removed due e.g. using backspace
     const leaves = offsetDetails
@@ -121,10 +119,8 @@ export default class MentionSuggestions extends Component {
           .getIn([decoratorKey, 'leaves', leafKey])
       ))
 
-    console.log("mention", { leaves: leaves.toJS() })
-
     // if all leaves are undefined the popover should be removed
-    if (leaves.every((leave) => leave === undefined)) {
+    if (leaves.every(leave => leave === undefined)) {
       return removeList()
     }
 
@@ -132,19 +128,15 @@ export default class MentionSuggestions extends Component {
     // the word (search term). Setting it to allow the cursor to be left of
     // the @ causes troubles due selection confusion.
     const selectionIsInsideWord = leaves
-      .filter((leave) => leave !== undefined)
+      .filter(leave => leave !== undefined)
       .map(({ start, end }) => (
         (start === 0 && anchorOffset === 1 && anchorOffset <= end) || // @ is the first character
         (anchorOffset > start + 1 && anchorOffset <= end) // @ is in the text or at the end
       ))
 
-    console.log("mention", { selectionIsInsideWord: selectionIsInsideWord.toJS() })
-
-    // if (selectionIsInsideWord.every((isInside) => isInside === false)) return removeList()
-
     const lastActiveOffsetKey = this.activeOffsetKey
     this.activeOffsetKey = selectionIsInsideWord
-      .filter((value) => value === true)
+      .filter(value => value === true)
       .keySeq()
       .first()
 
@@ -183,11 +175,7 @@ export default class MentionSuggestions extends Component {
     return editorState
   };
 
-  onSearchChange = (word, activeOffsetKey, lastActiveOffsetKey) => {
-    const searchValue = word //word.substring(mentionTrigger.length, word.length)
-
-    console.log('onSearchChange', word)
-
+  onSearchChange = (searchValue, activeOffsetKey, lastActiveOffsetKey) => {
     if (this.lastSearchValue !== searchValue || activeOffsetKey !== lastActiveOffsetKey) {
       this.lastSearchValue = searchValue
       this.props.onSearchChange({ value: searchValue })
@@ -217,7 +205,7 @@ export default class MentionSuggestions extends Component {
     keyboardEvent.preventDefault()
 
     const activeOffsetKey = this.lastSelectionIsInsideWord
-      .filter((value) => value === true)
+      .filter(value => value === true)
       .keySeq()
       .first()
     this.props.store.escapeSearch(activeOffsetKey)
