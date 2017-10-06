@@ -83,7 +83,7 @@ export default class MentionSuggestions extends Component {
   };
 
   onEditorStateChange = (editorState) => {
-    const { mentionTrigger } = this.props
+    const { mentionTrigger, stopChar } = this.props
 
     const searches = this.props.store.getAllSearches()
 
@@ -141,7 +141,7 @@ export default class MentionSuggestions extends Component {
 
     const { word } = getSearchText(editorState, selection, mentionTrigger)
 
-    if (word.search(']') >= 0) {
+    if (word.search(stopChar) >= 0) {
       return removeList()
     }
 
@@ -315,6 +315,7 @@ export default class MentionSuggestions extends Component {
       positionSuggestions, // eslint-disable-line no-unused-vars
       mentionTrigger, // eslint-disable-line no-unused-vars
       replaceTemplate, // eslint-disable-line no-unused-vars
+      stopChar, // eslint-disable-line no-unused-vars
       ...elementProps } = this.props
 
     return (
