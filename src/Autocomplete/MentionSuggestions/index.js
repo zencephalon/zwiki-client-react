@@ -83,6 +83,8 @@ export default class MentionSuggestions extends Component {
   };
 
   onEditorStateChange = (editorState) => {
+    const { mentionTrigger } = this.props
+
     const searches = this.props.store.getAllSearches()
     console.log({ searches: searches.size })
 
@@ -108,7 +110,7 @@ export default class MentionSuggestions extends Component {
     // identify the start & end positon of each search-text
     const offsetDetails = searches.map((offsetKey) => decodeOffsetKey(offsetKey))
 
-    console.log({ offsetDetails })
+    console.log("mention", { offsetDetails: offsetDetails.toJS() })
 
     // a leave can be empty when it is removed due e.g. using backspace
     const leaves = offsetDetails
@@ -118,6 +120,8 @@ export default class MentionSuggestions extends Component {
           .getBlockTree(blockKey)
           .getIn([decoratorKey, 'leaves', leafKey])
       ))
+
+    console.log("mention", { leaves: leaves.toJS() })
 
     // if all leaves are undefined the popover should be removed
     if (leaves.every((leave) => leave === undefined)) {
@@ -134,6 +138,8 @@ export default class MentionSuggestions extends Component {
         (anchorOffset > start + 1 && anchorOffset <= end) // @ is in the text or at the end
       ))
 
+    console.log("mention", { selectionIsInsideWord: selectionIsInsideWord.toJS() })
+
     // if (selectionIsInsideWord.every((isInside) => isInside === false)) return removeList()
 
     const lastActiveOffsetKey = this.activeOffsetKey
@@ -142,8 +148,13 @@ export default class MentionSuggestions extends Component {
       .keySeq()
       .first()
 
-    this.onSearchChange(editorState, selection, this.activeOffsetKey, lastActiveOffsetKey)
-    this.openDropdown()
+    const { word } = getSearchText(editorState, selection, mentionTrigger)
+
+    if (word.search(']') >= 0) {
+      return removeList()
+    }
+
+    this.onSearchChange(word, this.activeOffsetKey, lastActiveOffsetKey)
 
     // make sure the escaped search is reseted in the cursor since the user
     // already switched to another mention search
@@ -172,10 +183,11 @@ export default class MentionSuggestions extends Component {
     return editorState
   };
 
-  onSearchChange = (editorState, selection, activeOffsetKey, lastActiveOffsetKey) => {
-    const { mentionTrigger } = this.props
-    const { word } = getSearchText(editorState, selection, mentionTrigger)
+  onSearchChange = (word, activeOffsetKey, lastActiveOffsetKey) => {
     const searchValue = word //word.substring(mentionTrigger.length, word.length)
+
+    console.log('onSearchChange', word)
+
     if (this.lastSearchValue !== searchValue || activeOffsetKey !== lastActiveOffsetKey) {
       this.lastSearchValue = searchValue
       this.props.onSearchChange({ value: searchValue })
