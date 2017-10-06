@@ -32,16 +32,15 @@ const getWordAt = (string, position, mentionTrigger) => {
   // eslint-disable-next-line no-bitwise
   const pos = Number(position) >>> 0
 
-  const left = getLeftEdge(string, pos, mentionTrigger)
-  const right = getRightEdge(string, pos)
-  const word = str.substring(left, right)
+  const begin = getLeftEdge(string, pos, mentionTrigger)
+  const end = getRightEdge(string, pos)
+  const word = str.substring(begin, end)
 
   // Return the word, using the located bounds to extract it from the string.
-  console.log({ left, right, word })
   return {
-    word: word,
-    begin: left,
-    end: right,
+    word,
+    begin,
+    end,
   }
 }
 

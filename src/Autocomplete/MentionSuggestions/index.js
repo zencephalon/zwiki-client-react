@@ -86,7 +86,6 @@ export default class MentionSuggestions extends Component {
     const { mentionTrigger } = this.props
 
     const searches = this.props.store.getAllSearches()
-    console.log({ searches: searches.size })
 
     // if no search portal is active there is no need to show the popover
     if (searches.size === 0) {
@@ -218,9 +217,6 @@ export default class MentionSuggestions extends Component {
   onMentionSelect = (mention) => {
     // Note: This can happen in case a user typed @xxx (invalid mention) and
     // then hit Enter. Then the mention will be undefined.
-
-    console.log('ILUVU', { mention })
-
     if (!mention) {
       return
     }
