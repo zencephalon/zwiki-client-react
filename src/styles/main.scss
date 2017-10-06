@@ -16,7 +16,7 @@ body {
   justify-content: center;
   font-family: 'Vollkorn', serif;
   font-size: 3vw;
-  margin: 0.5em 1.5em;
+  margin-top: 0;
 }
 
 // ====== Editor ======
@@ -55,7 +55,7 @@ figure {
 
 .omni-search {
   input {
-    font-size: 1em;
+    font-size: 66%;
     line-height: 1.5em;
     font-family: 'Vollkorn', serif;
     width: 33em;
@@ -69,11 +69,17 @@ figure {
 
   .suggestions {
     height: 1em;
+    font-size: 66%;
 
     .suggestion-popover {
       position: relative;
       background-color: white;
       border: 1px solid $accent-blue;
+      z-index: 500;
+
+      div {
+        padding-left: 0.5em;
+      }
 
       .selected {
         background-color: $lighter-blue;
