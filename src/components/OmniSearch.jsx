@@ -111,7 +111,7 @@ class OmniSearch extends Component {
               suggestions.map((suggestion, index) => (
                 <div
                   key={suggestion.id}
-                  className={classNames({ selected: index === selected })}
+                  className={classNames('suggestion-item', { selected: index === selected })}
                 >
                   { suggestion.name }
                 </div>

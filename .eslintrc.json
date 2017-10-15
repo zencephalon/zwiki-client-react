@@ -5,7 +5,10 @@
     "jQuery": true,
     "$": true,
     "document": true,
-    "localStorage": true
+    "localStorage": true,
+    "window": true,
+    "expect": true,
+    "test": true
   },
   "extends": "airbnb",
   "rules": {

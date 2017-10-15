@@ -85,7 +85,8 @@ export default (config = {}) => {
     mentionComponent,
     entityMutability = 'SEGMENTED',
     mentionTrigger = '[',
-    replaceTemplate = ({ name, id }) => `[${name}](${id})`,
+    replaceTemplate = ({ name, id }) => `${name}](${id})`,
+    stopChar = ']',
     mentionRegExp = defaultRegExp,
   } = config
   const mentionSearchProps = {
@@ -97,6 +98,7 @@ export default (config = {}) => {
     positionSuggestions,
     mentionTrigger,
     replaceTemplate,
+    stopChar,
   }
   return {
     MentionSuggestions: decorateComponentWithProps(MentionSuggestions, mentionSearchProps),

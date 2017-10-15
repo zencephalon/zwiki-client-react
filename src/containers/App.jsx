@@ -21,6 +21,10 @@ class App extends Component {
     bindShortcut('ctrl+h', () => {
       dispatch(SLIDE_LEFT())
     })
+    window.onscroll = throttle(() => {
+      const searchHeight = $('.omni-search').height()
+      $('.flex-column').css('top', window.scrollY > searchHeight ? window.scrollY - searchHeight : 0)
+    }, 200)
   }
 
   render() {

@@ -83,6 +83,8 @@ export default class MentionSuggestions extends Component {
   };
 
   onEditorStateChange = (editorState) => {
+    const { mentionTrigger, stopChar } = this.props
+
     const searches = this.props.store.getAllSearches()
 
     // if no search portal is active there is no need to show the popover
@@ -105,7 +107,7 @@ export default class MentionSuggestions extends Component {
     if (!selection.isCollapsed() || !selection.getHasFocus()) return removeList()
 
     // identify the start & end positon of each search-text
-    const offsetDetails = searches.map((offsetKey) => decodeOffsetKey(offsetKey))
+    const offsetDetails = searches.map(offsetKey => decodeOffsetKey(offsetKey))
 
     // a leave can be empty when it is removed due e.g. using backspace
     const leaves = offsetDetails
@@ -117,7 +119,7 @@ export default class MentionSuggestions extends Component {
       ))
 
     // if all leaves are undefined the popover should be removed
-    if (leaves.every((leave) => leave === undefined)) {
+    if (leaves.every(leave => leave === undefined)) {
       return removeList()
     }
 
@@ -125,21 +127,25 @@ export default class MentionSuggestions extends Component {
     // the word (search term). Setting it to allow the cursor to be left of
     // the @ causes troubles due selection confusion.
     const selectionIsInsideWord = leaves
-      .filter((leave) => leave !== undefined)
+      .filter(leave => leave !== undefined)
       .map(({ start, end }) => (
         (start === 0 && anchorOffset === 1 && anchorOffset <= end) || // @ is the first character
         (anchorOffset > start + 1 && anchorOffset <= end) // @ is in the text or at the end
       ))
 
-    if (selectionIsInsideWord.every((isInside) => isInside === false)) return removeList()
-
     const lastActiveOffsetKey = this.activeOffsetKey
     this.activeOffsetKey = selectionIsInsideWord
-      .filter((value) => value === true)
+      .filter(value => value === true)
       .keySeq()
       .first()
 
-    this.onSearchChange(editorState, selection, this.activeOffsetKey, lastActiveOffsetKey)
+    const { word } = getSearchText(editorState, selection, mentionTrigger)
+
+    if (word.search(stopChar) >= 0) {
+      return removeList()
+    }
+
+    this.onSearchChange(word, this.activeOffsetKey, lastActiveOffsetKey)
 
     // make sure the escaped search is reseted in the cursor since the user
     // already switched to another mention search
@@ -168,10 +174,7 @@ export default class MentionSuggestions extends Component {
     return editorState
   };
 
-  onSearchChange = (editorState, selection, activeOffsetKey, lastActiveOffsetKey) => {
-    const { mentionTrigger } = this.props
-    const { word } = getSearchText(editorState, selection, mentionTrigger)
-    const searchValue = word.substring(mentionTrigger.length, word.length)
+  onSearchChange = (searchValue, activeOffsetKey, lastActiveOffsetKey) => {
     if (this.lastSearchValue !== searchValue || activeOffsetKey !== lastActiveOffsetKey) {
       this.lastSearchValue = searchValue
       this.props.onSearchChange({ value: searchValue })
@@ -201,7 +204,7 @@ export default class MentionSuggestions extends Component {
     keyboardEvent.preventDefault()
 
     const activeOffsetKey = this.lastSelectionIsInsideWord
-      .filter((value) => value === true)
+      .filter(value => value === true)
       .keySeq()
       .first()
     this.props.store.escapeSearch(activeOffsetKey)
@@ -312,6 +315,7 @@ export default class MentionSuggestions extends Component {
       positionSuggestions, // eslint-disable-line no-unused-vars
       mentionTrigger, // eslint-disable-line no-unused-vars
       replaceTemplate, // eslint-disable-line no-unused-vars
+      stopChar, // eslint-disable-line no-unused-vars
       ...elementProps } = this.props
 
     return (

@@ -73,12 +73,12 @@ class ZEditor extends Component {
     this.mentionPlugin = createMentionPlugin({
       theme,
       mentionTrigger: '[',
-      replaceTemplate: ({ name, id }) => `[${name}](${id})`,
+      replaceTemplate: ({ name, id }) => `${name}](${id})`,
     })
     this.mentionPluginTwo = createMentionPlugin({
       theme,
       mentionTrigger: '](',
-      replaceTemplate: ({ id }) => `](${id})`,
+      replaceTemplate: ({ id }) => `${id})`,
     })
   }
 
@@ -104,6 +104,10 @@ class ZEditor extends Component {
         (lastProps.focusType !== EDITOR || !lastProps.focused)) {
       this.focus()
     }
+  }
+
+  componentWillUnmount() {
+    // this.saveToServer(this.state.editorState.getCurrentContent().getPlainText())
   }
 
   onChange = (editorState) => {
@@ -151,7 +155,7 @@ class ZEditor extends Component {
 
   saveToServer = (content) => {
     const { node, dispatch } = this.props
-    dispatch(PUT(node.id, { content, version: node.version + 1 })).then(() => {
+    return dispatch(PUT(node.id, { content, version: node.version + 1 })).then(() => {
       this.setState({ timer: null })
     }).catch(() => {
       console.log('ILUVU, versions out of sync.')
@@ -246,8 +250,9 @@ class ZEditor extends Component {
       return 'handled'
     }
     if (command === 'REFOCUS') {
-      this.saveToServer(editorState.getCurrentContent().getPlainText())
-      dispatch(REFOCUS({ nodeId: node.id }))
+      this.saveToServer(editorState.getCurrentContent().getPlainText()).then(() => {
+        dispatch(REFOCUS({ nodeId: node.id }))
+      })
       return 'handled'
     }
     if (command === 'ONE_COLUMN') {

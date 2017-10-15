@@ -32,8 +32,6 @@ export function insertAtomicBlock(editorState, entityKey, character) {
   const afterSplit = DraftModifier.splitBlock(afterRemoval, targetSelection)
   const insertionTarget = afterSplit.getSelectionAfter()
 
-  // console.log({ afterRemoval, afterSplit, insertionTarget })
-
   const asAtomicBlock = DraftModifier.setBlockType(
     afterSplit,
     insertionTarget,
