@@ -11,6 +11,8 @@ export default class Auth {
     scope: 'openid profile',
   })
 
+  userProfile = null
+
   handleAuthentication = () => {
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
@@ -28,6 +30,24 @@ export default class Auth {
     localStorage.setItem('access_token', authResult.accessToken)
     localStorage.setItem('id_token', authResult.idToken)
     localStorage.setItem('expires_at', expiresAt)
+  }
+
+  getAccessToken = () => {
+    const accessToken = localStorage.getItem('access_token')
+    if (!accessToken) {
+      throw new Error('No access token found')
+    }
+    return accessToken
+  }
+
+  getProfile = (callback) => {
+    const accessToken = this.getAccessToken()
+    this.auth0.userInfo(accessToken, (err, profile) => {
+      if (profile) {
+        this.userProfile = profile
+      }
+      callback(err, profile)
+    })
   }
 
   logout = () => {

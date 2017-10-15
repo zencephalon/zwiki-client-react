@@ -8,6 +8,8 @@ import OmniSearch from '~/components/OmniSearch'
 import { FOCUS, SLIDE_RIGHT, SLIDE_LEFT } from '~/apis/flex/actions'
 import { OMNI_SEARCH } from '~/constants'
 
+import { throttle } from 'lodash'
+
 
 class App extends Component {
   componentWillMount() {
@@ -36,8 +38,8 @@ class App extends Component {
             <button onClick={() => this.props.auth.login()}>Login</button>
           }
         </div>
-        <OmniSearch />
-        {this.props.children}
+        {this.props.auth.isAuthenticated() ? <OmniSearch /> : null}
+        {this.props.auth.isAuthenticated() ? this.props.children : null}
       </div>
     )
   }
