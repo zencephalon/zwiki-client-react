@@ -2,16 +2,18 @@ import auth0 from 'auth0-js'
 import { browserHistory } from 'react-router'
 
 export default class Auth {
-  auth0 = new auth0.WebAuth({
-    domain: 'iluvu.auth0.com',
-    clientID: 'oUJGRGbBjT90at5NVNBTD_4RWHWjEUKg',
-    redirectUri: 'http://localhost:3000/callback',
-    audience: 'https://iluvu.auth0.com/userinfo',
-    responseType: 'token id_token',
-    scope: 'openid profile',
-  })
+  constructor() {
+    this.auth0 = new auth0.WebAuth({
+      domain: 'iluvu.auth0.com',
+      clientID: 'oUJGRGbBjT90at5NVNBTD_4RWHWjEUKg',
+      redirectUri: 'http://localhost:3000/callback',
+      audience: 'https://iluvu.auth0.com/userinfo',
+      responseType: 'token id_token',
+      scope: 'openid profile',
+    })
 
-  userProfile = null
+    this.userProfile = null
+  }
 
   handleAuthentication = () => {
     this.auth0.parseHash((err, authResult) => {
@@ -42,7 +44,8 @@ export default class Auth {
 
   getProfile = (callback) => {
     const accessToken = this.getAccessToken()
-    this.auth0.userInfo(accessToken, (err, profile) => {
+    console.log(this.auth0)
+    this.auth0.client.userInfo(accessToken, (err, profile) => {
       if (profile) {
         this.userProfile = profile
       }

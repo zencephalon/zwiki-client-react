@@ -4,6 +4,7 @@ import { mouseTrap } from 'react-mousetrap'
 import { connect } from 'react-redux'
 
 import OmniSearch from '~/components/OmniSearch'
+import Profile from '~/components/Profile'
 
 import { FOCUS, SLIDE_RIGHT, SLIDE_LEFT } from '~/apis/flex/actions'
 import { OMNI_SEARCH } from '~/constants'
@@ -34,7 +35,12 @@ class App extends Component {
       <div className="main-app-container">
         <div>
           {this.props.auth.isAuthenticated() ?
-            <button onClick={() => this.props.auth.logout()}>Logout</button> :
+            (
+              <div>
+                <button onClick={() => this.props.auth.logout()}>Logout</button>
+                <Profile auth={this.props.auth} />
+              </div>
+            ) :
             <button onClick={() => this.props.auth.login()}>Login</button>
           }
         </div>
@@ -49,6 +55,7 @@ App.propTypes = {
   dispatch: PropTypes.func.isRequired,
   bindShortcut: PropTypes.func.isRequired,
   children: PropTypes.element.isRequired,
+  auth: PropTypes.object.isRequired,
 }
 
 export default mouseTrap(connect()(App))
