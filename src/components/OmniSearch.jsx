@@ -1,10 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { browserHistory } from 'react-router'
 
 import { INDEX, OMNI_QUERY, POST } from '~/apis/nodes/actions'
 import nodeShape from '~/apis/nodes/shape'
-import { NodeEditPath } from '~/routes'
 
 import { FOCUS, OPEN_NODE } from '~/apis/flex/actions'
 import { OMNI_SEARCH, EDITOR } from '~/constants'

@@ -4,6 +4,7 @@ import { mouseTrap } from 'react-mousetrap'
 import { connect } from 'react-redux'
 
 import OmniSearch from '~/components/OmniSearch'
+import Gate from '~/containers/Gate'
 
 import { FOCUS, SLIDE_RIGHT, SLIDE_LEFT } from '~/apis/flex/actions'
 import { OMNI_SEARCH } from '~/constants'
@@ -31,8 +32,10 @@ class App extends Component {
   render() {
     return (
       <div className="main-app-container">
-        <OmniSearch />
-        {this.props.children}
+        <Gate>
+          <OmniSearch />
+          {this.props.children}
+        </Gate>
       </div>
     )
   }
