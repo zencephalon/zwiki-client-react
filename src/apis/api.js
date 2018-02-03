@@ -6,6 +6,8 @@ const apiMap = {
   prod: 'http://zw-api.zencephalon.com/',
 }
 
-const api = configureAPI(apiMap[ZWIKI_ENV])
+export const API_BASE = apiMap[ZWIKI_ENV]
+
+const api = configureAPI(API_BASE)
 
 export default api
