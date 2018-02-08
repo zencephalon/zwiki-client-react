@@ -1,51 +1,37 @@
 import React, { Component, PropTypes } from 'react'
-import { API_BASE } from '~/apis/api'
+import LoginForm from '~/components/LoginForm'
+import RegisterForm from '~/components/RegisterForm'
 
 class Gate extends Component {
   constructor(props, context) {
     super(props, context)
     this.state = {
       token: localStorage.getItem('token'),
-      name: '',
-      password: '',
     }
-  }
 
-  nameChange = (event) => {
-    this.setState({ name: event.target.value })
-  }
-
-  passwordChange = (event) => {
-    this.setState({ password: event.target.value })
-  }
-
-  handleSubmit = (event) => {
-    const { name, password } = this.state
-
-    fetch(API_BASE + 'login', {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name, password }),
-    }).then(res => res.json()).then(({ token }) => {
-      localStorage.setItem('token', token)
-      this.setState({ token })
+    window.addEventListener('storage', () => {
+      this.setState({ token: localStorage.getItem('token') })
     })
+  }
 
-    event.preventDefault()
+  onRegister = (user) => {
+    console.log(user)
+  }
+
+  setToken = (token) => {
+    localStorage.setItem('token', token)
+    this.setState({ token })
   }
 
   render() {
-    const { token, name, password } = this.state
+    const { token } = this.state
     return (
       <div>
         {!token ? (
-          <form onSubmit={this.handleSubmit}>
-            <input type="text" value={name} onChange={this.nameChange} />
-            <input type="password" value={password} onChange={this.passwordChange} />
-            <input type="submit" />
-          </form>
+          <div>
+            <LoginForm onLogin={this.setToken} />
+            <RegisterForm onRegister={this.onRegister} />
+          </div>
           ) : this.props.children
         }
       </div>
