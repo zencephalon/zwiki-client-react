@@ -67,7 +67,7 @@
     "react-router": "^3.0.0",
     "react-router-redux": "^4.0.7",
     "redux": "^3.6.0",
-    "redux-rest-reducer": "git+ssh://git@github.com/zencephalon/redux-rest-reducer.git#3c849f5e1720f598377e9381fd610d87852531a6",
+    "redux-rest-reducer": "git+ssh://git@github.com/zencephalon/redux-rest-reducer.git#d001491666e4cbbd1a66793ca5c96fdd6400859c",
     "redux-thunk": "^2.1.0",
     "union-class-names": "^1.0.0"
   }
