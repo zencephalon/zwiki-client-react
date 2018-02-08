@@ -8,6 +8,11 @@ const apiMap = {
 
 export const API_BASE = apiMap[ZWIKI_ENV]
 
-const api = configureAPI(API_BASE)
+const setAuthHeader = (headers) => {
+  const token = localStorage.getItem('token')
+  return { ...headers, Authorization: `${token}` }
+}
+
+const api = configureAPI(API_BASE, { headerFunc: setAuthHeader })
 
 export default api
