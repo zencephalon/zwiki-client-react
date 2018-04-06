@@ -9,6 +9,7 @@ class RegisterForm extends Component {
       password: '',
       passwordConfirmation: '',
       email: '',
+      isRegistered: false,
     }
   }
 
@@ -38,28 +39,36 @@ class RegisterForm extends Component {
       },
       body: JSON.stringify({ name, password, passwordConfirmation, email }),
     }).then(res => res.json()).then((user) => {
-      this.props.onRegister(user)
+      this.props.onRegister({ user, name, password })
+      this.setState({ isRegistered: true })
     })
 
     event.preventDefault()
   }
 
   render() {
-    const { name, password, email, passwordConfirmation } = this.state
+    const { name, password, email, passwordConfirmation, isRegistered } = this.state
     return (
       <div>
         <h5>Register</h5>
-        <form onSubmit={this.handleSubmit}>
-          <input type="text" value={name} onChange={this.nameChange} />
-          <input type="email" value={email} onChange={this.emailChange} />
-          <input type="password" value={password} onChange={this.passwordChange} />
-          <input
-            type="password"
-            value={passwordConfirmation}
-            onChange={this.passwordConfirmationChange}
-          />
-          <input type="submit" />
-        </form>
+        {isRegistered ?
+          <p>Congrats!</p> :
+          <form onSubmit={this.handleSubmit}>
+            <p>Name:</p>
+            <input type="text" value={name} onChange={this.nameChange} />
+            <p>Email:</p>
+            <input type="email" value={email} onChange={this.emailChange} />
+            <p>Password:</p>
+            <input type="password" value={password} onChange={this.passwordChange} />
+            <p>Password Confirmation:</p>
+            <input
+              type="password"
+              value={passwordConfirmation}
+              onChange={this.passwordConfirmationChange}
+            />
+            <input type="submit" />
+          </form>
+        }
       </div>
     )
   }
