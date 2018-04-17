@@ -1,6 +1,6 @@
 import api from '~/apis/api'
+import { NAME } from './constants'
 
-const endpoint = 'nodes'
 const indexParam = 'q'
 
 const template = {}
@@ -11,4 +11,4 @@ export const {
   DELETE,
   PUT,
   INDEX,
-} = api.genericApiFactory(endpoint, indexParam, template)
+} = api.genericApiFactory(NAME, indexParam, template)

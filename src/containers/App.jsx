@@ -11,6 +11,8 @@ import { OMNI_SEARCH } from '~/constants'
 
 import { throttle } from 'lodash'
 
+import UserContainer from '~/containers/User'
+
 class App extends Component {
   componentWillMount() {
     const { dispatch, bindShortcut } = this.props
@@ -33,8 +35,10 @@ class App extends Component {
     return (
       <div className="main-app-container">
         <Gate>
-          <OmniSearch />
-          {this.props.children}
+          <UserContainer id="me">
+            <OmniSearch />
+            {this.props.children}
+          </UserContainer>
         </Gate>
       </div>
     )
