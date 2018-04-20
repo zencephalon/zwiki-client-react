@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react'
 import LoginForm from '~/components/LoginForm'
 import RegisterForm from '~/components/RegisterForm'
 
+import { API_BASE } from '~/apis/api'
+
 class Gate extends Component {
   constructor(props, context) {
     super(props, context)
@@ -14,8 +16,20 @@ class Gate extends Component {
     })
   }
 
-  onRegister = (user) => {
-    console.log(user)
+  onLogin = ({ name, password }) => {
+    fetch(`${API_BASE}login`, {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name, password }),
+    }).then(res => res.json()).then(({ token }) => {
+      this.setToken(token)
+    })
+  }
+
+  onRegister = ({ user, name, password }) => {
+    this.onLogin({ name, password })
   }
 
   setToken = (token) => {
@@ -29,7 +43,7 @@ class Gate extends Component {
       <div>
         {!token ? (
           <div>
-            <LoginForm onLogin={this.setToken} />
+            <LoginForm onLogin={this.onLogin} />
             <RegisterForm onRegister={this.onRegister} />
           </div>
           ) : this.props.children

@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { API_BASE } from '~/apis/api'
 
 class LoginForm extends Component {
   constructor(props, context) {
@@ -20,17 +19,7 @@ class LoginForm extends Component {
 
   handleSubmit = (event) => {
     const { name, password } = this.state
-
-    fetch(`${API_BASE}login`, {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name, password }),
-    }).then(res => res.json()).then(({ token }) => {
-      this.props.onLogin(token)
-    })
-
+    this.props.onLogin({ name, password });
     event.preventDefault()
   }
 
