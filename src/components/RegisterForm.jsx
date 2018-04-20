@@ -53,20 +53,36 @@ class RegisterForm extends Component {
         <h5>Register</h5>
         {isRegistered ?
           <p>Congrats!</p> :
-          <form onSubmit={this.handleSubmit}>
-            <p>Name:</p>
-            <input type="text" value={name} onChange={this.nameChange} />
-            <p>Email:</p>
-            <input type="email" value={email} onChange={this.emailChange} />
-            <p>Password:</p>
-            <input type="password" value={password} onChange={this.passwordChange} />
-            <p>Password Confirmation:</p>
+          <form className="gate" onSubmit={this.handleSubmit}>
+            <input
+              type="text"
+              placeholder="Username"
+              value={name}
+              onChange={this.nameChange}
+            />
+            <br />
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={this.emailChange}
+            />
+            <br />
             <input
               type="password"
+              placeholder="Password"
+              value={password}
+              onChange={this.passwordChange}
+            />
+            <br />
+            <input
+              type="password"
+              placeholder="Password (again... 😓)"
               value={passwordConfirmation}
               onChange={this.passwordConfirmationChange}
             />
-            <input type="submit" />
+            <br />
+            <input type="submit" className="button" />
           </form>
         }
       </div>

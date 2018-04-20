@@ -24,6 +24,23 @@ h5 {
   margin-bottom: 0.2em;
 }
 
+// ====== Login =====
+
+form.gate input {
+  font-size: 1em;
+}
+
+.button {
+  background-color: #36AECC;
+  color: white;
+  border-radius: 4px;
+}
+
+.button:hover {
+  color: black;
+  background-color: #cce7ff;
+}
+
 // ====== Editor ======
 
 .editor {
