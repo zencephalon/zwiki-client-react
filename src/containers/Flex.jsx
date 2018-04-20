@@ -22,6 +22,7 @@ class Flex extends Component {
       visibleColumnIds,
       focusedColumnId,
       focusedRowId,
+      trie,
       actions: {
         FOCUS,
       },
@@ -49,6 +50,7 @@ class Flex extends Component {
                   id={nodeId}
                   editorId={`${columnId}-${nodeId}`}
                   focused={focusedColumnId === columnId && rowId === focusedRowId}
+                  trie={trie}
                 />
               </div>
             ))

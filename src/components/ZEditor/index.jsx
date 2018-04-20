@@ -133,20 +133,8 @@ class ZEditor extends Component {
 
   onSearchChange = ({ value }) => {
     const { dispatch } = this.props
-    const { linkTimer } = this.state
 
-    const q = value
-
-    dispatch(LINK_QUERY(q))
-    clearTimeout(linkTimer)
-
-    this.setState({
-      linkTimer: setTimeout(() => {
-        dispatch(INDEX(q)).then(() => {
-          this.setState({ linkTimer: null, selected: 0 })
-        })
-      }, 150),
-    })
+    dispatch(LINK_QUERY(value))
   }
 
   onAddMention = () => {
@@ -334,7 +322,7 @@ function mapStateToProps(state) {
   const {
     data: suggestions,
     confirmed,
-  } = state.nodes.http.collections[q] || {
+  } = state.nodes.http.collections[''] || {
     data: [],
     confirmed: false,
   }

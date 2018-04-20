@@ -61,7 +61,7 @@ function mapStateToProps(state, props) {
 
   return {
     node,
-    confirmed,
+    confirmed: !!(confirmed && node.content),
     requested,
     failed,
   }
