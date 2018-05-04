@@ -10,7 +10,7 @@ import ZEditor from '~/components/ZEditor'
 const NodeEdit = props => (
   <NodeContainer id={props.id}>
     <ShowConfirmed>
-      <ZEditor editorId={props.editorId || ROOT} focused={props.focused} trie={props.trie} />
+      <ZEditor editorId={props.editorId || ROOT} focused={props.focused} trieSearch={props.trieSearch} />
     </ShowConfirmed>
   </NodeContainer>
 )

@@ -38,7 +38,7 @@
     "eventsource-polyfill": "^0.9.6",
     "express": "^4.13.3",
     "jest": "^21.2.1",
-    "node-sass": "^4.0.0",
+    "node-sass": "^4.9.0",
     "redux-devtools": "^3.0.1",
     "redux-devtools-dock-monitor": "^1.0.1",
     "redux-devtools-log-monitor": "^1.0.2",
@@ -67,8 +67,9 @@
     "react-router": "^3.0.0",
     "react-router-redux": "^4.0.7",
     "redux": "^3.6.0",
-    "redux-rest-reducer": "git+ssh://git@github.com/zencephalon/redux-rest-reducer.git#d001491666e4cbbd1a66793ca5c96fdd6400859c",
+    "redux-rest-reducer": "git+ssh://git@github.com/zencephalon/redux-rest-reducer.git#9ccbc3dea0dbaf125a929d6380743fecd0203234",
     "redux-thunk": "^2.1.0",
+    "trie-search": "^1.1.0",
     "union-class-names": "^1.0.0"
   }
 }

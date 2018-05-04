@@ -316,7 +316,7 @@ class ZEditor extends Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, props) {
   const { linkQ: q } = state.nodes.query
 
   const {
@@ -327,7 +327,10 @@ function mapStateToProps(state) {
     confirmed: false,
   }
 
-  const sortedSuggestions = confirmed ? fuseSort(suggestions, q) : [{ name: '…' }]
+  console.log({ props })
+
+  // const sortedSuggestions = confirmed ? fuseSort(suggestions, q) : [{ name: '…' }]
+  const sortedSuggestions = fuseSort(props.trieSearch.get(q), q)
 
   return {
     suggestions: fromJS(sortedSuggestions),

@@ -3,7 +3,9 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as NodeActions from '~/apis/nodes/actions'
 import nodeShape from '~/apis/nodes/shape'
+import TrieSearch from 'trie-search'
 
+const trieSearch = new TrieSearch('name', { ix: 'id' })
 
 class TrieContainer extends Component {
   componentWillMount() {
@@ -37,9 +39,14 @@ function mapStateToProps(state, props) {
     confirmed: false,
   }
 
+  if (confirmed) {
+    trieSearch.addAll(nodes)
+  }
+
   return {
     nodes,
     confirmed,
+    trieSearch,
   }
 }
 
