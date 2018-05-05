@@ -335,13 +335,8 @@ function mapStateToProps(state, props) {
     confirmed: false,
   }
 
-  console.log({ props })
-
   // const sortedSuggestions = confirmed ? fuseSort(suggestions, q) : [{ name: '…' }]
-  // const sortedSuggestions = fuseSort(props.trieSearch.get(q), q)
   const sortedSuggestions = state.suggest.trie.find(q) || []
-
-  console.log({ sortedSuggestions })
 
   return {
     suggestions: fromJS(sortedSuggestions),

@@ -12,7 +12,6 @@ import { OMNI_SEARCH } from '~/constants'
 import { throttle } from 'lodash'
 
 import UserContainer from '~/containers/User'
-import TrieContainer from '~/containers/Trie'
 
 class App extends Component {
   componentWillMount() {
@@ -37,10 +36,8 @@ class App extends Component {
       <div className="main-app-container">
         <Gate>
           <UserContainer id="me">
-            <TrieContainer>
-              <OmniSearch />
-              {this.props.children}
-            </TrieContainer>
+            <OmniSearch />
+            {this.props.children}
           </UserContainer>
         </Gate>
       </div>

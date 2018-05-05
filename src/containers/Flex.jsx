@@ -22,7 +22,6 @@ class Flex extends Component {
       visibleColumnIds,
       focusedColumnId,
       focusedRowId,
-      trieSearch,
       actions: {
         FOCUS,
       },
@@ -50,7 +49,6 @@ class Flex extends Component {
                   id={nodeId}
                   editorId={`${columnId}-${nodeId}`}
                   focused={focusedColumnId === columnId && rowId === focusedRowId}
-                  trieSearch={trieSearch}
                 />
               </div>
             ))
@@ -66,7 +64,6 @@ class Flex extends Component {
 Flex.propTypes = {
   columns: PropTypes.array,
   visibleColumnIds: PropTypes.array,
-  trieSearch: PropTypes.object.isRequired,
   focusedColumnId: PropTypes.number,
   focusedRowId: PropTypes.number,
   actions: PropTypes.objectOf(PropTypes.func).isRequired,

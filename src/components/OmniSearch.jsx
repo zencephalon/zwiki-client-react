@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import { INDEX, OMNI_QUERY, POST } from '~/apis/nodes/actions'
 import nodeShape from '~/apis/nodes/shape'
 
+import { RECEIVE_INDEX } from '~/apis/suggest/actions'
+
 import { FOCUS, OPEN_NODE } from '~/apis/flex/actions'
 import { OMNI_SEARCH, EDITOR } from '~/constants'
 import { fuseSort } from '~/helpers'
@@ -17,6 +19,12 @@ class OmniSearch extends Component {
       timer: null,
       selected: 0,
     }
+  }
+
+  componentWillMount() {
+    this.props.dispatch(INDEX('')).then(res => {
+      this.props.dispatch(RECEIVE_INDEX(res.data))
+    })
   }
 
   componentWillReceiveProps(nextProps) {
