@@ -31,6 +31,8 @@ import {
   FOUR_COLUMN,
 } from '~/apis/flex/actions'
 
+import { UPDATE_ENTRY } from '~/apis/suggest/actions'
+
 import '~/Autocomplete/mentionStyles.css'
 import '~/Autocomplete/mentionSuggestionsStyles.css'
 import '~/Autocomplete/mentionSuggestionsEntryStyles.css'
@@ -143,7 +145,11 @@ class ZEditor extends Component {
 
   saveToServer = (content) => {
     const { node, dispatch } = this.props
-    return dispatch(PUT(node.id, { content, version: node.version + 1 })).then(() => {
+    const oldName = node.name
+
+    return dispatch(PUT(node.id, { content, version: node.version + 1 })).then((res) => {
+      console.log('PUT returns', { res })
+      dispatch(UPDATE_ENTRY(oldName, res.data.name))
       this.setState({ timer: null })
     }).catch(() => {
       console.log('ILUVU, versions out of sync.')
@@ -330,7 +336,10 @@ function mapStateToProps(state, props) {
   console.log({ props })
 
   // const sortedSuggestions = confirmed ? fuseSort(suggestions, q) : [{ name: '…' }]
-  const sortedSuggestions = fuseSort(props.trieSearch.get(q), q)
+  // const sortedSuggestions = fuseSort(props.trieSearch.get(q), q)
+  const sortedSuggestions = state.suggest.trie.find(q) || []
+
+  console.log({ sortedSuggestions })
 
   return {
     suggestions: fromJS(sortedSuggestions),

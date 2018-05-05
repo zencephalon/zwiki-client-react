@@ -5,11 +5,16 @@ import * as NodeActions from '~/apis/nodes/actions'
 import nodeShape from '~/apis/nodes/shape'
 import TrieSearch from 'trie-search'
 
+import { RECEIVE_INDEX } from '~/apis/suggest/actions'
+
 const trieSearch = new TrieSearch('name', { ix: 'id' })
 
 class TrieContainer extends Component {
   componentWillMount() {
-    this.props.actions.INDEX('')
+    this.props.actions.INDEX('').then(res => {
+      console.log({ res, 'ILUVU': 'yolo' })
+      this.props.actions.RECEIVE_INDEX(res.data)
+    })
   }
 
   render() {
@@ -52,7 +57,7 @@ function mapStateToProps(state, props) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(NodeActions, dispatch),
+    actions: bindActionCreators({ ...NodeActions, RECEIVE_INDEX }, dispatch),
   }
 }
 

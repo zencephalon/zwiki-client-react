@@ -1,5 +1,6 @@
 import { http } from 'redux-rest-reducer'
 import t from './actionTypes'
+import Trie from '~/lib/trie'
 
 const httpReducer = http.reducerFactory(t)
 
