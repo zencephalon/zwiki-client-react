@@ -11,6 +11,8 @@ function suggestReducer(state = { trie }, action) {
       })
       return state
     case t.UPDATE_ENTRY:
+      state.trie.remove(action.oldName)
+      state.trie.add(action.newName, action.entry)
       return state
     default:
       return state

@@ -5,8 +5,9 @@ export const RECEIVE_INDEX = index => ({
   index,
 })
 
-export const UPDATE_ENTRY = (oldName, newName) => ({
+export const UPDATE_ENTRY = (oldName, newName, entry) => ({
   type: t.UPDATE_ENTRY,
   oldName,
-  newName
+  newName,
+  entry
 })

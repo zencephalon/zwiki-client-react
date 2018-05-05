@@ -438,3 +438,9 @@ export const selectBlockDir = (editorState, down) => {
 export const selectBlockDown = editorState => selectBlockDir(editorState, true)
 
 export const selectBlockUp = editorState => selectBlockDir(editorState, false)
+
+// TODO: i18n
+export function extractName(content) {
+  const m = content.split('\n', 1)[0].match(/#+\s*(.*)$/);
+  return m ? m[1] : 'Untitled'
+}

@@ -1,19 +1,18 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
+import { fromJS } from 'immutable'
+import { uniqueId } from 'lodash'
+import classNames from 'classnames'
+
 import {
   EditorState,
   ContentState,
 } from 'draft-js'
 import Editor from 'draft-js-plugins-editor'
 
-import { uniqueId } from 'lodash'
-import classNames from 'classnames'
-
-import { POST, PUT, INDEX, LINK_QUERY } from '~/apis/nodes/actions'
 import nodeShape from '~/apis/nodes/shape'
-
-import { fromJS } from 'immutable'
+import { POST, PUT, INDEX, LINK_QUERY } from '~/apis/nodes/actions'
 
 import {
   FOCUS,
@@ -37,9 +36,10 @@ import '~/Autocomplete/mentionStyles.css'
 import '~/Autocomplete/mentionSuggestionsStyles.css'
 import '~/Autocomplete/mentionSuggestionsEntryStyles.css'
 
+import createMentionPlugin from '~/Autocomplete' // eslint-disable-line import/no-unresolved
+
 import { OMNI_SEARCH, EDITOR, LINK_REGEX } from '~/constants'
 import { fuseSort } from '~/helpers'
-import createMentionPlugin from '~/Autocomplete' // eslint-disable-line import/no-unresolved
 import {
   findWithRegex,
   selectMatch,
@@ -51,6 +51,7 @@ import {
   insertTimeStamp,
   insertDateStamp,
   toggleTodo,
+  extractName,
 } from './helpers'
 
 import Link from './Link'
@@ -146,10 +147,11 @@ class ZEditor extends Component {
   saveToServer = (content) => {
     const { node, dispatch } = this.props
     const oldName = node.name
+    const newName = extractName(content)
+
+    dispatch(UPDATE_ENTRY(oldName, newName, { id: node.id, name: newName }))
 
     return dispatch(PUT(node.id, { content, version: node.version + 1 })).then((res) => {
-      console.log('PUT returns', { res })
-      dispatch(UPDATE_ENTRY(oldName, res.data.name))
       this.setState({ timer: null })
     }).catch(() => {
       console.log('ILUVU, versions out of sync.')
