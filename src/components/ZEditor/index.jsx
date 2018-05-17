@@ -255,15 +255,19 @@ class ZEditor extends Component {
     }
     if (command === 'ONE_COLUMN') {
       dispatch(ONE_COLUMN())
+      return 'handled'
     }
     if (command === 'TWO_COLUMN') {
       dispatch(TWO_COLUMN())
+      return 'handled'
     }
     if (command === 'THREE_COLUMN') {
       dispatch(THREE_COLUMN())
+      return 'handled'
     }
     if (command === 'FOUR_COLUMN') {
       dispatch(FOUR_COLUMN())
+      return 'handled'
     }
     return 'not-handled'
   }
