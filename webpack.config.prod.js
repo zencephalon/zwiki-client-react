@@ -2,7 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
-  devtool: 'source-map',
+  devtool: 'cheap-module-source-map',
   entry: [
     './src/index.jsx'
   ],
@@ -45,7 +45,8 @@ module.exports = {
       {
         test: /\.scss$/,
         loader: 'style!css!sass'
-      }
+      },
+      { test: /\.css$/, exclude: /\.useable\.css$/, loader: "style-loader!css-loader" },
     ]
   },
   resolve: {
