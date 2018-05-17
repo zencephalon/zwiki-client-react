@@ -24,6 +24,9 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production')
     }),
+    new webpack.DefinePlugin({
+      'ZWIKI_ENV': JSON.stringify(process.env.ZWIKI_ENV || 'prod')
+    }),
     /**
      * Some of you might recognize this! It minimizes all your JS output of chunks.
      * Loaders are switched into a minmizing mode. Obviously, you'd only want to run
