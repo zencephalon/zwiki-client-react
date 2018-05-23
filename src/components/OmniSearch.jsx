@@ -8,7 +8,7 @@ import { RECEIVE_INDEX } from '~/apis/suggest/actions'
 
 import { FOCUS, OPEN_NODE } from '~/apis/flex/actions'
 import { OMNI_SEARCH, EDITOR } from '~/constants'
-import { fuseSort } from '~/helpers'
+import { fuseSort, getDateStamp } from '~/helpers'
 
 import classNames from 'classnames'
 
@@ -71,6 +71,7 @@ class OmniSearch extends Component {
     if (e.key === 'Enter') {
       e.preventDefault()
       if (e.ctrlKey) {
+        // ILUVU: not a great idea to have a content template here
         dispatch(POST('new-omni', { content: `# ${q}\n\n`, name: q })).then((ret) => {
           const { data: new_node } = ret
           dispatch(OPEN_NODE({ nodeId: new_node.id }))
@@ -88,6 +89,11 @@ class OmniSearch extends Component {
     if (e.key === ' ' && e.ctrlKey) {
       this.input.blur()
       dispatch(FOCUS({ type: EDITOR }))
+    }
+    if (e.key === 'D' && e.ctrlKey) {
+      const newQ = q + getDateStamp()
+      dispatch(OMNI_QUERY(newQ))
+      dispatch(INDEX(newQ))
     }
   }
 

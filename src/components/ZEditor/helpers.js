@@ -12,10 +12,9 @@ import generateRandomKey from 'draft-js/lib/generateRandomKey'
 
 import { List, Repeat } from 'immutable'
 
-import { LINK_REGEX_NO_G } from '~/constants'
+import { LINK_REGEX_NO_G, DONE_TODO, NOT_DONE_TODO } from '~/constants'
 
-const NOT_DONE_TODO = '☐'
-const DONE_TODO = '☑'
+import { getDateStamp } from '~/helpers'
 
 export function insertAtomicBlock(editorState, entityKey, character) {
   const contentState = editorState.getCurrentContent()
@@ -314,11 +313,7 @@ export const insertDateStamp = editorState => (
     Modifier.insertText(
       editorState.getCurrentContent(),
       editorState.getSelection(),
-      (new Date())
-      .toString()
-      .split(' ')
-      .slice(0, 4)
-      .join(' '),
+      getDateStamp(),
     ),
     'insert-characters',
   )
