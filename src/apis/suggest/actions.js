@@ -15,4 +15,5 @@ export const UPDATE_ENTRY = (oldName, newName, entry) => ({
 export const NEW_ENTRY = (name, entry) => ({
   type: t.NEW_ENTRY,
   name,
+  entry,
 })
