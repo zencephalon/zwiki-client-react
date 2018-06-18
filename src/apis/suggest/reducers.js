@@ -14,6 +14,8 @@ function suggestReducer(state = { trie }, action) {
       state.trie.remove(action.oldName)
       state.trie.add(action.newName, action.entry)
       return state
+    case t.NEW_ENTRY:
+      state.trie.add(action.name, action.entry)
     default:
       return state
   }

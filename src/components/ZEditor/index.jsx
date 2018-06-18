@@ -30,7 +30,7 @@ import {
   FOUR_COLUMN,
 } from '~/apis/flex/actions'
 
-import { UPDATE_ENTRY } from '~/apis/suggest/actions'
+import { NEW_ENTRY, UPDATE_ENTRY } from '~/apis/suggest/actions'
 
 import '~/Autocomplete/mentionStyles.css'
 import '~/Autocomplete/mentionSuggestionsStyles.css'
@@ -232,10 +232,11 @@ class ZEditor extends Component {
       dispatch(POST('NEW_NODE', {
         content: `# ${nodeTitle}\n\n`,
         name: nodeTitle,
-      })).then(({ data: { id } }) => {
+      })).then(({ data: { id, name } }) => {
         this.setState({
           editorState: insertLinkCompletion(editorState, id),
         })
+        dispatch(NEW_ENTRY(name, id))
         dispatch(TOGGLE_LINK({ nodeId: id }))
         dispatch(SLIDE_RIGHT())
       })

@@ -10,6 +10,8 @@ import { FOCUS, OPEN_NODE } from '~/apis/flex/actions'
 import { OMNI_SEARCH, EDITOR } from '~/constants'
 import { fuseSort, getDateStamp } from '~/helpers'
 
+import { NEW_ENTRY } from '~/apis/suggest/actions'
+
 import classNames from 'classnames'
 
 class OmniSearch extends Component {
@@ -75,6 +77,7 @@ class OmniSearch extends Component {
         dispatch(POST('new-omni', { content: `# ${q}\n\n`, name: q })).then((ret) => {
           const { data: new_node } = ret
           dispatch(OPEN_NODE({ nodeId: new_node.id }))
+          dispatch(NEW_ENTRY(new_node.id, new_node.name))
         })
       } else {
         dispatch(OPEN_NODE({ nodeId: suggestions[selected].id }))
