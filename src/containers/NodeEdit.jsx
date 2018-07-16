@@ -5,12 +5,12 @@ import { ROOT } from '~/constants'
 import NodeContainer from '~/containers/Node'
 
 import ShowConfirmed from '~/components/ShowConfirmed'
-import ZEditor from '~/components/ZEditor'
+import SEditor from '~/components/SEditor'
 
 const NodeEdit = props => (
   <NodeContainer id={props.id}>
     <ShowConfirmed>
-      <ZEditor
+      <SEditor
         editorId={props.editorId || ROOT}
         focused={props.focused}
       />
