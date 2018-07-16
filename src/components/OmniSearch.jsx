@@ -77,7 +77,7 @@ class OmniSearch extends Component {
         dispatch(POST('new-omni', { content: `# ${q}\n\n`, name: q })).then((ret) => {
           const { data: new_node } = ret
           dispatch(OPEN_NODE({ nodeId: new_node.id }))
-          dispatch(NEW_ENTRY(new_node.id, new_node.name))
+          dispatch(NEW_ENTRY(new_node.name, new_node.id))
         })
       } else {
         dispatch(OPEN_NODE({ nodeId: suggestions[selected].id }))
