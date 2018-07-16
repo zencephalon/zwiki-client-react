@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Editor } from 'slate-react'
-import Plain from 'slate-plain-serializer'
+import Serializer from './serializer'
 
 function CodeNode(props) {
   return (
@@ -14,7 +14,7 @@ class SEditor extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      value: Plain.deserialize(props.node.content),
+      value: Serializer.deserialize(props.node.content),
     }
   }
 
