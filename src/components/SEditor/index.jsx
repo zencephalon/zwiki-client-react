@@ -2,20 +2,25 @@ import React, { Component } from 'react'
 import { Editor } from 'slate-react'
 import Serializer from './serializer'
 
+import { LINK_REGEX_NO_G } from '~/constants'
+
 
 class CodeNode extends Component {
   onClick = event => {
     console.log({ event, selection: window.getSelection() })
     const offset = window.getSelection().anchorOffset;
     this.props.editor.change(change => {
-      change.moveToRangeOf(this.props.node).moveStart(offset);
+      change.moveToRangeOf(this.props.node).moveStart(offset + 1).collapseToStart()
     })
+  }
+  getLinkLabel = () => {
+    return this.props.node.text.match(LINK_REGEX_NO_G)[1]
   }
   render() {
     const props = this.props;
     return (
       <pre {...props.attributes}>
-        <code onClick={this.onClick}>{props.isSelected ? '' : props.node.text.toUpperCase()}<span style={{display: props.isSelected ? 'inline' : 'none'}}>{props.children}</span></code>
+        <code onClick={this.onClick}>{props.isSelected ? '' : this.getLinkLabel()}<span style={{display: props.isSelected ? 'inline' : 'none'}}>{props.children}</span></code>
       </pre>
     )
   }
