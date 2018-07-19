@@ -3,8 +3,9 @@ export const EDITOR = 'editor'
 export const ROOT = 'root'
 
 // From Slimdown
-export const LINK_REGEX = /\[([^[]+)\]\(([^)]+)\)/g
-export const LINK_REGEX_NO_G = /\[([^[]+)\]\(([^)]+)\)/
+export const LINK_REGEX = /\[([^[]+)]\(([^)]+)\)/g
+export const LINK_REGEX_NO_G = /\[([^[]+)]\(([^)]+)\)/
+export const LINK_REGEX_CAPTURE_FULL = /(\[[^[]+]\([^)]+\))/
 
 export const NOT_DONE_TODO = '☐'
 export const DONE_TODO = '☑'

@@ -2,12 +2,23 @@ import React, { Component } from 'react'
 import { Editor } from 'slate-react'
 import Serializer from './serializer'
 
-function CodeNode(props) {
-  return (
-    <pre {...props.attributes}>
-      <code>{props.isSelected ? '```' : ''}{props.children}{props.isSelected ? '```' : ''}</code>
-    </pre>
-  )
+
+class CodeNode extends Component {
+  onClick = event => {
+    console.log({ event, selection: window.getSelection() })
+    const offset = window.getSelection().anchorOffset;
+    this.props.editor.change(change => {
+      change.moveToRangeOf(this.props.node).moveStart(offset);
+    })
+  }
+  render() {
+    const props = this.props;
+    return (
+      <pre {...props.attributes}>
+        <code onClick={this.onClick}>{props.isSelected ? '' : props.node.text.toUpperCase()}<span style={{display: props.isSelected ? 'inline' : 'none'}}>{props.children}</span></code>
+      </pre>
+    )
+  }
 }
 
 class SEditor extends Component {

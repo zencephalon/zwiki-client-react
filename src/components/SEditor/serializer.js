@@ -1,6 +1,8 @@
 import { Block, Mark, Node, Value } from 'slate'
 import { Set } from 'immutable'
 
+import { LINK_REGEX_CAPTURE_FULL } from '~/constants'
+
 /**
  * Deserialize a plain text `string` to a Slate value.
  *
@@ -23,6 +25,8 @@ function deserialize(string, options = {}) {
   defaultMarks = defaultMarks.map(Mark.createProperties)
 
   function processLine(line) {
+    const parts = line.split(LINK_REGEX_CAPTURE_FULL)
+    console.log({ parts })
     return {
       ...defaultBlock,
       object: 'block',
