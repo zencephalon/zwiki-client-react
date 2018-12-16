@@ -251,20 +251,21 @@ export const getNodeTitle = (editorState) => {
   const breakChars = [']', ')', '(']
   let startFound
   let i
+  let char
 
   for (i = blockText.length - 1; i >= 0; i -= 1) {
-    const char = blockText[i]
+    char = blockText[i]
     if (breakChars.includes(char)) {
       break
     }
-    if (char === '[') {
+    if (char === '[' || char === '{') {
       startFound = true
       break
     }
   }
 
   // Slice off the leading [
-  return startFound ? blockText.slice(i + 1) : null
+  return startFound ? { char, title: blockText.slice(i + 1) } : {}
 }
 
 export const getSelectedText = (editorState) => {
@@ -283,13 +284,13 @@ export const getSelectionNodeId = (editorState) => {
   return match ? match[2] : null
 }
 
-export const insertLinkCompletion = (editorState, nodeId) => (
+export const insertLinkCompletion = (editorState, nodeId, char) => (
   EditorState.push(
     editorState,
     Modifier.insertText(
       editorState.getCurrentContent(),
       editorState.getSelection(),
-      `](${nodeId})`,
+      `${{'[' : ']', '{' : '}'}[char]}(${nodeId})`,
     ),
     'insert-characters',
   )

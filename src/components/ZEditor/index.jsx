@@ -38,7 +38,7 @@ import '~/Autocomplete/mentionSuggestionsEntryStyles.css'
 
 import createMentionPlugin from '~/Autocomplete' // eslint-disable-line import/no-unresolved
 
-import { OMNI_SEARCH, EDITOR, LINK_REGEX, IMPORT_REGEX } from '~/constants'
+import { OMNI_SEARCH, EDITOR, LINK_REGEX, IMPORT_REGEX, LINK_AND_IMPORT_REGEX } from '~/constants'
 import { fuseSort } from '~/helpers'
 import {
   findWithRegex,
@@ -236,13 +236,15 @@ class ZEditor extends Component {
       return 'handled'
     }
     if (command === 'NEW_NODE') {
-      const nodeTitle = getNodeTitle(editorState)
+      const { char, title } = getNodeTitle(editorState)
+      if (!char) return 'handled'
+
       dispatch(POST('NEW_NODE', {
-        content: `# ${nodeTitle}\n\n`,
-        name: nodeTitle,
+        content: `# ${title}\n\n`,
+        name: title,
       })).then(({ data: { id, name } }) => {
         this.setState({
-          editorState: insertLinkCompletion(editorState, id),
+          editorState: insertLinkCompletion(editorState, id, char),
         })
         dispatch(NEW_ENTRY(name, id))
         dispatch(TOGGLE_LINK({ nodeId: id }))
@@ -306,7 +308,7 @@ class ZEditor extends Component {
             e.preventDefault()
 
             this.setState({
-              editorState: selectMatch(editorState, LINK_REGEX, !e.shiftKey),
+              editorState: selectMatch(editorState, LINK_AND_IMPORT_REGEX, !e.shiftKey),
             })
           }}
           onBlur={() => {
