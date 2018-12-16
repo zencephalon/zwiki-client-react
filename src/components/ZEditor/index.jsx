@@ -38,7 +38,7 @@ import '~/Autocomplete/mentionSuggestionsEntryStyles.css'
 
 import createMentionPlugin from '~/Autocomplete' // eslint-disable-line import/no-unresolved
 
-import { OMNI_SEARCH, EDITOR, LINK_REGEX } from '~/constants'
+import { OMNI_SEARCH, EDITOR, LINK_REGEX, IMPORT_REGEX } from '~/constants'
 import { fuseSort } from '~/helpers'
 import {
   findWithRegex,
@@ -59,6 +59,9 @@ import keyBindings from './keyBindings'
 
 function linkStrategy(contentBlock, callback) {
   findWithRegex(LINK_REGEX, contentBlock, callback)
+}
+function importStrategy(contentBlock, callback) {
+  findWithRegex(IMPORT_REGEX, contentBlock, callback)
 }
 
 const theme = {
@@ -82,6 +85,11 @@ class ZEditor extends Component {
       theme,
       mentionTrigger: '](',
       replaceTemplate: ({ id }) => `${id})`,
+    })
+    this.mentionPluginThree = createMentionPlugin({
+      theme,
+      mentionTrigger: '{',
+      replaceTemplate: ({ name, id }) => `${name}}(${id})`,
     })
   }
 
@@ -278,6 +286,7 @@ class ZEditor extends Component {
     const { focused } = this.props
     const { MentionSuggestions } = this.mentionPlugin
     const { MentionSuggestions: MentionSuggestionsTwo } = this.mentionPluginTwo
+    const { MentionSuggestions: MentionSuggestionsThree } = this.mentionPluginThree
     return (
       <div
         className={classNames('editor', { saved: !timer, focused })}
@@ -285,7 +294,7 @@ class ZEditor extends Component {
         <Editor
           editorState={this.state.editorState}
           onChange={this.onChange}
-          plugins={[this.mentionPlugin, this.mentionPluginTwo]}
+          plugins={[this.mentionPlugin, this.mentionPluginTwo, this.mentionPluginThree]}
           ref={(element) => { this.editor = element }}
           defaultKeyBindings={false}
           handleKeyCommand={this.handleKeyCommand}
@@ -310,6 +319,13 @@ class ZEditor extends Component {
                 {...props}
               />
             ),
+          },{
+            strategy: importStrategy,
+            component: props => (
+              <Link
+                {...props}
+              />
+            ),
           }]}
         />
         {focused &&
@@ -321,6 +337,13 @@ class ZEditor extends Component {
         }
         {focused &&
           <MentionSuggestionsTwo
+            onSearchChange={this.onSearchChange}
+            suggestions={this.props.suggestions}
+            onAddMention={this.onAddMention}
+          />
+        }
+        {focused &&
+          <MentionSuggestionsThree
             onSearchChange={this.onSearchChange}
             suggestions={this.props.suggestions}
             onAddMention={this.onAddMention}
