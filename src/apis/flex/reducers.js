@@ -4,6 +4,7 @@ import t from './actionTypes'
 
 const startState = {
   columns: [[], [], [], []],
+  columnsFocusedRowIds: [0, 0, 0, 0],
   visibleColumnIds: [0, 1],
   focusedColumnId: 0,
   focusedRowId: 0,
@@ -16,6 +17,7 @@ export default function focus(state = startState, action) {
     columns,
     visibleColumnIds,
     focusedRowId,
+    columnsFocusedRowIds,
   } = state
   const nextColumnId = focusedColumnId + 1
   const leftColumnId = focusedColumnId - 1
@@ -23,12 +25,14 @@ export default function focus(state = startState, action) {
   const focusedColumn = columns[focusedColumnId]
   const rowsInLeftColumn = state.columns[leftColumnId] ? state.columns[leftColumnId].length : 0
   const rowsInRightColumn = state.columns[nextColumnId] ? state.columns[nextColumnId].length : 0
-  const leftNextRowId = focusedRowId >= rowsInLeftColumn ?
-    rowsInLeftColumn - 1 :
-    focusedRowId
-  const rightNextRowId = focusedRowId >= rowsInRightColumn ?
-    rowsInRightColumn - 1 :
-    focusedRowId
+  // const leftNextRowId = focusedRowId >= rowsInLeftColumn ?
+  //   rowsInLeftColumn - 1 :
+  //   focusedRowId
+  const leftNextRowId = state.columnsFocusedRowIds[leftColumnId]
+  // const rightNextRowId = focusedRowId >= rowsInRightColumn ?
+  //   rowsInRightColumn - 1 :
+  //   focusedRowId
+  const rightNextRowId = state.columnsFocusedRowIds[nextColumnId]
   const upNextRowId = focusedRowId <= 0 ? focusedColumn.length - 1 :
           focusedRowId - 1
   const downNextRowId = focusedRowId >= focusedColumn.length - 1 ? 0 :
@@ -77,16 +81,19 @@ export default function focus(state = startState, action) {
       return {
         ...state,
         focusedRowId: upNextRowId,
+        columnsFocusedRowIds: Object.assign([], columnsFocusedRowIds, { [focusedColumnId]: upNextRowId })
       }
     case t.CYCLE_DOWN:
       return {
         ...state,
         focusedRowId: downNextRowId,
+        columnsFocusedRowIds: Object.assign([], columnsFocusedRowIds, { [focusedColumnId]: downNextRowId })
       }
     case t.SHIFT_DOWN:
       return {
         ...state,
         focusedRowId: downNextRowId,
+        columnsFocusedRowIds: Object.assign([], columnsFocusedRowIds, { [focusedColumnId]: downNextRowId }),
         columns: [
           ...columns.slice(0, focusedColumnId),
           ((col) => {
@@ -104,6 +111,7 @@ export default function focus(state = startState, action) {
       return {
         ...state,
         focusedRowId: upNextRowId,
+        columnsFocusedRowIds: Object.assign([], columnsFocusedRowIds, { [focusedColumnId]: downNextRowId }),
         columns: [
           ...columns.slice(0, focusedColumnId),
           ((col) => {
@@ -173,6 +181,7 @@ export default function focus(state = startState, action) {
     case t.REFOCUS:
       return {
         columns: [[action.nodeId], []],
+        columnsFocusedRowIds: [0, 0],
         visibleColumnIds: [0, 1],
         focusedColumnId: 0,
         focusedRowId: 0,
