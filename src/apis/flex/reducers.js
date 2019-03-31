@@ -143,6 +143,12 @@ export default function focus(state = startState, action) {
           ],
           ...columns.slice(nextColumnId, columns.length),
         ],
+        // TODO figure out column focus for open node
+        // columnsFocusedRowIds: [
+        //   ...columns.slice(0, columnsFocusedRowIds),
+        //   columnsFocusedRowIds[focusedColumnId],
+        //   ...columns.slice(nextColumnId, columnsFocusedRowIds.length),
+        // ],
       }
     case t.TOGGLE_LINK:
       if (!nextColumn) {
