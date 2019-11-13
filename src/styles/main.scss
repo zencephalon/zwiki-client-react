@@ -1,7 +1,7 @@
-@import url(//fonts.googleapis.com/css?family=Vollkorn:400italic,400);
+@import url(//fonts.googleapis.com/css?family=Vollkorn:400italic, 400);
 
 $main-bg-color: #fff;
-$accent-blue: #36AECC;
+$accent-blue: #36aecc;
 $lighter-blue: #d2edf4;
 $lightest-blue: #e9fbff;
 $accent-gray: #e1e0dd;
@@ -14,7 +14,7 @@ body {
   color: $accent-black;
   display: flex;
   justify-content: center;
-  font-family: 'Vollkorn', serif;
+  font-family: "Vollkorn", serif;
   font-size: 3vw;
   margin-top: 0;
 }
@@ -31,7 +31,7 @@ form.gate input {
 }
 
 .button {
-  background-color: #36AECC;
+  background-color: #36aecc;
   color: white;
   border-radius: 4px;
 }
@@ -50,7 +50,7 @@ form.gate input {
   border-bottom: 1px solid $lightest-blue;
   border-left: 1px solid $accent-blue;
   cursor: text;
-  padding: .5em;
+  padding: 0.5em;
   margin-bottom: 0em;
 }
 
@@ -79,7 +79,7 @@ figure {
   input {
     font-size: 66%;
     line-height: 1.5em;
-    font-family: 'Vollkorn', serif;
+    font-family: "Vollkorn", serif;
     width: 33em;
     padding: 0px;
     border-width: 0px;
@@ -162,6 +162,7 @@ figure {
 
 .column-item.column-filler {
   text-align: center;
+  margin-bottom: 10em;
 }
 
 .focused .column-item.column-filler {
