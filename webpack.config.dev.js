@@ -1,17 +1,17 @@
-const path = require('path');
-const webpack = require('webpack');
+const path = require("path");
+const webpack = require("webpack");
 
 module.exports = {
-  devtool: 'cheap-module-eval-source-map',
+  devtool: "cheap-module-eval-source-map",
   entry: [
-    'eventsource-polyfill', // necessary for hot reloading with IE
-    'webpack-hot-middleware/client',
-    './src/index.jsx'
+    "eventsource-polyfill", // necessary for hot reloading with IE
+    "webpack-hot-middleware/client",
+    "./src/index.jsx"
   ],
   output: {
-    path: path.join(__dirname, 'dist'),
-    filename: 'bundle.js',
-    publicPath: '/static/'
+    path: path.join(__dirname, "dist"),
+    filename: "bundle.js",
+    publicPath: "/static/"
   },
   plugins: [
     /**
@@ -19,37 +19,34 @@ module.exports = {
      */
     new webpack.HotModuleReplacementPlugin(),
     /**
-     * NoErrorsPlugin prevents your webpack CLI from exiting with an error code if
-     * there are errors during compiling - essentially, assets that include errors
-     * will not be emitted. If you want your webpack to 'fail', you need to check out
-     * the bail option.
-     */
-    new webpack.NoErrorsPlugin(),
-    /**
      * DefinePlugin allows us to define free variables, in any webpack build, you can
      * use it to create separate builds with debug logging or adding global constants!
      * Here, we use it to specify a development build.
      */
     new webpack.DefinePlugin({
-      'ZWIKI_ENV': JSON.stringify(process.env.ZWIKI_ENV || 'dev')
-    }),
+      ZWIKI_ENV: JSON.stringify(process.env.ZWIKI_ENV || "dev")
+    })
   ],
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.jsx?$/,
         exclude: [/node_modules/, /styles/],
-        loaders: ['babel'],
-        include: path.join(__dirname, 'src')
+        loaders: ["babel-loader"],
+        include: path.join(__dirname, "src")
       },
       {
         test: /\.scss$/,
-        loader: 'style!css!sass'
+        loader: "style!css!sass"
       },
-      { test: /\.css$/, exclude: /\.useable\.css$/, loader: "style-loader!css-loader" },
+      {
+        test: /\.css$/,
+        exclude: /\.useable\.css$/,
+        loader: "style-loader!css-loader"
+      }
     ]
   },
   resolve: {
-    extensions: ['', '.js', '.jsx'],
+    extensions: [".js", ".jsx"]
   }
 };
