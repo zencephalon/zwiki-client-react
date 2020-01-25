@@ -10,8 +10,8 @@
       "module:babel-root-import",
       {
         "rootPathSuffix": "src"
-      },
-      "@babel/plugin-proposal-class-properties"
-    ]
+      }
+    ],
+    "@babel/plugin-proposal-class-properties"
   ]
 }
