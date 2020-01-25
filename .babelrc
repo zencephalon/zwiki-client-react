@@ -1,5 +1,5 @@
 {
-  "presets": ["@babel/react", "@babel/env", "@babel/stage-0"],
+  "presets": ["@babel/react", "@babel/env"],
   "env": {
     "development": {
       "presets": []
@@ -10,7 +10,8 @@
       "module:babel-root-import",
       {
         "rootPathSuffix": "src"
-      }
+      },
+      "@babel/plugin-proposal-class-properties"
     ]
   ]
 }

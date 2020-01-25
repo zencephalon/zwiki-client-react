@@ -18,6 +18,7 @@
   "license": "MIT",
   "homepage": "https://github.com/tsaiDavid/simple-redux-boilerplate",
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
     "autoprefixer": "^9.7.4",
     "babel-core": "^6.26.3",
     "babel-eslint": "^10.0.3",
