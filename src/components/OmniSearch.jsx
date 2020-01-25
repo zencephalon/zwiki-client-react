@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux'
 
 import { INDEX, OMNI_QUERY, POST } from '~/apis/nodes/actions'
