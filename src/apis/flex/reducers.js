@@ -11,24 +11,19 @@ const startState = {
   columns: [makeColumn(), makeColumn(), makeColumn(), makeColumn()],
   visibleColumnIds: [0, 1],
   focusedColumnId: 0,
-  focusedRowId: 0,
   focusType: EDITOR
 };
 
 export default function focus(state = startState, action) {
-  const { focusedColumnId, columns, visibleColumnIds, focusedRowId } = state;
+  const { focusedColumnId, columns, visibleColumnIds } = state;
   const nextColumnId = focusedColumnId + 1;
   const leftColumnId = focusedColumnId - 1;
   const nextColumn = columns[nextColumnId];
   const focusedColumn = columns[focusedColumnId];
-  const rowsInLeftColumn = state.columns[leftColumnId]
-    ? state.columns[leftColumnId].length
-    : 0;
-  const rowsInRightColumn = state.columns[nextColumnId]
-    ? state.columns[nextColumnId].length
-    : 0;
   const leftNextRowId = state.columns[leftColumnId]?.focusedRowId;
   const rightNextRowId = state.columns[nextColumnId]?.focusedRowId;
+
+  const focusedRowId = focusedColumn.focusedRowId;
   const upNextRowId =
     focusedRowId <= 0 ? focusedColumn.length - 1 : focusedRowId - 1;
   const downNextRowId =
@@ -72,64 +67,63 @@ export default function focus(state = startState, action) {
     case t.CYCLE_UP:
       return {
         ...state,
-        focusedRowId: upNextRowId,
-        columnsFocusedRowIds: Object.assign([], columnsFocusedRowIds, {
-          [focusedColumnId]: upNextRowId
+        columns: Object.assign([], columns, {
+          [focusedColumnId]: { ...focusedColumn, focusedRowId: upNextRowId }
         })
       };
     case t.CYCLE_DOWN:
       return {
         ...state,
-        focusedRowId: downNextRowId,
-        columnsFocusedRowIds: Object.assign([], columnsFocusedRowIds, {
-          [focusedColumnId]: downNextRowId
+        columns: Object.assign([], columns, {
+          [focusedColumnId]: { ...focusedColumn, focusedRowId: downNextRowId }
         })
       };
     case t.SHIFT_DOWN:
       return {
         ...state,
-        focusedRowId: downNextRowId,
-        columnsFocusedRowIds: Object.assign([], columnsFocusedRowIds, {
-          [focusedColumnId]: downNextRowId
-        }),
-        columns: [
-          ...columns.slice(0, focusedColumnId),
-          (col => {
-            const nc = [...col];
-            const a = nc[focusedRowId];
-            const b = nc[downNextRowId];
-            nc[focusedRowId] = b;
-            nc[downNextRowId] = a;
-            return nc;
-          })(columns[focusedColumnId]),
-          ...columns.slice(nextColumnId, columns.length)
-        ]
+        columns: Object.assign([], columns, {
+          [focusedColumnId]: {
+            ...focusedColumn,
+            focusedRowId: downNextRowId,
+            nodes: (nodes => {
+              const newNodes = [...nodes];
+              const a = newNodes[focusedRowId];
+              const b = newNodes[downNextRowId];
+              newNodes[focusedRowId] = b;
+              newNodes[downNextRowId] = a;
+              return newNodes;
+            })(focusedColumn.nodes)
+          }
+        })
       };
     case t.SHIFT_UP:
       return {
         ...state,
-        focusedRowId: upNextRowId,
-        columnsFocusedRowIds: Object.assign([], columnsFocusedRowIds, {
-          [focusedColumnId]: downNextRowId
-        }),
-        columns: [
-          ...columns.slice(0, focusedColumnId),
-          (col => {
-            const nc = [...col];
-            const a = nc[focusedRowId];
-            const b = nc[upNextRowId];
-            nc[focusedRowId] = b;
-            nc[upNextRowId] = a;
-            return nc;
-          })(columns[focusedColumnId]),
-          ...columns.slice(nextColumnId, columns.length)
-        ]
+        columns: Object.assign([], columns, {
+          [focusedColumnId]: {
+            ...focusedColumn,
+            focusedRowId: downNextRowId,
+            nodes: (nodes => {
+              const newNodes = [...nodes];
+              const a = newNodes[focusedRowId];
+              const b = newNodes[upNextRowId];
+              newNodes[focusedRowId] = b;
+              newNodes[downNextRowId] = a;
+              return newNodes;
+            })(focusedColumn.nodes)
+          }
+        })
       };
     case t.FOCUS:
       return {
         ...state,
         focusedColumnId: defVal(action.columnId, state.focusedColumnId),
-        focusedRowId: defVal(action.rowId, state.focusedRowId),
+        columns: Object.assign([], columns, {
+          [focusedColumnId]: {
+            ...focusedColumn,
+            focusedRowId: action.rowId
+          }
+        }),
         focusType: defVal(action.focusType, state.focusType)
       };
     case t.OPEN_NODE:
@@ -145,40 +139,40 @@ export default function focus(state = startState, action) {
       if (!nextColumn) {
         return {
           ...state,
-          columns: [...columns, [action.nodeId]]
-          // visibleColumnIds: visibleColumnIds.includes(nextColumnId) ?
-          //   visibleColumnIds :
-          //   [...visibleColumnIds.slice(1), nextColumnId],
+          columns: [...columns, makeColumn([action.nodeId])],
+          visibleColumnIds: visibleColumnIds.includes(nextColumnId)
+            ? visibleColumnIds
+            : [...visibleColumnIds.slice(1), nextColumnId]
         };
       }
-      if (!nextColumn.includes(action.nodeId)) {
+      if (!nextColumn.nodes.includes(action.nodeId)) {
         return {
           ...state,
-          columns: [
-            ...columns.slice(0, nextColumnId),
-            [action.nodeId, ...nextColumn],
-            ...columns.slice(nextColumnId + 1, columns.length)
-          ]
-          // visibleColumnIds: visibleColumnIds.includes(nextColumnId) ?
-          //   visibleColumnIds :
-          //   [...visibleColumnIds.slice(1), nextColumnId],
+          columns: Object.assign([], columns, {
+            [nextColumnId]: {
+              ...nextColumn,
+              nodes: [action.nodeId, ...nextColumn.nodes]
+            }
+          }),
+          visibleColumnIds: visibleColumnIds.includes(nextColumnId)
+            ? visibleColumnIds
+            : [...visibleColumnIds.slice(1), nextColumnId]
         };
       }
       return {
         ...state,
-        columns: [
-          ...columns.slice(0, nextColumnId),
-          nextColumn.filter(id => id !== action.nodeId),
-          ...columns.slice(nextColumnId + 1, columns.length)
-        ]
+        columns: Object.assign([], columns, {
+          [nextColumnId]: {
+            ...nextColumn,
+            nodes: nextColumn.nodes.filter(id => id !== action.nodeId)
+          }
+        })
       };
     case t.REFOCUS:
       return {
-        columns: [[action.nodeId], []],
-        columnsFocusedRowIds: [0, 0],
+        columns: [makeColumn([action.nodeId]), makeColumn()],
         visibleColumnIds: [0, 1],
         focusedColumnId: 0,
-        focusedRowId: 0,
         focusType: EDITOR
       };
     case t.ONE_COLUMN:

@@ -71,6 +71,7 @@
     "react-router-dom": "^5.1.2",
     "react-router-redux": "^4.0.8",
     "redux": "^4.0.5",
+    "redux-devtools-extension": "^2.13.8",
     "redux-rest-reducer": "git+ssh://git@github.com/zencephalon/redux-rest-reducer.git#9ccbc3dea0dbaf125a929d6380743fecd0203234",
     "redux-thunk": "^2.3.0",
     "trie-search": "^1.2.11",

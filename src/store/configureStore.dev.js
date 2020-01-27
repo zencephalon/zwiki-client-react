@@ -17,7 +17,11 @@ const finalCreateStore = compose(
 )(createStore);
 
 export default function configureStore(initialState) {
-  const store = finalCreateStore(rootReducer, initialState);
+  const store = finalCreateStore(
+    rootReducer,
+    initialState,
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  );
 
   // Hot reload reducers (requires Webpack or Browserify HMR to be enabled)
   if (module.hot) {
