@@ -20,14 +20,12 @@ export default function focus(state = startState, action) {
   const leftColumnId = focusedColumnId - 1;
   const nextColumn = columns[nextColumnId];
   const focusedColumn = columns[focusedColumnId];
-  const leftNextRowId = state.columns[leftColumnId]?.focusedRowId;
-  const rightNextRowId = state.columns[nextColumnId]?.focusedRowId;
 
   const focusedRowId = focusedColumn.focusedRowId;
   const upNextRowId =
-    focusedRowId <= 0 ? focusedColumn.length - 1 : focusedRowId - 1;
+    focusedRowId <= 0 ? focusedColumn.nodes.length - 1 : focusedRowId - 1;
   const downNextRowId =
-    focusedRowId >= focusedColumn.length - 1 ? 0 : focusedRowId + 1;
+    focusedRowId >= focusedColumn.nodes.length - 1 ? 0 : focusedRowId + 1;
 
   switch (action.type) {
     case t.SLIDE_RIGHT:
