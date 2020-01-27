@@ -121,7 +121,7 @@ export default function focus(state = startState, action) {
         columns: Object.assign([], columns, {
           [focusedColumnId]: {
             ...focusedColumn,
-            focusedRowId: action.rowId
+            focusedRowId: defVal(action.rowId, focusedRowId)
           }
         }),
         focusType: defVal(action.focusType, state.focusType)
