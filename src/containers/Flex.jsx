@@ -1,14 +1,14 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
-import * as FlexActions from '~/apis/flex/actions'
-import NodeEdit from './NodeEdit'
-import classNames from 'classnames'
+import PropTypes from "prop-types";
+import React, { Component } from "react";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import * as FlexActions from "~/apis/flex/actions";
+import NodeEdit from "./NodeEdit";
+import classNames from "classnames";
 
-import UserShape from '~/apis/users/shape'
+import UserShape from "~/apis/users/shape";
 
-import { EDITOR } from '~/constants'
+import { EDITOR } from "~/constants";
 
 class Flex extends Component {
   componentWillReceiveProps(nextProps) {
@@ -22,25 +22,22 @@ class Flex extends Component {
       columns,
       visibleColumnIds,
       focusedColumnId,
-      focusedRowId,
-      actions: {
-        FOCUS,
-      },
-    } = this.props
-    const firstVisibleColumnId = visibleColumnIds[0]
-    const numVisible = visibleColumnIds.length
+      actions: { FOCUS }
+    } = this.props;
+    const firstVisibleColumnId = visibleColumnIds[0];
+    const numVisible = visibleColumnIds.length;
     return (
       <div className={`flex-writer columns-${numVisible}`}>
         {columns.map((column, columnId) => (
           <div
-            className={classNames('flex-column', {
+            className={classNames("flex-column", {
               hidden: !visibleColumnIds.includes(columnId),
               focused: focusedColumnId === columnId,
-              'first-visible': firstVisibleColumnId === columnId,
+              "first-visible": firstVisibleColumnId === columnId
             })}
             key={columnId}
           >
-            {column.map((nodeId, rowId) => (
+            {column.nodes.map((nodeId, rowId) => (
               <div
                 className="column-item"
                 key={`${columnId}-${nodeId}`}
@@ -49,16 +46,18 @@ class Flex extends Component {
                 <NodeEdit
                   id={nodeId}
                   editorId={`${columnId}-${nodeId}`}
-                  focused={focusedColumnId === columnId && rowId === focusedRowId}
+                  focused={
+                    focusedColumnId === columnId &&
+                    rowId === column.focusedRowId
+                  }
                 />
               </div>
-            ))
-            }
+            ))}
             <div className="column-item column-filler">❧</div>
           </div>
         ))}
       </div>
-    )
+    );
   }
 }
 
@@ -66,34 +65,24 @@ Flex.propTypes = {
   columns: PropTypes.array,
   visibleColumnIds: PropTypes.array,
   focusedColumnId: PropTypes.number,
-  focusedRowId: PropTypes.number,
   actions: PropTypes.objectOf(PropTypes.func).isRequired,
-  user: UserShape,
-}
+  user: UserShape
+};
 
 function mapStateToProps(state) {
-  const {
-    columns,
-    visibleColumnIds,
-    focusedColumnId,
-    focusedRowId,
-  } = state.flex
+  const { columns, visibleColumnIds, focusedColumnId } = state.flex;
 
   return {
     columns,
     visibleColumnIds,
-    focusedColumnId,
-    focusedRowId,
-  }
+    focusedColumnId
+  };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(FlexActions, dispatch),
-  }
+    actions: bindActionCreators(FlexActions, dispatch)
+  };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Flex)
+export default connect(mapStateToProps, mapDispatchToProps)(Flex);
