@@ -18,13 +18,13 @@
   "license": "MIT",
   "homepage": "https://github.com/tsaiDavid/simple-redux-boilerplate",
   "devDependencies": {
-    "autoprefixer": "^9.7.4",
-    "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/core": "7.8.3",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/preset-env": "^7.8.3",
     "@babel/preset-es2015": "^7.0.0-beta.53",
     "@babel/preset-react": "^7.8.3",
     "@babel/preset-stage-0": "^7.8.3",
+    "autoprefixer": "^9.7.4",
     "babel-eslint": "^10.0.3",
     "babel-loader": "^8.0.6",
     "babel-root-import": "^4.1.8",
@@ -48,6 +48,7 @@
     "sass-loader": "^8.0.2",
     "style-loader": "^1.1.3",
     "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10",
     "webpack-dev-middleware": "^3.7.2",
     "webpack-hot-middleware": "^2.25.0"
   },
