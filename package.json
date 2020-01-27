@@ -67,6 +67,7 @@
     "react-mousetrap": "^0.2.0",
     "react-redux": "^7.1.3",
     "react-router": "^5.1.2",
+    "react-router-dom": "^5.1.2",
     "react-router-redux": "^4.0.8",
     "redux": "^4.0.5",
     "redux-rest-reducer": "git+ssh://git@github.com/zencephalon/redux-rest-reducer.git#9ccbc3dea0dbaf125a929d6380743fecd0203234",
