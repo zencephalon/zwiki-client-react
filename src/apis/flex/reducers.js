@@ -9,13 +9,19 @@ const makeColumn = (nodes = []) => ({
 
 const startState = {
   columns: [makeColumn(), makeColumn(), makeColumn(), makeColumn()],
-  visibleColumnIds: [0, 1],
+  leftmostVisibleColumnId: 0,
+  visibleColumns: 2,
   focusedColumnId: 0,
   focusType: EDITOR
 };
 
 export default function focus(state = startState, action) {
-  const { focusedColumnId, columns, visibleColumnIds } = state;
+  const {
+    focusedColumnId,
+    columns,
+    leftmostVisibleColumnId,
+    visibleColumns
+  } = state;
   const nextColumnId = focusedColumnId + 1;
   const leftColumnId = focusedColumnId - 1;
   const nextColumn = columns[nextColumnId];
@@ -27,9 +33,12 @@ export default function focus(state = startState, action) {
   const downNextRowId =
     focusedRowId >= focusedColumn.nodes.length - 1 ? 0 : focusedRowId + 1;
 
+  const nextColumnWithinBounds =
+    leftmostVisibleColumnId + visibleColumns > nextColumnId;
+
   switch (action.type) {
     case t.SLIDE_RIGHT:
-      if (visibleColumnIds.includes(nextColumnId)) {
+      if (nextColumnWithinBounds) {
         return {
           ...state,
           focusedColumnId: nextColumnId
@@ -39,16 +48,13 @@ export default function focus(state = startState, action) {
         ...state,
         columns: nextColumn ? columns : [...columns, makeColumn()],
         focusedColumnId: nextColumnId,
-        visibleColumnIds: [
-          ...visibleColumnIds.slice(1, visibleColumnIds.length),
-          nextColumnId
-        ]
+        leftmostVisibleColumnId: leftmostVisibleColumnId + 1
       };
     case t.SLIDE_LEFT:
       if (focusedColumnId === 0) {
         return state;
       }
-      if (visibleColumnIds.includes(leftColumnId)) {
+      if (leftmostVisibleColumnId <= leftColumnId) {
         return {
           ...state,
           focusedColumnId: leftColumnId
@@ -57,10 +63,7 @@ export default function focus(state = startState, action) {
       return {
         ...state,
         focusedColumnId: leftColumnId,
-        visibleColumnIds: [
-          leftColumnId,
-          ...visibleColumnIds.slice(0, visibleColumnIds.length - 1)
-        ]
+        leftmostVisibleColumnId: leftColumnId
       };
     case t.CYCLE_UP:
       return {
@@ -138,9 +141,8 @@ export default function focus(state = startState, action) {
         return {
           ...state,
           columns: [...columns, makeColumn([action.nodeId])],
-          visibleColumnIds: visibleColumnIds.includes(nextColumnId)
-            ? visibleColumnIds
-            : [...visibleColumnIds.slice(1), nextColumnId]
+          leftmostVisibleColumnId:
+            leftmostVisibleColumnId + (nextColumnWithinBounds ? 0 : 1)
         };
       }
       if (!nextColumn.nodes.includes(action.nodeId)) {
@@ -152,9 +154,8 @@ export default function focus(state = startState, action) {
               nodes: [action.nodeId, ...nextColumn.nodes]
             }
           }),
-          visibleColumnIds: visibleColumnIds.includes(nextColumnId)
-            ? visibleColumnIds
-            : [...visibleColumnIds.slice(1), nextColumnId]
+          leftmostVisibleColumnId:
+            leftmostVisibleColumnId + (nextColumnWithinBounds ? 0 : 1)
         };
       }
       return {
@@ -168,39 +169,36 @@ export default function focus(state = startState, action) {
       };
     case t.REFOCUS:
       return {
-        columns: [makeColumn([action.nodeId]), makeColumn()],
-        visibleColumnIds: [0, 1],
+        ...state,
+        columns: [
+          makeColumn([action.nodeId]),
+          ...Array(visibleColumns - 1)
+            .fill(0)
+            .map(_a => makeColumn())
+        ],
+        leftmostVisibleColumnId: 0,
         focusedColumnId: 0,
         focusType: EDITOR
       };
     case t.ONE_COLUMN:
       return {
         ...state,
-        visibleColumnIds: [focusedColumnId]
+        visibleColumns: 1
       };
     case t.TWO_COLUMN:
       return {
         ...state,
-        visibleColumnIds: [focusedColumnId, focusedColumnId + 1]
+        visibleColumns: 2
       };
     case t.THREE_COLUMN:
       return {
         ...state,
-        visibleColumnIds: [
-          focusedColumnId,
-          focusedColumnId + 1,
-          focusedColumnId + 2
-        ]
+        visibleColumns: 3
       };
     case t.FOUR_COLUMN:
       return {
         ...state,
-        visibleColumnIds: [
-          focusedColumnId,
-          focusedColumnId + 1,
-          focusedColumnId + 2,
-          focusedColumnId + 3
-        ]
+        visibleColumns: 4
       };
     default:
       return state;

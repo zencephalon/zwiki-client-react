@@ -20,42 +20,52 @@ class Flex extends Component {
   render() {
     const {
       columns,
-      visibleColumnIds,
+      visibleColumns,
+      leftmostVisibleColumnId,
       focusedColumnId,
       actions: { FOCUS }
     } = this.props;
-    const firstVisibleColumnId = visibleColumnIds[0];
-    const numVisible = visibleColumnIds.length;
     return (
-      <div className={`flex-writer columns-${numVisible}`}>
-        {columns.map((column, columnId) => (
-          <div
-            className={classNames("flex-column", {
-              hidden: !visibleColumnIds.includes(columnId),
-              focused: focusedColumnId === columnId,
-              "first-visible": firstVisibleColumnId === columnId
-            })}
-            key={columnId}
-          >
-            {column.nodes.map((nodeId, rowId) => (
-              <div
-                className="column-item"
-                key={`${columnId}-${nodeId}`}
-                onClick={() => FOCUS({ rowId, columnId, type: EDITOR })}
-              >
-                <NodeEdit
-                  id={nodeId}
-                  editorId={`${columnId}-${nodeId}`}
-                  focused={
-                    focusedColumnId === columnId &&
-                    rowId === column.focusedRowId
-                  }
-                />
-              </div>
-            ))}
-            <div className="column-item column-filler">❧</div>
-          </div>
-        ))}
+      <div className={`flex-writer columns-${visibleColumns}`}>
+        {columns.map((column, columnId) => {
+          const hidden =
+            columnId < leftmostVisibleColumnId ||
+            columnId >= leftmostVisibleColumnId + visibleColumns;
+          console.log({
+            columnId,
+            leftmostVisibleColumnId,
+            visibleColumns,
+            hidden
+          });
+          return (
+            <div
+              className={classNames("flex-column", {
+                hidden,
+                focused: focusedColumnId === columnId,
+                "first-visible": leftmostVisibleColumnId === columnId
+              })}
+              key={columnId}
+            >
+              {column.nodes.map((nodeId, rowId) => (
+                <div
+                  className="column-item"
+                  key={`${columnId}-${nodeId}`}
+                  onClick={() => FOCUS({ rowId, columnId, type: EDITOR })}
+                >
+                  <NodeEdit
+                    id={nodeId}
+                    editorId={`${columnId}-${nodeId}`}
+                    focused={
+                      focusedColumnId === columnId &&
+                      rowId === column.focusedRowId
+                    }
+                  />
+                </div>
+              ))}
+              <div className="column-item column-filler">❧</div>
+            </div>
+          );
+        })}
       </div>
     );
   }
@@ -63,19 +73,26 @@ class Flex extends Component {
 
 Flex.propTypes = {
   columns: PropTypes.array,
-  visibleColumnIds: PropTypes.array,
+  visibleColumns: PropTypes.number,
+  leftmostVisibleColumnId: PropTypes.number,
   focusedColumnId: PropTypes.number,
   actions: PropTypes.objectOf(PropTypes.func).isRequired,
   user: UserShape
 };
 
 function mapStateToProps(state) {
-  const { columns, visibleColumnIds, focusedColumnId } = state.flex;
+  const {
+    columns,
+    visibleColumns,
+    focusedColumnId,
+    leftmostVisibleColumnId
+  } = state.flex;
 
   return {
     columns,
-    visibleColumnIds,
-    focusedColumnId
+    visibleColumns,
+    focusedColumnId,
+    leftmostVisibleColumnId
   };
 }
 

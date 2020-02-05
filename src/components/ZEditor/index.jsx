@@ -178,12 +178,11 @@ class ZEditor extends Component {
   };
 
   focus = () => {
-    console.log("Focus got called");
     this.editor.focus();
+
     setTimeout(() => {
       window.getSelection().anchorNode.parentElement.scrollIntoViewIfNeeded();
     }, 10);
-    // this.editorState.
   };
 
   handleKeyCommand = command => {
