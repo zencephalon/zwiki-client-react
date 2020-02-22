@@ -164,7 +164,7 @@ class ZEditor extends Component {
     const oldName = node.name;
     const newName = extractName(content);
 
-    if (oldName != newName) {
+    if (oldName !== newName) {
       dispatch(UPDATE_ENTRY(oldName, newName, { id: node.id, name: newName }));
     }
 

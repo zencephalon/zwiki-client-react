@@ -31,12 +31,12 @@ class Flex extends Component {
           const hidden =
             columnId < leftmostVisibleColumnId ||
             columnId >= leftmostVisibleColumnId + visibleColumns;
-          console.log({
-            columnId,
-            leftmostVisibleColumnId,
-            visibleColumns,
-            hidden
-          });
+          // console.log({
+          //   columnId,
+          //   leftmostVisibleColumnId,
+          //   visibleColumns,
+          //   hidden
+          // });
           return (
             <div
               className={classNames("flex-column", {
