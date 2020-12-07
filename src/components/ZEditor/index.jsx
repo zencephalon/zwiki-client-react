@@ -116,7 +116,7 @@ class ZEditor extends Component {
   componentWillReceiveProps(nextProps) {
     const {
       node: { content },
-    } = nextPropse;
+    } = nextProps;
     if (
       this.state.previousPlainText !== content &&
       this.props.node.content !== content
