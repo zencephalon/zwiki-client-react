@@ -114,7 +114,13 @@ class ZEditor extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.state.previousPlainText !== nextProps.node.content) {
+    const {
+      node: { content },
+    } = nextPropse;
+    if (
+      this.state.previousPlainText !== content &&
+      this.props.node.content !== content
+    ) {
       this.setState({
         editorState: EditorState.createWithContent(
           ContentState.createFromText(nextProps.node.content)
