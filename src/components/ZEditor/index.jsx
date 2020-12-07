@@ -184,6 +184,7 @@ class ZEditor extends Component {
         this.setState({ timer: null });
       })
       .catch(() => {
+        this.props.refetch();
         console.log("ILUVU, versions out of sync.");
       });
   };
