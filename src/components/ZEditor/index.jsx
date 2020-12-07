@@ -25,7 +25,7 @@ import {
   ONE_COLUMN,
   TWO_COLUMN,
   THREE_COLUMN,
-  FOUR_COLUMN
+  FOUR_COLUMN,
 } from "~/apis/flex/actions";
 
 import { NEW_ENTRY, UPDATE_ENTRY } from "~/apis/suggest/actions";
@@ -41,7 +41,7 @@ import {
   EDITOR,
   LINK_REGEX,
   IMPORT_REGEX,
-  LINK_AND_IMPORT_REGEX
+  LINK_AND_IMPORT_REGEX,
 } from "~/constants";
 import { fuseSort } from "~/helpers";
 import {
@@ -55,7 +55,7 @@ import {
   insertTimeStamp,
   insertDateStamp,
   toggleTodo,
-  extractName
+  extractName,
 } from "./helpers";
 
 import Link from "./Link";
@@ -73,7 +73,7 @@ const theme = {
   mentionSuggestions: "mentionSuggestions",
   mentionSuggestionsEntry: "mentionSuggestionsEntry",
   mentionSuggestionsEntryFocused: "mentionSuggestionsEntryFocused",
-  mentionSuggestionsEntryText: "mentionSuggestionsEntryText"
+  mentionSuggestionsEntryText: "mentionSuggestionsEntryText",
 };
 
 class ZEditor extends Component {
@@ -83,17 +83,17 @@ class ZEditor extends Component {
     this.mentionPlugin = createMentionPlugin({
       theme,
       mentionTrigger: "[",
-      replaceTemplate: ({ name, id }) => `${name}](${id})`
+      replaceTemplate: ({ name, id }) => `${name}](${id})`,
     });
     this.mentionPluginTwo = createMentionPlugin({
       theme,
       mentionTrigger: "](",
-      replaceTemplate: ({ id }) => `${id})`
+      replaceTemplate: ({ id }) => `${id})`,
     });
     this.mentionPluginThree = createMentionPlugin({
       theme,
       mentionTrigger: "{",
-      replaceTemplate: ({ name, id }) => `${name}}(${id})`
+      replaceTemplate: ({ name, id }) => `${name}}(${id})`,
     });
   }
 
@@ -104,7 +104,7 @@ class ZEditor extends Component {
     previousPlainText: this.props.node.content,
     timer: null,
     linkTimer: null,
-    editorId: this.props.editorId || uniqueId("editor_")
+    editorId: this.props.editorId || uniqueId("editor_"),
   };
 
   componentDidMount() {
@@ -113,8 +113,19 @@ class ZEditor extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.state.previousPlainText !== nextProps.node.content) {
+      this.setState({
+        editorState: EditorState.createWithContent(
+          ContentState.createFromText(nextProps.node.content)
+        ),
+        previousPlainText: nextProps.node.content,
+      });
+    }
+  }
+
   componentDidUpdate(lastProps) {
-    const { focused, focusType } = this.props;
+    const { focused, focusType, node } = this.props;
     if (
       focused &&
       focusType === EDITOR &&
@@ -128,7 +139,7 @@ class ZEditor extends Component {
     // this.saveToServer(this.state.editorState.getCurrentContent().getPlainText())
   }
 
-  onChange = editorState => {
+  onChange = (editorState) => {
     const { timer, previousPlainText } = this.state;
     let newTimer;
 
@@ -145,7 +156,7 @@ class ZEditor extends Component {
     this.setState({
       editorState,
       timer: newTimer,
-      previousPlainText: plainText
+      previousPlainText: plainText,
     });
   };
 
@@ -159,7 +170,7 @@ class ZEditor extends Component {
     // get the mention object selected
   };
 
-  saveToServer = content => {
+  saveToServer = (content) => {
     const { node, dispatch } = this.props;
     const oldName = node.name;
     const newName = extractName(content);
@@ -169,7 +180,7 @@ class ZEditor extends Component {
     }
 
     return dispatch(PUT(node.id, { content, version: node.version + 1 }))
-      .then(res => {
+      .then((res) => {
         this.setState({ timer: null });
       })
       .catch(() => {
@@ -178,6 +189,7 @@ class ZEditor extends Component {
   };
 
   focus = () => {
+    this.props.refetch();
     this.editor.focus();
 
     setTimeout(() => {
@@ -185,37 +197,37 @@ class ZEditor extends Component {
     }, 10);
   };
 
-  handleKeyCommand = command => {
+  handleKeyCommand = (command) => {
     const { dispatch, node } = this.props;
     const { editorState } = this.state;
 
     if (command === "INSERT_TIME_STAMP") {
       this.setState({
-        editorState: insertTimeStamp(editorState)
+        editorState: insertTimeStamp(editorState),
       });
       return "handled";
     }
     if (command === "INSERT_DATE_STAMP") {
       this.setState({
-        editorState: insertDateStamp(editorState)
+        editorState: insertDateStamp(editorState),
       });
       return "handled";
     }
     if (command === "TOGGLE_TODO") {
       this.setState({
-        editorState: toggleTodo(editorState)
+        editorState: toggleTodo(editorState),
       });
       return "handled";
     }
     if (command === "SELECT_BLOCK_DOWN") {
       this.setState({
-        editorState: selectBlockDown(editorState)
+        editorState: selectBlockDown(editorState),
       });
       return "handled";
     }
     if (command === "SELECT_BLOCK_UP") {
       this.setState({
-        editorState: selectBlockUp(editorState)
+        editorState: selectBlockUp(editorState),
       });
       return "handled";
     }
@@ -255,11 +267,11 @@ class ZEditor extends Component {
       dispatch(
         POST("NEW_NODE", {
           content: `# ${title}\n\n`,
-          name: title
+          name: title,
         })
       ).then(({ data: { id, name } }) => {
         this.setState({
-          editorState: insertLinkCompletion(editorState, id, char)
+          editorState: insertLinkCompletion(editorState, id, char),
         });
         dispatch(NEW_ENTRY(name, id));
         dispatch(TOGGLE_LINK({ nodeId: id }));
@@ -306,7 +318,7 @@ class ZEditor extends Component {
     const { MentionSuggestions } = this.mentionPlugin;
     const { MentionSuggestions: MentionSuggestionsTwo } = this.mentionPluginTwo;
     const {
-      MentionSuggestions: MentionSuggestionsThree
+      MentionSuggestions: MentionSuggestionsThree,
     } = this.mentionPluginThree;
     return (
       <div className={classNames("editor", { saved: !timer, focused })}>
@@ -316,16 +328,16 @@ class ZEditor extends Component {
           plugins={[
             this.mentionPlugin,
             this.mentionPluginTwo,
-            this.mentionPluginThree
+            this.mentionPluginThree,
           ]}
-          ref={element => {
+          ref={(element) => {
             this.editor = element;
           }}
           defaultKeyBindings={false}
           handleKeyCommand={this.handleKeyCommand}
           keyBindingFn={keyBindings}
           spellCheck
-          onTab={e => {
+          onTab={(e) => {
             const { editorState } = this.state;
 
             e.preventDefault();
@@ -335,7 +347,7 @@ class ZEditor extends Component {
                 editorState,
                 LINK_AND_IMPORT_REGEX,
                 !e.shiftKey
-              )
+              ),
             });
 
             setTimeout(this.focus, 10);
@@ -348,12 +360,12 @@ class ZEditor extends Component {
           decorators={[
             {
               strategy: linkStrategy,
-              component: props => <Link {...props} />
+              component: (props) => <Link {...props} />,
             },
             {
               strategy: importStrategy,
-              component: props => <Link {...props} />
-            }
+              component: (props) => <Link {...props} />,
+            },
           ]}
         />
         {focused && (
@@ -387,7 +399,7 @@ function mapStateToProps(state, props) {
 
   const { data: suggestions, confirmed } = state.nodes.http.collections[""] || {
     data: [],
-    confirmed: false
+    confirmed: false,
   };
 
   // const sortedSuggestions = confirmed ? fuseSort(suggestions, q) : [{ name: '…' }]
@@ -397,7 +409,7 @@ function mapStateToProps(state, props) {
     suggestions: fromJS(sortedSuggestions),
     confirmed,
     q,
-    focusType: state.flex.focusType
+    focusType: state.flex.focusType,
   };
 }
 
@@ -406,7 +418,7 @@ ZEditor.propTypes = {
   dispatch: PropTypes.func.isRequired,
   editorId: PropTypes.string,
   focused: PropTypes.bool.isRequired,
-  focusType: PropTypes.string.isRequired
+  focusType: PropTypes.string.isRequired,
 };
 
 export default connect(mapStateToProps)(ZEditor);
