@@ -23,7 +23,7 @@ class NodeContainer extends Component {
   }
 
   refetch = () => {
-    console.log("Synchronizing node: ", id);
+    console.log("Synchronizing node: ", this.props.id);
     const {
       actions: { GET },
       id,
