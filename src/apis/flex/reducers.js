@@ -57,6 +57,7 @@ function sharedValues(state) {
     leftColumnId,
     nextColumn,
     focusedColumn,
+    focusedColumnId,
     focusedRowId,
     upNextRowId,
     downNextRowId,
@@ -111,6 +112,33 @@ function slideLeft(state) {
   };
 }
 
+function cycleUp(state) {
+  const { columns, focusedColumnId, focusedColumn, upNextRowId } = sharedValues(
+    state
+  );
+  return {
+    ...state,
+    columns: Object.assign([], columns, {
+      [focusedColumnId]: { ...focusedColumn, focusedRowId: upNextRowId },
+    }),
+  };
+}
+
+function cycleDown(state) {
+  const {
+    columns,
+    focusedColumnId,
+    focusedColumn,
+    downNextRowId,
+  } = sharedValues(state);
+  return {
+    ...state,
+    columns: Object.assign([], columns, {
+      [focusedColumnId]: { ...focusedColumn, focusedRowId: downNextRowId },
+    }),
+  };
+}
+
 export default function focus(state = startState, action) {
   const {
     focusedColumnId,
@@ -140,19 +168,9 @@ export default function focus(state = startState, action) {
     case t.SLIDE_LEFT:
       return slideLeft(state);
     case t.CYCLE_UP:
-      return {
-        ...state,
-        columns: Object.assign([], columns, {
-          [focusedColumnId]: { ...focusedColumn, focusedRowId: upNextRowId },
-        }),
-      };
+      return cycleUp(state);
     case t.CYCLE_DOWN:
-      return {
-        ...state,
-        columns: Object.assign([], columns, {
-          [focusedColumnId]: { ...focusedColumn, focusedRowId: downNextRowId },
-        }),
-      };
+      return cycleDown(state);
     case t.SHIFT_DOWN:
       return {
         ...state,
