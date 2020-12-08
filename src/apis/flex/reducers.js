@@ -214,22 +214,88 @@ function focus(state, rowId, columnId, focusType) {
   };
 }
 
-export default function focusReducer(state = startState, action) {
+function openNode(state, nodeId) {
   const {
     focusedColumnId,
     columns,
+    nextColumnId,
+    focusedColumn,
+  } = sharedValues(state);
+  return {
+    ...state,
+    columns: [
+      ...columns.slice(0, focusedColumnId),
+      makeColumn([nodeId, ...focusedColumn.nodes]),
+      ...columns.slice(nextColumnId, columns.length),
+    ],
+  };
+}
+
+function toggleLink(state, nodeId) {
+  const {
+    nextColumn,
     leftmostVisibleColumnId,
-    visibleColumns,
-  } = state;
-  const nextColumnId = focusedColumnId + 1;
-  const nextColumn = columns[nextColumnId];
-  const focusedColumn = columns[focusedColumnId];
+    columns,
+    nextColumnWithinBounds,
+    nextColumnId,
+  } = sharedValues(state);
 
-  const focusedRowId = focusedColumn.focusedRowId;
+  if (!nextColumn) {
+    return {
+      ...state,
+      columns: [...columns, makeColumn([nodeId])],
+      leftmostVisibleColumnId:
+        leftmostVisibleColumnId + (nextColumnWithinBounds ? 0 : 1),
+    };
+  }
+  if (!nextColumn.nodes.includes(nodeId)) {
+    return {
+      ...state,
+      columns: Object.assign([], columns, {
+        [nextColumnId]: {
+          ...nextColumn,
+          nodes: [nodeId, ...nextColumn.nodes],
+        },
+      }),
+      leftmostVisibleColumnId:
+        leftmostVisibleColumnId + (nextColumnWithinBounds ? 0 : 1),
+    };
+  }
+  return {
+    ...state,
+    columns: Object.assign([], columns, {
+      [nextColumnId]: {
+        ...nextColumn,
+        nodes: nextColumn.nodes.filter((id) => id !== nodeId),
+      },
+    }),
+  };
+}
 
-  const nextColumnWithinBounds =
-    leftmostVisibleColumnId + visibleColumns > nextColumnId;
+function refocus(state, nodeId) {
+  const { visibleColumns } = sharedValues(state);
+  return {
+    ...state,
+    columns: [
+      makeColumn([nodeId]),
+      ...Array(visibleColumns - 1)
+        .fill(0)
+        .map(() => makeColumn()),
+    ],
+    leftmostVisibleColumnId: 0,
+    focusedColumnId: 0,
+    focusType: EDITOR,
+  };
+}
 
+function setVisibleColumns(state, num) {
+  return {
+    ...state,
+    visibleColumns: num,
+  };
+}
+
+export default function focusReducer(state = startState, action) {
   switch (action.type) {
     case t.SLIDE_RIGHT:
       return slideRight(state);
@@ -246,78 +312,19 @@ export default function focusReducer(state = startState, action) {
     case t.FOCUS:
       return focus(state, action.rowId, action.columnId, action.focusType);
     case t.OPEN_NODE:
-      return {
-        ...state,
-        columns: [
-          ...columns.slice(0, focusedColumnId),
-          makeColumn([action.nodeId, ...focusedColumn.nodes]),
-          ...columns.slice(nextColumnId, columns.length),
-        ],
-      };
+      return openNode(state, action.nodeId);
     case t.TOGGLE_LINK:
-      if (!nextColumn) {
-        return {
-          ...state,
-          columns: [...columns, makeColumn([action.nodeId])],
-          leftmostVisibleColumnId:
-            leftmostVisibleColumnId + (nextColumnWithinBounds ? 0 : 1),
-        };
-      }
-      if (!nextColumn.nodes.includes(action.nodeId)) {
-        return {
-          ...state,
-          columns: Object.assign([], columns, {
-            [nextColumnId]: {
-              ...nextColumn,
-              nodes: [action.nodeId, ...nextColumn.nodes],
-            },
-          }),
-          leftmostVisibleColumnId:
-            leftmostVisibleColumnId + (nextColumnWithinBounds ? 0 : 1),
-        };
-      }
-      return {
-        ...state,
-        columns: Object.assign([], columns, {
-          [nextColumnId]: {
-            ...nextColumn,
-            nodes: nextColumn.nodes.filter((id) => id !== action.nodeId),
-          },
-        }),
-      };
+      return toggleLink(state, action.nodeId);
     case t.REFOCUS:
-      return {
-        ...state,
-        columns: [
-          makeColumn([action.nodeId]),
-          ...Array(visibleColumns - 1)
-            .fill(0)
-            .map((_a) => makeColumn()),
-        ],
-        leftmostVisibleColumnId: 0,
-        focusedColumnId: 0,
-        focusType: EDITOR,
-      };
+      return refocus(state, action.nodeId);
     case t.ONE_COLUMN:
-      return {
-        ...state,
-        visibleColumns: 1,
-      };
+      return setVisibleColumns(state, 1);
     case t.TWO_COLUMN:
-      return {
-        ...state,
-        visibleColumns: 2,
-      };
+      return setVisibleColumns(state, 2);
     case t.THREE_COLUMN:
-      return {
-        ...state,
-        visibleColumns: 3,
-      };
+      return setVisibleColumns(state, 3);
     case t.FOUR_COLUMN:
-      return {
-        ...state,
-        visibleColumns: 4,
-      };
+      return setVisibleColumns(state, 4);
     default:
       return state;
   }
