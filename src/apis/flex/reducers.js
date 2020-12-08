@@ -295,7 +295,7 @@ function setVisibleColumns(state, num) {
   };
 }
 
-export default function focusReducer(state = startState, action) {
+export default function flex(state = startState, action) {
   switch (action.type) {
     case t.SLIDE_RIGHT:
       return slideRight(state);
@@ -317,14 +317,8 @@ export default function focusReducer(state = startState, action) {
       return toggleLink(state, action.nodeId);
     case t.REFOCUS:
       return refocus(state, action.nodeId);
-    case t.ONE_COLUMN:
-      return setVisibleColumns(state, 1);
-    case t.TWO_COLUMN:
-      return setVisibleColumns(state, 2);
-    case t.THREE_COLUMN:
-      return setVisibleColumns(state, 3);
-    case t.FOUR_COLUMN:
-      return setVisibleColumns(state, 4);
+    case t.SET_VISIBLE_COLUMNS:
+      return setVisibleColumns(state, action.num);
     default:
       return state;
   }

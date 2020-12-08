@@ -1,4 +1,4 @@
-import { NAME } from './constants'
+import { NAME } from './constants';
 
 const types = {
   TOGGLE_LINK: `${NAME}/TOGGLE_LINK`,
@@ -13,10 +13,7 @@ const types = {
   SLIDE_UP: `${NAME}/SLIDE_UP`,
   SLIDE_DOWN: `${NAME}/SLIDE_DOWN`,
   REFOCUS: `${NAME}/REFOCUS`,
-  ONE_COLUMN: `${NAME}/ONE_COLUMN`,
-  TWO_COLUMN: `${NAME}/TWO_COLUMN`,
-  THREE_COLUMN: `${NAME}/THREE_COLUMN`,
-  FOUR_COLUMN: `${NAME}/FOUR_COLUMN`,
-}
+  SET_VISIBLE_COLUMNS: `${NAME}/SET_VISIBLE_COLUMNS`,
+};
 
-export default types
+export default types;

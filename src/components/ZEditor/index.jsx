@@ -22,10 +22,7 @@ import {
   SLIDE_LEFT,
   TOGGLE_LINK,
   REFOCUS,
-  ONE_COLUMN,
-  TWO_COLUMN,
-  THREE_COLUMN,
-  FOUR_COLUMN,
+  SET_VISIBLE_COLUMNS,
 } from '~/apis/flex/actions';
 
 import { NEW_ENTRY, UPDATE_ENTRY } from '~/apis/suggest/actions';
@@ -300,22 +297,12 @@ class ZEditor extends Component {
       );
       return 'handled';
     }
-    if (command === 'ONE_COLUMN') {
-      dispatch(ONE_COLUMN());
+    if (command.setColumn) {
+      console.log('hello');
+      dispatch(SET_VISIBLE_COLUMNS(command.num));
       return 'handled';
     }
-    if (command === 'TWO_COLUMN') {
-      dispatch(TWO_COLUMN());
-      return 'handled';
-    }
-    if (command === 'THREE_COLUMN') {
-      dispatch(THREE_COLUMN());
-      return 'handled';
-    }
-    if (command === 'FOUR_COLUMN') {
-      dispatch(FOUR_COLUMN());
-      return 'handled';
-    }
+
     return 'not-handled';
   };
 
