@@ -89,6 +89,28 @@ function slideRight(state) {
   };
 }
 
+function slideLeft(state) {
+  const {
+    focusedColumnId,
+    leftmostVisibleColumnId,
+    leftColumnId,
+  } = sharedValues(state);
+  if (focusedColumnId === 0) {
+    return state;
+  }
+  if (leftmostVisibleColumnId <= leftColumnId) {
+    return {
+      ...state,
+      focusedColumnId: leftColumnId,
+    };
+  }
+  return {
+    ...state,
+    focusedColumnId: leftColumnId,
+    leftmostVisibleColumnId: leftColumnId,
+  };
+}
+
 export default function focus(state = startState, action) {
   const {
     focusedColumnId,
@@ -116,20 +138,7 @@ export default function focus(state = startState, action) {
     case t.SLIDE_RIGHT:
       return slideRight(state);
     case t.SLIDE_LEFT:
-      if (focusedColumnId === 0) {
-        return state;
-      }
-      if (leftmostVisibleColumnId <= leftColumnId) {
-        return {
-          ...state,
-          focusedColumnId: leftColumnId,
-        };
-      }
-      return {
-        ...state,
-        focusedColumnId: leftColumnId,
-        leftmostVisibleColumnId: leftColumnId,
-      };
+      return slideLeft(state);
     case t.CYCLE_UP:
       return {
         ...state,
