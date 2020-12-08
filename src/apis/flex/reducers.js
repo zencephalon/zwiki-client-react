@@ -37,7 +37,6 @@ function sharedValues(state) {
     columns,
     leftmostVisibleColumnId,
     visibleColumns,
-    columns,
   } = state;
   const nextColumnId = focusedColumnId + 1;
   const leftColumnId = focusedColumnId - 1;
