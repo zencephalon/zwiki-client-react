@@ -1,7 +1,7 @@
-import { EDITOR } from "~/constants";
-import { defVal } from "~/helpers";
-import t from "./actionTypes";
-import _ from "lodash";
+import _ from 'lodash';
+import { EDITOR } from '~/constants';
+import { defVal } from '~/helpers';
+import t from './actionTypes';
 
 const makeColumn = (nodes = []) => ({
   focusedRowId: 0,
@@ -16,17 +16,17 @@ const startState = {
   focusType: EDITOR,
 };
 
-const findNode = (columns) => {
-  const columnNodeRowIndex = columns.map((col) =>
-    _.indexOf(col.nodes, action.nodeId)
-  );
-  const columnIndex = _.indexOf(columnNodeIndex, (i) => i >= 0);
-  if (columnIndex) {
-    return { rowId: columnNodeRowIndex[columnIndex], columnId: columnIndex };
-  }
+// const findNode = (columns) => {
+//   const columnNodeRowIndex = columns.map((col) =>
+//     _.indexOf(col.nodes, action.nodeId)
+//   );
+//   const columnIndex = _.indexOf(columnNodeIndex, (i) => i >= 0);
+//   if (columnIndex) {
+//     return { rowId: columnNodeRowIndex[columnIndex], columnId: columnIndex };
+//   }
 
-  return null;
-};
+//   return null;
+// };
 
 // TODO: refactor this by pulling out subfunctions so that I can re-use logic between actions
 // I need this in order to properly handle focusing an already open node instead of re-opening.
