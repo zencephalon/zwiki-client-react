@@ -1,16 +1,16 @@
-import PropTypes from "prop-types";
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-import { fromJS } from "immutable";
-import { uniqueId } from "lodash";
-import classNames from "classnames";
+import { fromJS } from 'immutable';
+import { uniqueId } from 'lodash';
+import classNames from 'classnames';
 
-import { EditorState, ContentState } from "draft-js";
-import Editor from "draft-js-plugins-editor";
+import { EditorState, ContentState } from 'draft-js';
+import Editor from 'draft-js-plugins-editor';
 
-import nodeShape from "~/apis/nodes/shape";
-import { POST, PUT, INDEX, LINK_QUERY } from "~/apis/nodes/actions";
+import nodeShape from '~/apis/nodes/shape';
+import { POST, PUT, INDEX, LINK_QUERY } from '~/apis/nodes/actions';
 
 import {
   FOCUS,
@@ -26,15 +26,15 @@ import {
   TWO_COLUMN,
   THREE_COLUMN,
   FOUR_COLUMN,
-} from "~/apis/flex/actions";
+} from '~/apis/flex/actions';
 
-import { NEW_ENTRY, UPDATE_ENTRY } from "~/apis/suggest/actions";
+import { NEW_ENTRY, UPDATE_ENTRY } from '~/apis/suggest/actions';
 
-import "~/Autocomplete/mentionStyles.css";
-import "~/Autocomplete/mentionSuggestionsStyles.css";
-import "~/Autocomplete/mentionSuggestionsEntryStyles.css";
+import '~/Autocomplete/mentionStyles.css';
+import '~/Autocomplete/mentionSuggestionsStyles.css';
+import '~/Autocomplete/mentionSuggestionsEntryStyles.css';
 
-import createMentionPlugin from "~/Autocomplete"; // eslint-disable-line import/no-unresolved
+import createMentionPlugin from '~/Autocomplete'; // eslint-disable-line import/no-unresolved
 
 import {
   OMNI_SEARCH,
@@ -42,8 +42,8 @@ import {
   LINK_REGEX,
   IMPORT_REGEX,
   LINK_AND_IMPORT_REGEX,
-} from "~/constants";
-import { fuseSort } from "~/helpers";
+} from '~/constants';
+import { fuseSort } from '~/helpers';
 import {
   findWithRegex,
   selectMatch,
@@ -56,10 +56,10 @@ import {
   insertDateStamp,
   toggleTodo,
   extractName,
-} from "./helpers";
+} from './helpers';
 
-import Link from "./Link";
-import keyBindings from "./keyBindings";
+import Link from './Link';
+import keyBindings from './keyBindings';
 
 function linkStrategy(contentBlock, callback) {
   findWithRegex(LINK_REGEX, contentBlock, callback);
@@ -69,11 +69,11 @@ function importStrategy(contentBlock, callback) {
 }
 
 const theme = {
-  mention: "mention",
-  mentionSuggestions: "mentionSuggestions",
-  mentionSuggestionsEntry: "mentionSuggestionsEntry",
-  mentionSuggestionsEntryFocused: "mentionSuggestionsEntryFocused",
-  mentionSuggestionsEntryText: "mentionSuggestionsEntryText",
+  mention: 'mention',
+  mentionSuggestions: 'mentionSuggestions',
+  mentionSuggestionsEntry: 'mentionSuggestionsEntry',
+  mentionSuggestionsEntryFocused: 'mentionSuggestionsEntryFocused',
+  mentionSuggestionsEntryText: 'mentionSuggestionsEntryText',
 };
 
 class ZEditor extends Component {
@@ -82,17 +82,17 @@ class ZEditor extends Component {
 
     this.mentionPlugin = createMentionPlugin({
       theme,
-      mentionTrigger: "[",
+      mentionTrigger: '[',
       replaceTemplate: ({ name, id }) => `${name}](${id})`,
     });
     this.mentionPluginTwo = createMentionPlugin({
       theme,
-      mentionTrigger: "](",
+      mentionTrigger: '](',
       replaceTemplate: ({ id }) => `${id})`,
     });
     this.mentionPluginThree = createMentionPlugin({
       theme,
-      mentionTrigger: "{",
+      mentionTrigger: '{',
       replaceTemplate: ({ name, id }) => `${name}}(${id})`,
     });
   }
@@ -104,7 +104,7 @@ class ZEditor extends Component {
     previousPlainText: this.props.node.content,
     timer: null,
     linkTimer: null,
-    editorId: this.props.editorId || uniqueId("editor_"),
+    editorId: this.props.editorId || uniqueId('editor_'),
   };
 
   componentDidMount() {
@@ -115,17 +115,17 @@ class ZEditor extends Component {
 
   componentWillReceiveProps(nextProps) {
     const {
-      node: { content },
+      node: { content, version },
     } = nextProps;
     if (
-      this.state.previousPlainText !== content &&
-      this.props.node.content !== content
+      this.props.node.version < version &&
+      content !== this.state.previousPlainText
     ) {
       this.setState({
         editorState: EditorState.createWithContent(
-          ContentState.createFromText(nextProps.node.content)
+          ContentState.createFromText(content)
         ),
-        previousPlainText: nextProps.node.content,
+        previousPlainText: content,
       });
     }
   }
@@ -191,7 +191,7 @@ class ZEditor extends Component {
       })
       .catch(() => {
         this.props.refetch();
-        console.log("ILUVU, versions out of sync.");
+        console.log('ILUVU, versions out of sync.');
       });
   };
 
@@ -208,71 +208,71 @@ class ZEditor extends Component {
     const { dispatch, node } = this.props;
     const { editorState } = this.state;
 
-    if (command === "INSERT_TIME_STAMP") {
+    if (command === 'INSERT_TIME_STAMP') {
       this.setState({
         editorState: insertTimeStamp(editorState),
       });
-      return "handled";
+      return 'handled';
     }
-    if (command === "INSERT_DATE_STAMP") {
+    if (command === 'INSERT_DATE_STAMP') {
       this.setState({
         editorState: insertDateStamp(editorState),
       });
-      return "handled";
+      return 'handled';
     }
-    if (command === "TOGGLE_TODO") {
+    if (command === 'TOGGLE_TODO') {
       this.setState({
         editorState: toggleTodo(editorState),
       });
-      return "handled";
+      return 'handled';
     }
-    if (command === "SELECT_BLOCK_DOWN") {
+    if (command === 'SELECT_BLOCK_DOWN') {
       this.setState({
         editorState: selectBlockDown(editorState),
       });
-      return "handled";
+      return 'handled';
     }
-    if (command === "SELECT_BLOCK_UP") {
+    if (command === 'SELECT_BLOCK_UP') {
       this.setState({
         editorState: selectBlockUp(editorState),
       });
-      return "handled";
+      return 'handled';
     }
-    if (command === "SWITCH_FOCUS") {
+    if (command === 'SWITCH_FOCUS') {
       dispatch(FOCUS({ type: OMNI_SEARCH }));
       this.editor.blur();
-      return "handled";
+      return 'handled';
     }
-    if (command === "CYCLE_DOWN") {
+    if (command === 'CYCLE_DOWN') {
       dispatch(CYCLE_DOWN());
-      return "handled";
+      return 'handled';
     }
-    if (command === "CYCLE_UP") {
+    if (command === 'CYCLE_UP') {
       dispatch(CYCLE_UP());
-      return "handled";
+      return 'handled';
     }
-    if (command === "SHIFT_UP") {
+    if (command === 'SHIFT_UP') {
       dispatch(SHIFT_UP());
-      return "handled";
+      return 'handled';
     }
-    if (command === "SHIFT_DOWN") {
+    if (command === 'SHIFT_DOWN') {
       dispatch(SHIFT_DOWN());
-      return "handled";
+      return 'handled';
     }
-    if (command === "SLIDE_RIGHT") {
+    if (command === 'SLIDE_RIGHT') {
       dispatch(SLIDE_RIGHT());
-      return "handled";
+      return 'handled';
     }
-    if (command === "SLIDE_LEFT") {
+    if (command === 'SLIDE_LEFT') {
       dispatch(SLIDE_LEFT());
-      return "handled";
+      return 'handled';
     }
-    if (command === "NEW_NODE") {
+    if (command === 'NEW_NODE') {
       const { char, title } = getNodeTitle(editorState);
-      if (!char) return "handled";
+      if (!char) return 'handled';
 
       dispatch(
-        POST("NEW_NODE", {
+        POST('NEW_NODE', {
           content: `# ${title}\n\n`,
           name: title,
         })
@@ -284,39 +284,39 @@ class ZEditor extends Component {
         dispatch(TOGGLE_LINK({ nodeId: id }));
         dispatch(SLIDE_RIGHT());
       });
-      return "handled";
+      return 'handled';
     }
-    if (command === "OPEN_LINK") {
+    if (command === 'OPEN_LINK') {
       const nodeId = getSelectionNodeId(editorState);
       dispatch(TOGGLE_LINK({ nodeId }));
       dispatch(SLIDE_RIGHT());
-      return "handled";
+      return 'handled';
     }
-    if (command === "REFOCUS") {
+    if (command === 'REFOCUS') {
       this.saveToServer(editorState.getCurrentContent().getPlainText()).then(
         () => {
           dispatch(REFOCUS({ nodeId: node.id }));
         }
       );
-      return "handled";
+      return 'handled';
     }
-    if (command === "ONE_COLUMN") {
+    if (command === 'ONE_COLUMN') {
       dispatch(ONE_COLUMN());
-      return "handled";
+      return 'handled';
     }
-    if (command === "TWO_COLUMN") {
+    if (command === 'TWO_COLUMN') {
       dispatch(TWO_COLUMN());
-      return "handled";
+      return 'handled';
     }
-    if (command === "THREE_COLUMN") {
+    if (command === 'THREE_COLUMN') {
       dispatch(THREE_COLUMN());
-      return "handled";
+      return 'handled';
     }
-    if (command === "FOUR_COLUMN") {
+    if (command === 'FOUR_COLUMN') {
       dispatch(FOUR_COLUMN());
-      return "handled";
+      return 'handled';
     }
-    return "not-handled";
+    return 'not-handled';
   };
 
   render() {
@@ -328,7 +328,7 @@ class ZEditor extends Component {
       MentionSuggestions: MentionSuggestionsThree,
     } = this.mentionPluginThree;
     return (
-      <div className={classNames("editor", { saved: !timer, focused })}>
+      <div className={classNames('editor', { saved: !timer, focused })}>
         <Editor
           editorState={this.state.editorState}
           onChange={this.onChange}
@@ -404,7 +404,7 @@ class ZEditor extends Component {
 function mapStateToProps(state, props) {
   const { linkQ: q } = state.nodes.query;
 
-  const { data: suggestions, confirmed } = state.nodes.http.collections[""] || {
+  const { data: suggestions, confirmed } = state.nodes.http.collections[''] || {
     data: [],
     confirmed: false,
   };
