@@ -139,7 +139,82 @@ function cycleDown(state) {
   };
 }
 
-export default function focus(state = startState, action) {
+function shiftDown(state) {
+  const {
+    columns,
+    downNextRowId,
+    focusedRowId,
+    focusedColumnId,
+    focusedColumn,
+  } = sharedValues(state);
+  return {
+    ...state,
+    columns: Object.assign([], columns, {
+      [focusedColumnId]: {
+        ...focusedColumn,
+        focusedRowId: downNextRowId,
+        nodes: ((nodes) => {
+          const newNodes = [...nodes];
+          const a = newNodes[focusedRowId];
+          const b = newNodes[downNextRowId];
+          newNodes[focusedRowId] = b;
+          newNodes[downNextRowId] = a;
+          return newNodes;
+        })(focusedColumn.nodes),
+      },
+    }),
+  };
+}
+
+function shiftUp(state) {
+  const {
+    columns,
+    downNextRowId,
+    focusedRowId,
+    focusedColumnId,
+    focusedColumn,
+    upNextRowId,
+  } = sharedValues(state);
+  return {
+    ...state,
+    columns: Object.assign([], columns, {
+      [focusedColumnId]: {
+        ...focusedColumn,
+        focusedRowId: downNextRowId,
+        nodes: ((nodes) => {
+          const newNodes = [...nodes];
+          const a = newNodes[focusedRowId];
+          const b = newNodes[upNextRowId];
+          newNodes[focusedRowId] = b;
+          newNodes[downNextRowId] = a;
+          return newNodes;
+        })(focusedColumn.nodes),
+      },
+    }),
+  };
+}
+
+function focus(state, rowId, columnId, focusType) {
+  const {
+    columns,
+    focusedColumnId,
+    focusedColumn,
+    focusedRowId,
+  } = sharedValues(state);
+  return {
+    ...state,
+    focusedColumnId: defVal(columnId, state.focusedColumnId),
+    columns: Object.assign([], columns, {
+      [focusedColumnId]: {
+        ...focusedColumn,
+        focusedRowId: defVal(rowId, focusedRowId),
+      },
+    }),
+    focusType: defVal(focusType, state.focusType),
+  };
+}
+
+export default function focusReducer(state = startState, action) {
   const {
     focusedColumnId,
     columns,
@@ -147,20 +222,13 @@ export default function focus(state = startState, action) {
     visibleColumns,
   } = state;
   const nextColumnId = focusedColumnId + 1;
-  const leftColumnId = focusedColumnId - 1;
   const nextColumn = columns[nextColumnId];
   const focusedColumn = columns[focusedColumnId];
 
   const focusedRowId = focusedColumn.focusedRowId;
-  const upNextRowId =
-    focusedRowId <= 0 ? focusedColumn.nodes.length - 1 : focusedRowId - 1;
-  const downNextRowId =
-    focusedRowId >= focusedColumn.nodes.length - 1 ? 0 : focusedRowId + 1;
 
   const nextColumnWithinBounds =
     leftmostVisibleColumnId + visibleColumns > nextColumnId;
-
-  let columnNodeIndex;
 
   switch (action.type) {
     case t.SLIDE_RIGHT:
@@ -172,53 +240,11 @@ export default function focus(state = startState, action) {
     case t.CYCLE_DOWN:
       return cycleDown(state);
     case t.SHIFT_DOWN:
-      return {
-        ...state,
-        columns: Object.assign([], columns, {
-          [focusedColumnId]: {
-            ...focusedColumn,
-            focusedRowId: downNextRowId,
-            nodes: ((nodes) => {
-              const newNodes = [...nodes];
-              const a = newNodes[focusedRowId];
-              const b = newNodes[downNextRowId];
-              newNodes[focusedRowId] = b;
-              newNodes[downNextRowId] = a;
-              return newNodes;
-            })(focusedColumn.nodes),
-          },
-        }),
-      };
+      return shiftDown(state);
     case t.SHIFT_UP:
-      return {
-        ...state,
-        columns: Object.assign([], columns, {
-          [focusedColumnId]: {
-            ...focusedColumn,
-            focusedRowId: downNextRowId,
-            nodes: ((nodes) => {
-              const newNodes = [...nodes];
-              const a = newNodes[focusedRowId];
-              const b = newNodes[upNextRowId];
-              newNodes[focusedRowId] = b;
-              newNodes[downNextRowId] = a;
-              return newNodes;
-            })(focusedColumn.nodes),
-          },
-        }),
-      };
+      return shiftUp(state);
     case t.FOCUS:
-      return {
-        ...state,
-        focusedColumnId: defVal(action.columnId, state.focusedColumnId),
-        columns: Object.assign([], columns, {
-          [focusedColumnId]: {
-            ...focusedColumn,
-            focusedRowId: defVal(action.rowId, focusedRowId),
-          },
-        }),
-        focusType: defVal(action.focusType, state.focusType),
-      };
+      return focus(state, action.rowId, action.columnId, action.focusType);
     case t.OPEN_NODE:
       return {
         ...state,
