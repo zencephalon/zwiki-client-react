@@ -9,7 +9,17 @@ const makeColumn = (nodes = []) => ({
 });
 
 const startState = {
-  columns: [makeColumn(), makeColumn(), makeColumn(), makeColumn()],
+  columns: [
+    makeColumn(),
+    makeColumn(),
+    makeColumn(),
+    makeColumn(),
+    makeColumn(),
+    makeColumn(),
+    makeColumn(),
+    makeColumn(),
+    makeColumn(),
+  ],
   leftmostVisibleColumnId: 0,
   visibleColumns: 2,
   focusedColumnId: 0,
@@ -273,12 +283,11 @@ function toggleLink(state, nodeId) {
 }
 
 function refocus(state, nodeId) {
-  const { visibleColumns } = sharedValues(state);
   return {
     ...state,
     columns: [
       makeColumn([nodeId]),
-      ...Array(visibleColumns - 1)
+      ...Array(9)
         .fill(0)
         .map(() => makeColumn()),
     ],
