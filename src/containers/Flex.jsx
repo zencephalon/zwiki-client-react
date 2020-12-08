@@ -1,14 +1,14 @@
-import PropTypes from "prop-types";
-import React, { Component } from "react";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import * as FlexActions from "~/apis/flex/actions";
-import NodeEdit from "./NodeEdit";
-import classNames from "classnames";
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as FlexActions from '~/apis/flex/actions';
+import NodeEdit from './NodeEdit';
+import classNames from 'classnames';
 
-import UserShape from "~/apis/users/shape";
+import UserShape from '~/apis/users/shape';
 
-import { EDITOR } from "~/constants";
+import { EDITOR } from '~/constants';
 
 class Flex extends Component {
   componentWillReceiveProps(nextProps) {
@@ -23,7 +23,7 @@ class Flex extends Component {
       visibleColumns,
       leftmostVisibleColumnId,
       focusedColumnId,
-      actions: { FOCUS }
+      actions: { FOCUS },
     } = this.props;
     return (
       <div className={`flex-writer columns-${visibleColumns}`}>
@@ -39,10 +39,10 @@ class Flex extends Component {
           // });
           return (
             <div
-              className={classNames("flex-column", {
+              className={classNames('flex-column', {
                 hidden,
                 focused: focusedColumnId === columnId,
-                "first-visible": leftmostVisibleColumnId === columnId
+                'first-visible': leftmostVisibleColumnId === columnId,
               })}
               key={columnId}
             >
@@ -77,7 +77,7 @@ Flex.propTypes = {
   leftmostVisibleColumnId: PropTypes.number,
   focusedColumnId: PropTypes.number,
   actions: PropTypes.objectOf(PropTypes.func).isRequired,
-  user: UserShape
+  user: UserShape,
 };
 
 function mapStateToProps(state) {
@@ -85,20 +85,20 @@ function mapStateToProps(state) {
     columns,
     visibleColumns,
     focusedColumnId,
-    leftmostVisibleColumnId
+    leftmostVisibleColumnId,
   } = state.flex;
 
   return {
     columns,
     visibleColumns,
     focusedColumnId,
-    leftmostVisibleColumnId
+    leftmostVisibleColumnId,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(FlexActions, dispatch)
+    actions: bindActionCreators(FlexActions, dispatch),
   };
 }
 

@@ -1,9 +1,9 @@
-import PropTypes from "prop-types";
-import React, { Component } from "react";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import * as NodeActions from "~/apis/nodes/actions";
-import nodeShape from "~/apis/nodes/shape";
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as NodeActions from '~/apis/nodes/actions';
+import nodeShape from '~/apis/nodes/shape';
 
 class NodeContainer extends Component {
   componentWillMount() {
@@ -23,7 +23,7 @@ class NodeContainer extends Component {
   }
 
   refetch = () => {
-    console.log("Synchronizing node: ", this.props.id);
+    console.log('Synchronizing node: ', this.props.id);
     const {
       actions: { GET },
       id,
