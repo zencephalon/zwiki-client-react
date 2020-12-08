@@ -31,6 +31,65 @@ const startState = {
 // TODO: refactor this by pulling out subfunctions so that I can re-use logic between actions
 // I need this in order to properly handle focusing an already open node instead of re-opening.
 
+function sharedValues(state) {
+  const {
+    focusedColumnId,
+    columns,
+    leftmostVisibleColumnId,
+    visibleColumns,
+    columns,
+  } = state;
+  const nextColumnId = focusedColumnId + 1;
+  const leftColumnId = focusedColumnId - 1;
+  const nextColumn = columns[nextColumnId];
+  const focusedColumn = columns[focusedColumnId];
+
+  const focusedRowId = focusedColumn.focusedRowId;
+  const upNextRowId =
+    focusedRowId <= 0 ? focusedColumn.nodes.length - 1 : focusedRowId - 1;
+  const downNextRowId =
+    focusedRowId >= focusedColumn.nodes.length - 1 ? 0 : focusedRowId + 1;
+
+  const nextColumnWithinBounds =
+    leftmostVisibleColumnId + visibleColumns > nextColumnId;
+
+  return {
+    nextColumnId,
+    leftColumnId,
+    nextColumn,
+    focusedColumn,
+    focusedRowId,
+    upNextRowId,
+    downNextRowId,
+    nextColumnWithinBounds,
+    leftmostVisibleColumnId,
+    columns,
+  };
+}
+
+function slideRight(state) {
+  const {
+    nextColumnWithinBounds,
+    nextColumnId,
+    nextColumn,
+    leftmostVisibleColumnId,
+    columns,
+  } = sharedValues(state);
+
+  if (nextColumnWithinBounds) {
+    return {
+      ...state,
+      focusedColumnId: nextColumnId,
+    };
+  }
+  return {
+    ...state,
+    columns: nextColumn ? columns : [...columns, makeColumn()],
+    focusedColumnId: nextColumnId,
+    leftmostVisibleColumnId: leftmostVisibleColumnId + 1,
+  };
+}
+
 export default function focus(state = startState, action) {
   const {
     focusedColumnId,
@@ -56,18 +115,7 @@ export default function focus(state = startState, action) {
 
   switch (action.type) {
     case t.SLIDE_RIGHT:
-      if (nextColumnWithinBounds) {
-        return {
-          ...state,
-          focusedColumnId: nextColumnId,
-        };
-      }
-      return {
-        ...state,
-        columns: nextColumn ? columns : [...columns, makeColumn()],
-        focusedColumnId: nextColumnId,
-        leftmostVisibleColumnId: leftmostVisibleColumnId + 1,
-      };
+      return slideRight(state);
     case t.SLIDE_LEFT:
       if (focusedColumnId === 0) {
         return state;
