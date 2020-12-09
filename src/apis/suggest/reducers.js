@@ -13,14 +13,14 @@ function suggestReducer(state = { trie }, action) {
     case t.UPDATE_ENTRY:
       const { oldName, newName } = action;
       // why? toLowerCase?
-      state.trie.remove(action.oldName.toLowerCase());
+      state.trie.remove(oldName);
       console.log({
         oldName,
         newName,
-        contains: !state.trie.contains(action.newName),
+        contains: !state.trie.contains(newName),
       });
-      if (!state.trie.contains(action.newName)) {
-        state.trie.add(action.newName, action.entry);
+      if (!state.trie.contains(newName)) {
+        state.trie.add(newName, action.entry);
       }
       return state;
     case t.NEW_ENTRY:
