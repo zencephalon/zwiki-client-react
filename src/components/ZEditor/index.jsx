@@ -118,6 +118,7 @@ class ZEditor extends Component {
       this.props.node.version < version &&
       content !== this.state.previousPlainText
     ) {
+      console.log(this.props.node.version, version, this.state.previousPlainText, content);
       this.setState({
         editorState: EditorState.createWithContent(
           ContentState.createFromText(content)
