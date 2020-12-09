@@ -391,17 +391,10 @@ class ZEditor extends Component {
 function mapStateToProps(state, props) {
   const { linkQ: q } = state.nodes.query;
 
-  // const { data: suggestions, confirmed } = state.nodes.http.collections[''] || {
-  //   data: [],
-  //   confirmed: false,
-  // };
-
-  // const sortedSuggestions = confirmed ? fuseSort(suggestions, q) : [{ name: '…' }]
   const sortedSuggestions = state.suggest.trie.find(q) || [];
 
   return {
     suggestions: fromJS(sortedSuggestions),
-    confirmed,
     q,
     focusType: state.flex.focusType,
   };
