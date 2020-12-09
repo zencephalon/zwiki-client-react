@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { debounce, unionBy } from 'lodash';
+import { parseDate } from 'chrono-node';
 
 import { INDEX, OMNI_QUERY, POST } from '~/apis/nodes/actions';
 import nodeShape from '~/apis/nodes/shape';
@@ -15,6 +16,8 @@ import { fuseSort, getDateStamp } from '~/helpers';
 import { NEW_ENTRY } from '~/apis/suggest/actions';
 
 import classNames from 'classnames';
+
+const shortCommands = ['today', 'tomorrow', 'yesterday'];
 
 class OmniSearch extends Component {
   constructor(props, context) {
@@ -54,6 +57,18 @@ class OmniSearch extends Component {
     this.query(q);
   };
 
+  createOrOpen = (q) => {
+    const { dispatch } = this.props;
+    // ILUVU: not a great idea to have a content template here
+    dispatch(POST('new-omni', { content: `# ${q}\n\n`, name: q })).then(
+      (ret) => {
+        const { data: new_node } = ret;
+        dispatch(OPEN_NODE({ nodeId: new_node.id }));
+        dispatch(NEW_ENTRY(new_node.name, new_node.id));
+      }
+    );
+  };
+
   handleKeyPress = (e) => {
     const { suggestions, dispatch, q } = this.props;
     const size = suggestions.length;
@@ -71,20 +86,33 @@ class OmniSearch extends Component {
         selected: selected === size - 1 ? 0 : selected + 1,
       });
     }
+    // Deal with /slash commands here
     if (e.key === 'Enter') {
       e.preventDefault();
-      if (e.ctrlKey) {
-        // ILUVU: not a great idea to have a content template here
-        dispatch(POST('new-omni', { content: `# ${q}\n\n`, name: q })).then(
-          (ret) => {
-            const { data: new_node } = ret;
-            dispatch(OPEN_NODE({ nodeId: new_node.id }));
-            dispatch(NEW_ENTRY(new_node.name, new_node.id));
-          }
-        );
+
+      if (q[0] === '/') {
+        const command = q.slice(1);
+
+        if (shortCommands.includes(command)) {
+          const slashQ = getDateStamp(parseDate(command));
+          console.log({ slashQ });
+          this.createOrOpen(slashQ);
+        }
+
+        if (command[0] === 'd') {
+          const dateStr = command.slice(2);
+
+          const slashQ = getDateStamp(parseDate(dateStr));
+          this.createOrOpen(slashQ);
+        }
       } else {
-        dispatch(OPEN_NODE({ nodeId: suggestions[selected].id }));
+        if (e.ctrlKey) {
+          this.createOrOpen(q);
+        } else {
+          dispatch(OPEN_NODE({ nodeId: suggestions[selected].id }));
+        }
       }
+
       this.input.blur();
       dispatch(OMNI_QUERY(''));
       dispatch(FOCUS({ type: EDITOR }));
