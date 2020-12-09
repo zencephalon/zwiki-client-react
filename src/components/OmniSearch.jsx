@@ -1,32 +1,32 @@
-import PropTypes from "prop-types";
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { debounce } from "lodash";
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { debounce, unionBy } from 'lodash';
 
-import { INDEX, OMNI_QUERY, POST } from "~/apis/nodes/actions";
-import nodeShape from "~/apis/nodes/shape";
+import { INDEX, OMNI_QUERY, POST } from '~/apis/nodes/actions';
+import nodeShape from '~/apis/nodes/shape';
 
-import { RECEIVE_INDEX } from "~/apis/suggest/actions";
+import { RECEIVE_INDEX } from '~/apis/suggest/actions';
 
-import { FOCUS, OPEN_NODE } from "~/apis/flex/actions";
-import { OMNI_SEARCH, EDITOR } from "~/constants";
-import { fuseSort, getDateStamp } from "~/helpers";
+import { FOCUS, OPEN_NODE } from '~/apis/flex/actions';
+import { OMNI_SEARCH, EDITOR } from '~/constants';
+import { fuseSort, getDateStamp } from '~/helpers';
 
-import { NEW_ENTRY } from "~/apis/suggest/actions";
+import { NEW_ENTRY } from '~/apis/suggest/actions';
 
-import classNames from "classnames";
+import classNames from 'classnames';
 
 class OmniSearch extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
       timer: null,
-      selected: 0
+      selected: 0,
     };
   }
 
   componentWillMount() {
-    this.props.dispatch(INDEX("")).then(res => {
+    this.props.dispatch(INDEX('')).then((res) => {
       this.props.dispatch(RECEIVE_INDEX(res.data));
     });
   }
@@ -37,7 +37,7 @@ class OmniSearch extends Component {
     }
   }
 
-  query = debounce(q => {
+  query = debounce((q) => {
     const { dispatch } = this.props;
 
     dispatch(INDEX(q)).then(() => {
@@ -45,7 +45,7 @@ class OmniSearch extends Component {
     });
   }, 250);
 
-  qChange = e => {
+  qChange = (e) => {
     const { dispatch } = this.props;
 
     const q = e.target.value;
@@ -54,29 +54,29 @@ class OmniSearch extends Component {
     this.query(q);
   };
 
-  handleKeyPress = e => {
+  handleKeyPress = (e) => {
     const { suggestions, dispatch, q } = this.props;
     const size = suggestions.length;
     const { selected } = this.state;
 
-    if (e.key === "ArrowUp") {
+    if (e.key === 'ArrowUp') {
       e.preventDefault();
       this.setState({
-        selected: selected === 0 ? size - 1 : selected - 1
+        selected: selected === 0 ? size - 1 : selected - 1,
       });
     }
-    if (e.key === "ArrowDown") {
+    if (e.key === 'ArrowDown') {
       e.preventDefault();
       this.setState({
-        selected: selected === size - 1 ? 0 : selected + 1
+        selected: selected === size - 1 ? 0 : selected + 1,
       });
     }
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       e.preventDefault();
       if (e.ctrlKey) {
         // ILUVU: not a great idea to have a content template here
-        dispatch(POST("new-omni", { content: `# ${q}\n\n`, name: q })).then(
-          ret => {
+        dispatch(POST('new-omni', { content: `# ${q}\n\n`, name: q })).then(
+          (ret) => {
             const { data: new_node } = ret;
             dispatch(OPEN_NODE({ nodeId: new_node.id }));
             dispatch(NEW_ENTRY(new_node.name, new_node.id));
@@ -86,17 +86,17 @@ class OmniSearch extends Component {
         dispatch(OPEN_NODE({ nodeId: suggestions[selected].id }));
       }
       this.input.blur();
-      dispatch(OMNI_QUERY(""));
+      dispatch(OMNI_QUERY(''));
       dispatch(FOCUS({ type: EDITOR }));
       this.setState({
-        selected: 0
+        selected: 0,
       });
     }
-    if (e.key === " " && e.ctrlKey) {
+    if (e.key === ' ' && e.ctrlKey) {
       this.input.blur();
       dispatch(FOCUS({ type: EDITOR }));
     }
-    if (e.key === "D" && e.ctrlKey) {
+    if (e.key === 'D' && e.ctrlKey) {
       const newQ = q + getDateStamp();
       dispatch(OMNI_QUERY(newQ));
       dispatch(INDEX(newQ));
@@ -105,11 +105,11 @@ class OmniSearch extends Component {
 
   handleBlur = () => {
     this.input.blur();
-    this.props.dispatch(OMNI_QUERY(""));
+    this.props.dispatch(OMNI_QUERY(''));
   };
 
   render() {
-    const { q, confirmed, suggestions } = this.props;
+    const { q, confirmed, suggestions, focusType } = this.props;
     const { selected } = this.state;
 
     return (
@@ -121,18 +121,18 @@ class OmniSearch extends Component {
           onKeyDown={this.handleKeyPress}
           value={q}
           placeholder="Search"
-          ref={element => {
+          ref={(element) => {
             this.input = element;
           }}
         />
         <div className="suggestions">
           <div className="suggestion-popover">
-            {confirmed &&
+            {focusType === OMNI_SEARCH &&
               suggestions.map((suggestion, index) => (
                 <div
                   key={suggestion.id}
-                  className={classNames("suggestion-item", {
-                    selected: index === selected
+                  className={classNames('suggestion-item', {
+                    selected: index === selected,
                   })}
                 >
                   {suggestion.name}
@@ -148,18 +148,26 @@ class OmniSearch extends Component {
 function mapStateToProps(state) {
   const { omniQ: q } = state.nodes.query;
 
+  const trieSuggestions = state.suggest.trie.find(q) || [];
   const { data: suggs, confirmed } = state.nodes.http.collections[q] || {
     data: [],
-    confirmed: false
+    confirmed: false,
   };
 
-  const suggestions = fuseSort(suggs, q);
+  const searchSuggs =
+    q === '' ? [] : confirmed ? suggs : [{ name: '🔍⏳...', id: '🔍⏳...' }];
+
+  const suggestions = unionBy(
+    trieSuggestions.slice(0, 10),
+    searchSuggs.slice(0, 10),
+    'id'
+  );
 
   return {
     q,
     confirmed,
     suggestions,
-    focusType: state.flex.focusType
+    focusType: state.flex.focusType,
   };
 }
 
@@ -168,7 +176,7 @@ OmniSearch.propTypes = {
   dispatch: PropTypes.func.isRequired,
   confirmed: PropTypes.bool.isRequired,
   suggestions: PropTypes.arrayOf(nodeShape),
-  focusType: PropTypes.string
+  focusType: PropTypes.string,
 };
 
 export default connect(mapStateToProps)(OmniSearch);
