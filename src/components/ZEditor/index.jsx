@@ -286,7 +286,7 @@ class ZEditor extends Component {
     if (command === 'OPEN_LINK') {
       const nodeId = getSelectionNodeId(editorState);
       dispatch(TOGGLE_LINK({ nodeId }));
-      dispatch(SLIDE_RIGHT());
+      // dispatch(SLIDE_RIGHT());
       return 'handled';
     }
     if (command === 'REFOCUS') {

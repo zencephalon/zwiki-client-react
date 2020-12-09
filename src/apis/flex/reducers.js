@@ -26,17 +26,15 @@ const startState = {
   focusType: EDITOR,
 };
 
-// const findNode = (columns) => {
-//   const columnNodeRowIndex = columns.map((col) =>
-//     _.indexOf(col.nodes, action.nodeId)
-//   );
-//   const columnIndex = _.indexOf(columnNodeIndex, (i) => i >= 0);
-//   if (columnIndex) {
-//     return { rowId: columnNodeRowIndex[columnIndex], columnId: columnIndex };
-//   }
+const findNode = (columns, nodeId) => {
+  const columnNodeRowIndex = columns.map((col) => _.indexOf(col.nodes, nodeId));
+  const columnIndex = _.findIndex(columnNodeRowIndex, (i) => i >= 0);
+  if (columnIndex >= 0) {
+    return { rowId: columnNodeRowIndex[columnIndex], columnId: columnIndex };
+  }
 
-//   return null;
-// };
+  return null;
+};
 
 // TODO: refactor this by pulling out subfunctions so that I can re-use logic between actions
 // I need this in order to properly handle focusing an already open node instead of re-opening.
@@ -64,6 +62,7 @@ function sharedValues(state) {
 
   return {
     nextColumnId,
+    visibleColumns,
     leftColumnId,
     nextColumn,
     focusedColumn,
@@ -210,7 +209,17 @@ function focus(state, rowId, columnId, focusType) {
     focusedColumnId,
     focusedColumn,
     focusedRowId,
+    leftmostVisibleColumnId,
+    visibleColumns,
   } = sharedValues(state);
+  let newLeftmost = leftmostVisibleColumnId;
+
+  if (leftmostVisibleColumnId + visibleColumns < columnId) {
+    newLeftmost = columnId - visibleColumns + 1;
+  }
+  if (columnId < leftmostVisibleColumnId) {
+    newLeftmost = columnId;
+  }
   return {
     ...state,
     focusedColumnId: defVal(columnId, state.focusedColumnId),
@@ -221,6 +230,7 @@ function focus(state, rowId, columnId, focusType) {
       },
     }),
     focusType: defVal(focusType, state.focusType),
+    leftmostVisibleColumnId: newLeftmost,
   };
 }
 
@@ -231,6 +241,12 @@ function openNode(state, nodeId) {
     nextColumnId,
     focusedColumn,
   } = sharedValues(state);
+  const nodePos = findNode(columns, nodeId);
+
+  if (nodePos) {
+    return focus(state, nodePos.rowId, nodePos.columnId, EDITOR);
+  }
+
   return {
     ...state,
     columns: [
@@ -249,6 +265,11 @@ function toggleLink(state, nodeId) {
     nextColumnWithinBounds,
     nextColumnId,
   } = sharedValues(state);
+  const nodePos = findNode(columns, nodeId);
+
+  if (nodePos && !nextColumn.nodes.includes(nodeId)) {
+    return focus(state, nodePos.rowId, nodePos.columnId, EDITOR);
+  }
 
   if (!nextColumn) {
     return {
