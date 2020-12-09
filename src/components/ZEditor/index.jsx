@@ -118,7 +118,7 @@ class ZEditor extends Component {
       this.props.node.version < version &&
       content !== this.state.previousPlainText
     ) {
-      console.log(this.props.node.version, version, this.state.previousPlainText, content);
+      console.log('ILUVU, sync occurred', this.props.node.version, version, this.state.previousPlainText, content);
       this.setState({
         editorState: EditorState.createWithContent(
           ContentState.createFromText(content)
@@ -151,16 +151,13 @@ class ZEditor extends Component {
 
     const plainText = editorState.getCurrentContent().getPlainText();
 
-    if (plainText !== previousPlainText) {
-      newTimer = setTimeout(() => {
-        this.saveToServer(plainText);
-      }, 1500);
-    }
+    newTimer = setTimeout(() => {
+      this.saveToServer();
+    }, 1500);
 
     this.setState({
       editorState,
       timer: newTimer,
-      previousPlainText: plainText,
     });
   };
 
@@ -174,7 +171,9 @@ class ZEditor extends Component {
     // get the mention object selected
   };
 
-  saveToServer = (content) => {
+  saveToServer = () => {
+    const { editorState } = this.state;
+    const content = editorState.getCurrentContent().getPlainText();
     const { node, dispatch } = this.props;
     const oldName = node.name;
     const newName = extractName(content);
@@ -185,7 +184,7 @@ class ZEditor extends Component {
 
     return dispatch(PUT(node.id, { content, version: node.version + 1 }))
       .then((res) => {
-        this.setState({ timer: null });
+        this.setState({ timer: null, previousPlainText: content });
       })
       .catch(() => {
         this.props.refetch();
@@ -291,7 +290,7 @@ class ZEditor extends Component {
       return 'handled';
     }
     if (command === 'REFOCUS') {
-      this.saveToServer(editorState.getCurrentContent().getPlainText()).then(
+      this.saveToServer().then(
         () => {
           dispatch(REFOCUS({ nodeId: node.id }));
         }
@@ -299,7 +298,6 @@ class ZEditor extends Component {
       return 'handled';
     }
     if (command.setColumn) {
-      console.log('hello');
       dispatch(SET_VISIBLE_COLUMNS(command.num));
       return 'handled';
     }
@@ -348,9 +346,7 @@ class ZEditor extends Component {
             setTimeout(this.focus, 10);
           }}
           onBlur={() => {
-            this.saveToServer(
-              this.state.editorState.getCurrentContent().getPlainText()
-            );
+            this.saveToServer();
           }}
           decorators={[
             {
