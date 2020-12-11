@@ -23,6 +23,7 @@ import {
   TOGGLE_LINK,
   REFOCUS,
   SET_VISIBLE_COLUMNS,
+  FOCUS_NODE,
 } from '~/apis/flex/actions';
 
 import { NEW_ENTRY, UPDATE_ENTRY } from '~/apis/suggest/actions';
@@ -180,18 +181,18 @@ class ZEditor extends Component {
     const oldName = node.name;
     const newName = extractName(content);
 
-
     this.setState({ timer: null, previousPlainText: content });
 
     if (oldName !== newName) {
       dispatch(UPDATE_ENTRY(oldName, newName, { id: node.id, name: newName }));
     }
 
-    return dispatch(PUT(node.id, { content, version: node.version + 1 }))
-      .catch(() => {
+    return dispatch(PUT(node.id, { content, version: node.version + 1 })).catch(
+      () => {
         this.props.refetch();
         console.log('ILUVU, versions out of sync.');
-      });
+      }
+    );
   };
 
   focus = () => {
@@ -281,22 +282,20 @@ class ZEditor extends Component {
         });
         dispatch(NEW_ENTRY(name, id));
         dispatch(TOGGLE_LINK({ nodeId: id }));
-        dispatch(SLIDE_RIGHT());
+        dispatch(FOCUS({ nodeId: id }));
       });
       return 'handled';
     }
     if (command === 'OPEN_LINK') {
       const nodeId = getSelectionNodeId(editorState);
       dispatch(TOGGLE_LINK({ nodeId }));
-      // dispatch(SLIDE_RIGHT());
+      dispatch(FOCUS({ nodeId }));
       return 'handled';
     }
     if (command === 'REFOCUS') {
-      this.saveToServer().then(
-        () => {
-          dispatch(REFOCUS({ nodeId: node.id }));
-        }
-      );
+      this.saveToServer().then(() => {
+        dispatch(REFOCUS({ nodeId: node.id }));
+      });
       return 'handled';
     }
     if (command.setColumn) {
