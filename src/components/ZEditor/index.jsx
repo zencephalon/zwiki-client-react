@@ -119,8 +119,6 @@ class ZEditor extends Component {
       content !== this.state.previousPlainText
     ) {
       console.log('ILUVU2, sync occurred', this.props.node.version, version);
-      console.log(this.state.previousPlainText);
-      console.log(content);
       this.setState({
         editorState: EditorState.createWithContent(
           ContentState.createFromText(content)
@@ -180,18 +178,18 @@ class ZEditor extends Component {
     const oldName = node.name;
     const newName = extractName(content);
 
-
     this.setState({ timer: null, previousPlainText: content });
 
     if (oldName !== newName) {
       dispatch(UPDATE_ENTRY(oldName, newName, { id: node.id, name: newName }));
     }
 
-    return dispatch(PUT(node.id, { content, version: node.version + 1 }))
-      .catch(() => {
+    return dispatch(PUT(node.id, { content, version: node.version + 1 })).catch(
+      () => {
         this.props.refetch();
         console.log('ILUVU, versions out of sync.');
-      });
+      }
+    );
   };
 
   focus = () => {
@@ -292,11 +290,9 @@ class ZEditor extends Component {
       return 'handled';
     }
     if (command === 'REFOCUS') {
-      this.saveToServer().then(
-        () => {
-          dispatch(REFOCUS({ nodeId: node.id }));
-        }
-      );
+      this.saveToServer().then(() => {
+        dispatch(REFOCUS({ nodeId: node.id }));
+      });
       return 'handled';
     }
     if (command.setColumn) {
