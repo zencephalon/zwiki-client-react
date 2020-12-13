@@ -24,7 +24,9 @@ function suggestReducer(state = { trie }, action) {
       }
       return state;
     case t.NEW_ENTRY:
-      state.trie.add(action.name, action.entry);
+      if (!state.trie.contains(action.name)) {
+        state.trie.add(action.name, action.entry);
+      }
       return state;
     default:
       return state;

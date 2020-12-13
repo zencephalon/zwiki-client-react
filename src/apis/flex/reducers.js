@@ -318,6 +318,18 @@ function refocus(state, nodeId) {
   };
 }
 
+function focusNode(state, nodeId) {
+  const { columns } = sharedValues(state);
+
+  const nodePos = findNode(columns, nodeId);
+
+  if (nodePos) {
+    return focus(state, nodePos.rowId, nodePos.columnId, EDITOR);
+  }
+
+  return state;
+}
+
 function setVisibleColumns(state, num) {
   return {
     ...state,
@@ -340,7 +352,9 @@ export default function flex(state = startState, action) {
     case t.SHIFT_UP:
       return shiftUp(state);
     case t.FOCUS:
-      return focus(state, action.rowId, action.columnId, action.focusType);
+      return action.nodeId
+        ? focusNode(state, action.nodeId)
+        : focus(state, action.rowId, action.columnId, action.focusType);
     case t.OPEN_NODE:
       return openNode(state, action.nodeId);
     case t.TOGGLE_LINK:

@@ -44,9 +44,10 @@ export const REFOCUS = ({ nodeId }) => ({
   nodeId,
 });
 
-export const FOCUS = ({ columnId, rowId, type }) => ({
+export const FOCUS = ({ columnId, rowId, type, nodeId }) => ({
   type: t.FOCUS,
   columnId,
   rowId,
+  nodeId,
   focusType: type,
 });

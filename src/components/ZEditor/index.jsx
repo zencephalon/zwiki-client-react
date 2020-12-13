@@ -23,6 +23,7 @@ import {
   TOGGLE_LINK,
   REFOCUS,
   SET_VISIBLE_COLUMNS,
+  FOCUS_NODE,
 } from '~/apis/flex/actions';
 
 import { NEW_ENTRY, UPDATE_ENTRY } from '~/apis/suggest/actions';
@@ -279,14 +280,14 @@ class ZEditor extends Component {
         });
         dispatch(NEW_ENTRY(name, id));
         dispatch(TOGGLE_LINK({ nodeId: id }));
-        dispatch(SLIDE_RIGHT());
+        dispatch(FOCUS({ nodeId: id }));
       });
       return 'handled';
     }
     if (command === 'OPEN_LINK') {
       const nodeId = getSelectionNodeId(editorState);
       dispatch(TOGGLE_LINK({ nodeId }));
-      // dispatch(SLIDE_RIGHT());
+      dispatch(FOCUS({ nodeId }));
       return 'handled';
     }
     if (command === 'REFOCUS') {
