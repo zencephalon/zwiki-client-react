@@ -5,39 +5,41 @@ import {
   CharacterMetadata,
   ContentBlock,
   BlockMapBuilder,
-} from 'draft-js'
-import getRangesForDraftEntity from 'draft-js/lib/getRangesForDraftEntity'
-import DraftModifier from 'draft-js/lib/DraftModifier'
-import generateRandomKey from 'draft-js/lib/generateRandomKey'
+} from 'draft-js';
+import getRangesForDraftEntity from 'draft-js/lib/getRangesForDraftEntity';
+import DraftModifier from 'draft-js/lib/DraftModifier';
+import generateRandomKey from 'draft-js/lib/generateRandomKey';
 
-import { List, Repeat } from 'immutable'
+import { List, Repeat } from 'immutable';
 
-import { LINK_REGEX_NO_G, DONE_TODO, NOT_DONE_TODO } from '~/constants'
+import { LINK_REGEX_NO_G, DONE_TODO, NOT_DONE_TODO } from '~/constants';
 
-import { getDateStamp } from '~/helpers'
+import { getDateStamp } from '~/helpers';
+
+const celebration = new Audio('/static/celebration.wav');
 
 export function insertAtomicBlock(editorState, entityKey, character) {
-  const contentState = editorState.getCurrentContent()
-  const selectionState = editorState.getSelection()
+  const contentState = editorState.getCurrentContent();
+  const selectionState = editorState.getSelection();
 
-  const afterRemoval = contentState
+  const afterRemoval = contentState;
   // const afterRemoval = DraftModifier.removeRange(
   //   contentState,
   //   selectionState,
   //   'backward',
   // )
 
-  const targetSelection = afterRemoval.getSelectionAfter()
-  const afterSplit = DraftModifier.splitBlock(afterRemoval, targetSelection)
-  const insertionTarget = afterSplit.getSelectionAfter()
+  const targetSelection = afterRemoval.getSelectionAfter();
+  const afterSplit = DraftModifier.splitBlock(afterRemoval, targetSelection);
+  const insertionTarget = afterSplit.getSelectionAfter();
 
   const asAtomicBlock = DraftModifier.setBlockType(
     afterSplit,
     insertionTarget,
-    'atomic',
-  )
+    'atomic'
+  );
 
-  const charData = CharacterMetadata.create({ entity: entityKey })
+  const charData = CharacterMetadata.create({ entity: entityKey });
 
   const fragmentArray = [
     new ContentBlock({
@@ -46,57 +48,57 @@ export function insertAtomicBlock(editorState, entityKey, character) {
       text: character,
       characterList: List(Repeat(charData, character.length)),
     }),
-  ]
+  ];
 
-  const fragment = BlockMapBuilder.createFromArray(fragmentArray)
+  const fragment = BlockMapBuilder.createFromArray(fragmentArray);
 
   const withAtomicBlock = DraftModifier.replaceWithFragment(
     asAtomicBlock,
     insertionTarget,
-    fragment,
-  )
+    fragment
+  );
 
   const newContent = withAtomicBlock.merge({
     selectionBefore: selectionState,
     selectionAfter: withAtomicBlock.getSelectionAfter().set('hasFocus', true),
-  })
+  });
 
-  return EditorState.push(editorState, newContent, 'insert-fragment')
+  return EditorState.push(editorState, newContent, 'insert-fragment');
 }
 
 export function findWithRegex(regex, contentBlock, callback) {
-  const text = contentBlock.getText()
-  let matchArr, start
+  const text = contentBlock.getText();
+  let matchArr, start;
   while ((matchArr = regex.exec(text)) !== null) {
-    start = matchArr.index
-    callback(start, start + matchArr[0].length)
+    start = matchArr.index;
+    callback(start, start + matchArr[0].length);
   }
 }
 
 export function findPrevMatch(editorState, regex) {
-  const selection = editorState.getSelection()
-  const startKey = selection.getStartKey()
-  const startOffset = selection.getStartOffset()
-  const content = editorState.getCurrentContent()
+  const selection = editorState.getSelection();
+  const startKey = selection.getStartKey();
+  const startOffset = selection.getStartOffset();
+  const content = editorState.getCurrentContent();
 
-  let prevMatch = null
-  let firstMatchFromBottom = null
+  let prevMatch = null;
+  let firstMatchFromBottom = null;
 
   for (const entry of content.getBlockMap().entries()) {
-    const [k, block] = entry
-    const text = block.getText()
-    let searchText = text
+    const [k, block] = entry;
+    const text = block.getText();
+    let searchText = text;
 
     if (k === startKey) {
       // restrict to the text that comes before the selection
-      searchText = text.slice(0, startOffset)
+      searchText = text.slice(0, startOffset);
     }
 
-    let lastMatch
-    let match
+    let lastMatch;
+    let match;
 
     while ((match = regex.exec(searchText)) !== null) {
-      lastMatch = match
+      lastMatch = match;
     }
 
     if (lastMatch) {
@@ -104,111 +106,116 @@ export function findPrevMatch(editorState, regex) {
         k,
         start: lastMatch.index,
         length: lastMatch[0].length,
-      }
+      };
 
-      prevMatch = matchObj
-      firstMatchFromBottom = matchObj
+      prevMatch = matchObj;
+      firstMatchFromBottom = matchObj;
     }
     if (k === startKey && prevMatch) {
-      break
+      break;
     }
   }
 
-  return prevMatch || firstMatchFromBottom || { k: null, start: null, length: null }
+  return (
+    prevMatch || firstMatchFromBottom || { k: null, start: null, length: null }
+  );
 }
 
 export function findNextMatch(editorState, regex) {
-  let currentBlockFound = false
-  const selection = editorState.getSelection()
-  const endKey = selection.getEndKey()
-  const endOffset = selection.getEndOffset()
-  const content = editorState.getCurrentContent()
+  let currentBlockFound = false;
+  const selection = editorState.getSelection();
+  const endKey = selection.getEndKey();
+  const endOffset = selection.getEndOffset();
+  const content = editorState.getCurrentContent();
 
-  let nextMatch = null
-  let firstMatchFromTop = null
+  let nextMatch = null;
+  let firstMatchFromTop = null;
 
   for (const entry of content.getBlockMap().entries()) {
-    const [k, block] = entry
-    const text = block.getText()
-    let searchText = text
+    const [k, block] = entry;
+    const text = block.getText();
+    let searchText = text;
 
     if (k === endKey) {
-      currentBlockFound = true
+      currentBlockFound = true;
       // restrict to the text that comes after the selection
-      searchText = text.slice(endOffset)
+      searchText = text.slice(endOffset);
     }
 
-    const match = regex.exec(searchText)
+    const match = regex.exec(searchText);
     if (match) {
       const matchObj = {
         k,
         start: match.index + (k === endKey ? endOffset : 0),
         length: match[0].length,
-      }
+      };
 
       if (!firstMatchFromTop) {
-        firstMatchFromTop = matchObj
+        firstMatchFromTop = matchObj;
       }
       if (currentBlockFound) {
-        nextMatch = matchObj
-        break
+        nextMatch = matchObj;
+        break;
       }
     }
   }
 
-  return nextMatch || firstMatchFromTop || { k: null, start: null, length: null }
+  return (
+    nextMatch || firstMatchFromTop || { k: null, start: null, length: null }
+  );
 }
 
 export function selectMatch(editorState, regex, forward = true) {
-  const { k, start, length } = forward ?
-    findNextMatch(editorState, regex) : findPrevMatch(editorState, regex)
+  const { k, start, length } = forward
+    ? findNextMatch(editorState, regex)
+    : findPrevMatch(editorState, regex);
   if (k) {
     const selectionState = SelectionState.createEmpty(k).merge({
       focusKey: k,
       anchorKey: k,
       anchorOffset: start,
       focusOffset: start + length,
-    })
-    return EditorState.forceSelection(editorState, selectionState)
+    });
+    return EditorState.forceSelection(editorState, selectionState);
   }
-  return editorState
+  return editorState;
 }
 
 export function moveToEnd(editorState, text) {
-  const selection = editorState.getSelection()
-  const key = selection.getStartKey()
-  const startOffset = selection.getStartOffset()
-  const content = editorState.getCurrentContent()
-  const block = content.getBlockForKey(key)
-  const blockText = block.getText()
+  const selection = editorState.getSelection();
+  const key = selection.getStartKey();
+  const startOffset = selection.getStartOffset();
+  const content = editorState.getCurrentContent();
+  const block = content.getBlockForKey(key);
+  const blockText = block.getText();
 
-  let offset = startOffset
-  const textLength = blockText.length
+  let offset = startOffset;
+  const textLength = blockText.length;
 
   while (
     offset <= textLength &&
     text.includes(blockText.slice(startOffset, offset))
   ) {
-    offset += 1
+    offset += 1;
   }
 
-  offset -= 1
+  offset -= 1;
 
   const newSelection = SelectionState.createEmpty(key).merge({
     focusKey: key,
     anchorKey: key,
     focusOffset: offset,
     anchorOffset: offset,
-  })
+  });
 
-  return EditorState.forceSelection(editorState, newSelection)
+  return EditorState.forceSelection(editorState, newSelection);
 }
 
 export const getEntitySelectionState = (contentState, entityKey) => {
-  let entitySelection
+  let entitySelection;
   contentState.getBlockMap().forEach((block) => {
     if (entitySelection) {
-      return
+      return;
     }
     try {
       getRangesForDraftEntity(block, entityKey).forEach((range) => {
@@ -219,128 +226,125 @@ export const getEntitySelectionState = (contentState, entityKey) => {
           focusKey: block.getKey(),
           isBackward: false,
           hasFocus: false,
-        })
-      })
-    } catch (e) {
-    }
-  })
-  return entitySelection
-}
+        });
+      });
+    } catch (e) {}
+  });
+  return entitySelection;
+};
 
 export const removeEntity = (editorState, entityKey) => {
-  const content = editorState.getCurrentContent()
-  const entitySelection = getEntitySelectionState(content, entityKey)
+  const content = editorState.getCurrentContent();
+  const entitySelection = getEntitySelectionState(content, entityKey);
   return EditorState.push(
-      editorState,
-      Modifier.removeRange(content, entitySelection, 'forward'),
-      'remove-range')
-}
+    editorState,
+    Modifier.removeRange(content, entitySelection, 'forward'),
+    'remove-range'
+  );
+};
 
 export const getCurrentBlockTextToCursor = (editorState) => {
-  const selection = editorState.getSelection()
-  const key = selection.getEndKey()
-  const offset = selection.getEndOffset()
-  const content = editorState.getCurrentContent()
-  const block = content.getBlockForKey(key)
-  return block.getText().slice(0, offset)
-}
+  const selection = editorState.getSelection();
+  const key = selection.getEndKey();
+  const offset = selection.getEndOffset();
+  const content = editorState.getCurrentContent();
+  const block = content.getBlockForKey(key);
+  return block.getText().slice(0, offset);
+};
 
 export const getNodeTitle = (editorState) => {
-  const blockText = getCurrentBlockTextToCursor(editorState)
+  const blockText = getCurrentBlockTextToCursor(editorState);
   // Probably impinging on some other link, break early
-  const breakChars = [']', ')', '(']
-  let startFound
-  let i
-  let char
+  const breakChars = [']', ')', '('];
+  let startFound;
+  let i;
+  let char;
 
   for (i = blockText.length - 1; i >= 0; i -= 1) {
-    char = blockText[i]
+    char = blockText[i];
     if (breakChars.includes(char)) {
-      break
+      break;
     }
     if (char === '[' || char === '{') {
-      startFound = true
-      break
+      startFound = true;
+      break;
     }
   }
 
   // Slice off the leading [
-  return startFound ? { char, title: blockText.slice(i + 1) } : {}
-}
+  return startFound ? { char, title: blockText.slice(i + 1) } : {};
+};
 
 export const getSelectedText = (editorState) => {
-  const selectionState = editorState.getSelection()
-  const anchorKey = selectionState.getAnchorKey()
-  const currentContent = editorState.getCurrentContent()
-  const currentContentBlock = currentContent.getBlockForKey(anchorKey)
-  const start = selectionState.getStartOffset()
-  const end = selectionState.getEndOffset()
-  return currentContentBlock.getText().slice(start, end)
-}
+  const selectionState = editorState.getSelection();
+  const anchorKey = selectionState.getAnchorKey();
+  const currentContent = editorState.getCurrentContent();
+  const currentContentBlock = currentContent.getBlockForKey(anchorKey);
+  const start = selectionState.getStartOffset();
+  const end = selectionState.getEndOffset();
+  return currentContentBlock.getText().slice(start, end);
+};
 
 export const getSelectionNodeId = (editorState) => {
-  const selectedText = getSelectedText(editorState)
-  const match = LINK_REGEX_NO_G.exec(selectedText)
-  return match ? match[2] : null
-}
+  const selectedText = getSelectedText(editorState);
+  const match = LINK_REGEX_NO_G.exec(selectedText);
+  return match ? match[2] : null;
+};
 
-export const insertLinkCompletion = (editorState, nodeId, char) => (
+export const insertLinkCompletion = (editorState, nodeId, char) =>
   EditorState.push(
     editorState,
     Modifier.insertText(
       editorState.getCurrentContent(),
       editorState.getSelection(),
-      `${{'[' : ']', '{' : '}'}[char]}(${nodeId})`,
+      `${{ '[': ']', '{': '}' }[char]}(${nodeId})`
     ),
-    'insert-characters',
-  )
-)
+    'insert-characters'
+  );
 
-export const insertTimeStamp = editorState => (
+export const insertTimeStamp = (editorState) =>
   EditorState.push(
     editorState,
     Modifier.insertText(
       editorState.getCurrentContent(),
       editorState.getSelection(),
-      `${new Date().toLocaleTimeString()}: `,
+      `${new Date().toLocaleTimeString()}: `
     ),
-    'insert-characters',
-  )
-)
+    'insert-characters'
+  );
 
-export const insertDateStamp = editorState => (
+export const insertDateStamp = (editorState) =>
   EditorState.push(
     editorState,
     Modifier.insertText(
       editorState.getCurrentContent(),
       editorState.getSelection(),
-      getDateStamp(),
+      getDateStamp()
     ),
-    'insert-characters',
-  )
-)
+    'insert-characters'
+  );
 
 export const selectBlockStart = (editorState, block) => {
-  const key = block.getKey()
+  const key = block.getKey();
   const newSelectionState = SelectionState.createEmpty(key).merge({
     focusKey: key,
     anchorKey: key,
     anchorOffset: 0,
     focusOffset: 0,
-  })
-  return EditorState.forceSelection(editorState, newSelectionState)
-}
+  });
+  return EditorState.forceSelection(editorState, newSelectionState);
+};
 
 export const selectBlock = (editorState, block) => {
-  const key = block.getKey()
+  const key = block.getKey();
   const newSelectionState = SelectionState.createEmpty(key).merge({
     focusKey: key,
     anchorKey: key,
     anchorOffset: 0,
     focusOffset: block.getLength(),
-  })
-  return EditorState.forceSelection(editorState, newSelectionState)
-}
+  });
+  return EditorState.forceSelection(editorState, newSelectionState);
+};
 
 const replaceTodoText = (currentKey, editorState, character) => {
   const todoSelectionState = SelectionState.createEmpty(currentKey).merge({
@@ -348,52 +352,57 @@ const replaceTodoText = (currentKey, editorState, character) => {
     anchorKey: currentKey,
     anchorOffset: 0,
     focusOffset: 1,
-  })
+  });
 
   return EditorState.push(
     editorState,
     Modifier.replaceText(
       editorState.getCurrentContent(),
       todoSelectionState,
-      character,
+      character
     ),
-    'insert-characters',
-  )
-}
+    'insert-characters'
+  );
+};
 
 export const toggleTodo = (editorState) => {
-  const selectionState = editorState.getSelection()
-  const currentKey = selectionState.getAnchorKey()
-  const currentContent = editorState.getCurrentContent()
-  const currentContentBlock = currentContent.getBlockForKey(currentKey)
+  const selectionState = editorState.getSelection();
+  const currentKey = selectionState.getAnchorKey();
+  const currentContent = editorState.getCurrentContent();
+  const currentContentBlock = currentContent.getBlockForKey(currentKey);
 
-  const postSelectEditorState = selectBlock(editorState, currentContentBlock)
-  const selectedText = getSelectedText(postSelectEditorState)
+  const postSelectEditorState = selectBlock(editorState, currentContentBlock);
+  const selectedText = getSelectedText(postSelectEditorState);
 
-  const postToggleEditorState = (selectedText.indexOf(NOT_DONE_TODO) === 0) ?
-    replaceTodoText(currentKey, postSelectEditorState, DONE_TODO)
-    :
-    (
-      (selectedText.indexOf(DONE_TODO) === 0) ?
-        replaceTodoText(currentKey, postSelectEditorState, NOT_DONE_TODO)
-        :
-        EditorState.push(
-          postSelectEditorState,
-          Modifier.insertText(
-            postSelectEditorState.getCurrentContent(),
-            SelectionState.createEmpty(currentKey).merge({
-              focusKey: currentKey,
-              anchorKey: currentKey,
-              anchorOffset: 0,
-              focusOffset: 0,
-            }),
-            NOT_DONE_TODO,
-          ),
-          'insert-characters',
-        )
-    )
+  const completedTodo = selectedText.indexOf(NOT_DONE_TODO) === 0;
 
-  const endOffset = postToggleEditorState.getCurrentContent().getBlockForKey(currentKey).getLength()
+  if (completedTodo) {
+    celebration.play();
+  }
+
+  const postToggleEditorState = completedTodo
+    ? replaceTodoText(currentKey, postSelectEditorState, DONE_TODO)
+    : selectedText.indexOf(DONE_TODO) === 0
+    ? replaceTodoText(currentKey, postSelectEditorState, NOT_DONE_TODO)
+    : EditorState.push(
+        postSelectEditorState,
+        Modifier.insertText(
+          postSelectEditorState.getCurrentContent(),
+          SelectionState.createEmpty(currentKey).merge({
+            focusKey: currentKey,
+            anchorKey: currentKey,
+            anchorOffset: 0,
+            focusOffset: 0,
+          }),
+          NOT_DONE_TODO
+        ),
+        'insert-characters'
+      );
+
+  const endOffset = postToggleEditorState
+    .getCurrentContent()
+    .getBlockForKey(currentKey)
+    .getLength();
 
   return EditorState.forceSelection(
     postToggleEditorState,
@@ -402,41 +411,44 @@ export const toggleTodo = (editorState) => {
       anchorKey: currentKey,
       anchorOffset: endOffset,
       focusOffset: endOffset,
-    }),
-  )
-}
+    })
+  );
+};
 
 export const selectBlockDir = (editorState, down) => {
-  const selectionState = editorState.getSelection()
-  const currentKey = selectionState.getAnchorKey()
-  const currentContent = editorState.getCurrentContent()
-  const currentContentBlock = currentContent.getBlockForKey(currentKey)
-  const start = selectionState.getStartOffset()
-  const end = selectionState.getEndOffset()
-  const length = currentContentBlock.getLength()
+  const selectionState = editorState.getSelection();
+  const currentKey = selectionState.getAnchorKey();
+  const currentContent = editorState.getCurrentContent();
+  const currentContentBlock = currentContent.getBlockForKey(currentKey);
+  const start = selectionState.getStartOffset();
+  const end = selectionState.getEndOffset();
+  const length = currentContentBlock.getLength();
 
   if (start !== 0 || end !== length) {
-    return selectBlock(editorState, currentContentBlock)
+    return selectBlock(editorState, currentContentBlock);
   }
-  let nextContentBlock = down ?
-    (currentContent.getBlockAfter(currentKey) || currentContent.getFirstBlock()) :
-    (currentContent.getBlockBefore(currentKey) || currentContent.getLastBlock())
+  let nextContentBlock = down
+    ? currentContent.getBlockAfter(currentKey) || currentContent.getFirstBlock()
+    : currentContent.getBlockBefore(currentKey) ||
+      currentContent.getLastBlock();
   while (nextContentBlock.getLength() === 0) {
-    const thisKey = nextContentBlock.getKey()
-    nextContentBlock = down ?
-      currentContent.getBlockAfter(thisKey) :
-      currentContent.getBlockBefore(thisKey)
+    const thisKey = nextContentBlock.getKey();
+    nextContentBlock = down
+      ? currentContent.getBlockAfter(thisKey)
+      : currentContent.getBlockBefore(thisKey);
   }
 
-  return selectBlock(editorState, nextContentBlock)
-}
+  return selectBlock(editorState, nextContentBlock);
+};
 
-export const selectBlockDown = editorState => selectBlockDir(editorState, true)
+export const selectBlockDown = (editorState) =>
+  selectBlockDir(editorState, true);
 
-export const selectBlockUp = editorState => selectBlockDir(editorState, false)
+export const selectBlockUp = (editorState) =>
+  selectBlockDir(editorState, false);
 
 // TODO: i18n
 export function extractName(content) {
   const m = content.split('\n', 1)[0].match(/#+\s*(.*)$/);
-  return m ? m[1] : 'Untitled'
+  return m ? m[1] : 'Untitled';
 }

@@ -120,8 +120,6 @@ class ZEditor extends Component {
       content !== this.state.previousPlainText
     ) {
       console.log('ILUVU2, sync occurred', this.props.node.version, version);
-      console.log(this.state.previousPlainText);
-      console.log(content);
       this.setState({
         editorState: EditorState.createWithContent(
           ContentState.createFromText(content)
