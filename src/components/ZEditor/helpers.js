@@ -377,6 +377,7 @@ export const toggleTodo = (editorState) => {
   const completedTodo = selectedText.indexOf(NOT_DONE_TODO) === 0;
 
   if (completedTodo) {
+    console.log('playing sound');
     celebration.play();
   }
 
