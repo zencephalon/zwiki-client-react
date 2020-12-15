@@ -378,6 +378,7 @@ export const toggleTodo = (editorState) => {
 
   if (completedTodo) {
     console.log('playing sound from the right place?');
+    celebration.fastSeek(0);
     celebration.play();
   }
 
