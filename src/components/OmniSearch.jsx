@@ -114,15 +114,9 @@ class OmniSearch extends Component {
       }
 
       this.input.blur();
-      dispatch(OMNI_QUERY(''));
-      dispatch(FOCUS({ type: EDITOR }));
-      this.setState({
-        selected: 0,
-      });
     }
     if (e.key === ' ' && e.ctrlKey) {
       this.input.blur();
-      dispatch(FOCUS({ type: EDITOR }));
     }
     if (e.key === 'D' && e.ctrlKey) {
       const newQ = q + getDateStamp();
@@ -134,6 +128,10 @@ class OmniSearch extends Component {
   handleBlur = () => {
     this.input.blur();
     this.props.dispatch(OMNI_QUERY(''));
+    dispatch(FOCUS({ type: EDITOR }));
+    this.setState({
+      selected: 0,
+    });
   };
 
   render() {
