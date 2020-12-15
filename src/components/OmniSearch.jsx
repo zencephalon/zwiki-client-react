@@ -128,7 +128,7 @@ class OmniSearch extends Component {
   handleBlur = () => {
     this.input.blur();
     this.props.dispatch(OMNI_QUERY(''));
-    dispatch(FOCUS({ type: EDITOR }));
+    this.props.dispatch(FOCUS({ type: EDITOR }));
     this.setState({
       selected: 0,
     });
