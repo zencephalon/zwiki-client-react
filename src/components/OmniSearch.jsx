@@ -100,7 +100,7 @@ class OmniSearch extends Component {
         }
 
         if (command[0] === 'd') {
-          const dateStr = command.slice(2);
+          const dateStr = command.slice(2) || 'today';
 
           const slashQ = getDateStamp(parseDate(dateStr));
           this.createOrOpen(slashQ);
