@@ -44,7 +44,7 @@ class OmniSearch extends Component {
     const { dispatch } = this.props;
 
     dispatch(INDEX(q)).then(() => {
-      this.setState({ timer: null, selected: 0 });
+      this.setState({ timer: null });
     });
   }, 250);
 
