@@ -55,12 +55,15 @@ const positionSuggestions = ({ decoratorRect, popover, state, props }) => {
     transform,
     transformOrigin: '1em 0%',
     transition,
+    display: 'flex',
+    zIndex: 9999,
   };
 
   if (top < window.innerHeight / 2) {
     style.top = `${top}px`;
   } else {
     style.bottom = `${bottom}px`;
+    style.flexDirection = 'column-reverse';
   }
 
   return style;
