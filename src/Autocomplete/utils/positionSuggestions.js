@@ -50,6 +50,7 @@ const positionSuggestions = ({ decoratorRect, popover, state, props }) => {
     }
   }
 
+  let direction;
   const style = {
     left: `${left}px`,
     transform,
@@ -61,12 +62,14 @@ const positionSuggestions = ({ decoratorRect, popover, state, props }) => {
 
   if (top < window.innerHeight / 2) {
     style.top = `${top}px`;
+    direction = 1;
   } else {
     style.bottom = `${bottom}px`;
     style.flexDirection = 'column-reverse';
+    direction = -1;
   }
 
-  return style;
+  return { direction, style };
 };
 
 export default positionSuggestions;
