@@ -5,7 +5,7 @@
   "scripts": {
     "clean": "rimraf dist",
     "build:webpack": "cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
-    "build": "npm run clean && npm run build:webpack && cp spidertree.png dist && cp celebrate.wav dist",
+    "build": "npm run clean && npm run build:webpack && cp spidertree.png dist && cp celebrate.wav dist && cp index.html dist",
     "dev": "NODE_ENV=development npm start",
     "start": "node devServer.js",
     "lint": "eslint src",
