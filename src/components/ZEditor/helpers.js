@@ -16,7 +16,7 @@ import { LINK_REGEX_NO_G, DONE_TODO, NOT_DONE_TODO } from '~/constants';
 
 import { getDateStamp } from '~/helpers';
 
-const celebration = new Audio('/static/celebrate.wav');
+const celebration = new Audio('/celebrate.wav');
 
 export function insertAtomicBlock(editorState, entityKey, character) {
   const contentState = editorState.getCurrentContent();
