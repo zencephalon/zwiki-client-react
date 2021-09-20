@@ -5,7 +5,7 @@
   "scripts": {
     "clean": "rimraf dist",
     "build:webpack": "cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
-    "build": "npm run clean && npm run build:webpack",
+    "build": "npm run clean && npm run build:webpack && cp spidertree.png dist && cp celebrate.wav dist",
     "dev": "NODE_ENV=development npm start",
     "start": "node devServer.js",
     "lint": "eslint src",
@@ -75,7 +75,7 @@
     "react-router-dom": "^5.1.2",
     "react-router-redux": "^4.0.8",
     "redux": "^4.0.5",
-    "redux-rest-reducer": "git+ssh://git@github.com/zencephalon/redux-rest-reducer.git#9ccbc3dea0dbaf125a929d6380743fecd0203234",
+    "redux-rest-reducer": "zencephalon/redux-rest-reducer#9ccbc3dea0dbaf125a929d6380743fecd0203234",
     "redux-thunk": "^2.3.0",
     "trie-search": "^1.2.11",
     "union-class-names": "^1.0.0"
