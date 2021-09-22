@@ -11,6 +11,7 @@ import Editor from 'draft-js-plugins-editor';
 
 import nodeShape from '~/apis/nodes/shape';
 import { POST, PUT, INDEX, LINK_QUERY } from '~/apis/nodes/actions';
+import PrivacyToggle from './PrivacyToggle';
 
 import {
   FOCUS,
@@ -193,6 +194,17 @@ class ZEditor extends Component {
     );
   };
 
+  togglePrivacy = () => {
+    const { node, dispatch } = this.props;
+
+    return dispatch(
+      PUT(node.id, { is_private: !node.is_private, version: node.version + 1 })
+    ).catch(() => {
+      this.props.refetch();
+      console.log('ILUVU, versions out of sync.');
+    });
+  };
+
   focus = () => {
     this.props.refetch();
     this.editor.focus();
@@ -306,7 +318,7 @@ class ZEditor extends Component {
 
   render() {
     const { timer } = this.state;
-    const { focused } = this.props;
+    const { focused, node } = this.props;
     const { MentionSuggestions } = this.mentionPlugin;
     const { MentionSuggestions: MentionSuggestionsTwo } = this.mentionPluginTwo;
     const {
@@ -314,6 +326,10 @@ class ZEditor extends Component {
     } = this.mentionPluginThree;
     return (
       <div className={classNames('editor', { saved: !timer, focused })}>
+        <PrivacyToggle
+          isPrivate={node.is_private}
+          togglePrivacy={this.togglePrivacy}
+        />
         <Editor
           editorState={this.state.editorState}
           onChange={this.onChange}

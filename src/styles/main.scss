@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css?family=Vollkorn&display=swap");
+@import url('https://fonts.googleapis.com/css?family=Vollkorn&display=swap');
 
 $main-bg-color: #fff;
 $accent-blue: #36aecc;
@@ -14,7 +14,7 @@ body {
   color: $accent-black;
   display: flex;
   justify-content: center;
-  font-family: "Vollkorn", serif;
+  font-family: 'Vollkorn', serif;
   font-size: 3vw;
   margin-top: 0;
 }
@@ -52,6 +52,7 @@ form.gate input {
   cursor: text;
   padding: 0.5em;
   margin-bottom: 0em;
+  position: relative;
 }
 
 .editor.saved {
@@ -73,13 +74,31 @@ figure {
   -webkit-margin-end: 0em;
 }
 
+.privacy-toggle {
+  position: absolute;
+  right: 0;
+  top: 0;
+  cursor: grab;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 40px 30px 0;
+}
+
+.privacy-toggle.public {
+  border-color: transparent $lighter-blue transparent transparent;
+}
+.privacy-toggle.private {
+  border-color: transparent #000000 transparent transparent;
+}
+
 // ===== OmniSearch ====
 
 .omni-search {
   input {
     font-size: 66%;
     line-height: 1.5em;
-    font-family: "Vollkorn", serif;
+    font-family: 'Vollkorn', serif;
     width: 33em;
     padding: 0px;
     border-width: 0px;
