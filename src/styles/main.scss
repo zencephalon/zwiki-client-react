@@ -63,7 +63,7 @@ form.gate input {
 }
 
 .editor.private {
-  border-top: 2px solid #000;
+  border-top: 2px dashed #000;
 }
 .editor.public {
   border-top: 2px solid $lightest-blue;
