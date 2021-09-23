@@ -218,6 +218,9 @@ class ZEditor extends Component {
     const { dispatch, node } = this.props;
     const { editorState } = this.state;
 
+    if (command === 'TOGGLE_PRIVACY') {
+      this.togglePrivacy();
+    }
     if (command === 'INSERT_TIME_STAMP') {
       this.setState({
         editorState: insertTimeStamp(editorState),
@@ -325,11 +328,14 @@ class ZEditor extends Component {
       MentionSuggestions: MentionSuggestionsThree,
     } = this.mentionPluginThree;
     return (
-      <div className={classNames('editor', { saved: !timer, focused })}>
-        <PrivacyToggle
-          isPrivate={node.is_private}
-          togglePrivacy={this.togglePrivacy}
-        />
+      <div
+        className={classNames('editor', {
+          saved: !timer,
+          focused,
+          private: node.is_private,
+          public: !node.is_private,
+        })}
+      >
         <Editor
           editorState={this.state.editorState}
           onChange={this.onChange}

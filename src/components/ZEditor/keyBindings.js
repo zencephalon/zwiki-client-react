@@ -1,6 +1,9 @@
 import { getDefaultKeyBinding } from 'draft-js';
 
 export default function keyBindings(e) {
+  if (e.key === 'p' && e.ctrlKey) {
+    return 'TOGGLE_PRIVACY';
+  }
   if (e.key === 'd' && e.ctrlKey) {
     return 'INSERT_TIME_STAMP';
   }

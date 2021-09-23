@@ -1,4 +1,5 @@
-.mention, .mention:visited {
+.mention,
+.mention:visited {
   color: #575f67;
   cursor: pointer;
   display: inline-block;
@@ -9,7 +10,8 @@
   text-decoration: none;
 }
 
-.mention:hover, .mention:focus {
+.mention:hover,
+.mention:focus {
   color: #677584;
   background: #edf5fd;
   outline: 0; /* reset for :focus */
