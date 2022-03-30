@@ -19,24 +19,25 @@ class Link extends Component {
     dispatch(TOGGLE_LINK({ nodeId }));
   };
 
-  render() {
-    const { selection } = this.context;
-    const {
-      dispatch,
-      decoratedText,
-      contentState,
-      blockKey,
-      start,
-      end,
-    } = this.props;
+  getText = (selection) => {
+    const { decoratedText, blockKey, start, end } = this.props;
+    const selected = selection.hasEdgeWithin(blockKey, start, end);
+
+    if (selected) {
+      return this.props.children;
+    }
+
     const match = LINK_REGEX_NO_G.exec(decoratedText);
     const nodeText = match?.[1];
-    const selected = selection.hasEdgeWithin(blockKey, start, end);
-    console.log(selected, nodeText);
-    // console.log(selection.getStartKey());
+    return nodeText;
+  };
+
+  render() {
+    const { selection } = this.context;
+
     return (
       <span style={{ color: '#36AECC' }} onClick={this.onClick}>
-        {selected ? this.props.children : nodeText}
+        {this.getText(selection)}
       </span>
     );
   }
