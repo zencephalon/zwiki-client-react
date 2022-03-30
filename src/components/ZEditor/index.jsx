@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import Context from './Context';
 import { connect } from 'react-redux';
 
 import { fromJS } from 'immutable';
@@ -146,6 +147,7 @@ class ZEditor extends Component {
   }
 
   onChange = (editorState) => {
+    console.log('editorstate change');
     const { timer, previousPlainText } = this.state;
     let newTimer;
 
@@ -327,6 +329,9 @@ class ZEditor extends Component {
     const {
       MentionSuggestions: MentionSuggestionsThree,
     } = this.mentionPluginThree;
+
+    const selection = this.state.editorState.getSelection();
+
     return (
       <div
         className={classNames('editor', {
@@ -336,71 +341,75 @@ class ZEditor extends Component {
           public: !node.is_private,
         })}
       >
-        <Editor
-          editorState={this.state.editorState}
-          onChange={this.onChange}
-          plugins={[
-            this.mentionPlugin,
-            this.mentionPluginTwo,
-            this.mentionPluginThree,
-          ]}
-          ref={(element) => {
-            this.editor = element;
-          }}
-          defaultKeyBindings={false}
-          handleKeyCommand={this.handleKeyCommand}
-          keyBindingFn={keyBindings}
-          spellCheck
-          onTab={(e) => {
-            const { editorState } = this.state;
+        <Context.Provider value={{ selection }}>
+          <Editor
+            editorState={this.state.editorState}
+            onChange={this.onChange}
+            plugins={[
+              this.mentionPlugin,
+              this.mentionPluginTwo,
+              this.mentionPluginThree,
+            ]}
+            ref={(element) => {
+              this.editor = element;
+            }}
+            defaultKeyBindings={false}
+            handleKeyCommand={this.handleKeyCommand}
+            keyBindingFn={keyBindings}
+            spellCheck
+            onTab={(e) => {
+              const { editorState } = this.state;
 
-            e.preventDefault();
+              e.preventDefault();
 
-            this.setState({
-              editorState: selectMatch(
-                editorState,
-                LINK_AND_IMPORT_REGEX,
-                !e.shiftKey
-              ),
-            });
+              this.setState({
+                editorState: selectMatch(
+                  editorState,
+                  LINK_AND_IMPORT_REGEX,
+                  !e.shiftKey
+                ),
+              });
 
-            setTimeout(this.focus, 10);
-          }}
-          onBlur={() => {
-            this.saveToServer();
-          }}
-          decorators={[
-            {
-              strategy: linkStrategy,
-              component: (props) => <Link {...props} />,
-            },
-            {
-              strategy: importStrategy,
-              component: (props) => <Link {...props} />,
-            },
-          ]}
-        />
-        {focused && (
-          <MentionSuggestions
-            onSearchChange={this.onSearchChange}
-            suggestions={this.props.suggestions}
-            onAddMention={this.onAddMention}
+              setTimeout(this.focus, 10);
+            }}
+            onBlur={() => {
+              this.saveToServer();
+            }}
+            decorators={[
+              {
+                strategy: linkStrategy,
+                component: (props) => (
+                  <Link {...props} editorState={this.state.editorState} />
+                ),
+              },
+              {
+                strategy: importStrategy,
+                component: (props) => <Link {...props} />,
+              },
+            ]}
           />
-        )}
-        {focused && (
-          <MentionSuggestionsTwo
-            onSearchChange={this.onSearchChange}
-            suggestions={this.props.suggestions}
-            onAddMention={this.onAddMention}
-          />
-        )}
-        {focused && (
-          <MentionSuggestionsThree
-            onSearchChange={this.onSearchChange}
-            suggestions={this.props.suggestions}
-            onAddMention={this.onAddMention}
-          />
-        )}
+          {focused && (
+            <MentionSuggestions
+              onSearchChange={this.onSearchChange}
+              suggestions={this.props.suggestions}
+              onAddMention={this.onAddMention}
+            />
+          )}
+          {focused && (
+            <MentionSuggestionsTwo
+              onSearchChange={this.onSearchChange}
+              suggestions={this.props.suggestions}
+              onAddMention={this.onAddMention}
+            />
+          )}
+          {focused && (
+            <MentionSuggestionsThree
+              onSearchChange={this.onSearchChange}
+              suggestions={this.props.suggestions}
+              onAddMention={this.onAddMention}
+            />
+          )}
+        </Context.Provider>
       </div>
     );
   }
