@@ -83,7 +83,7 @@ class ZEditor extends Component {
     this.mentionPlugin = createMentionPlugin({
       theme,
       mentionTrigger: '[',
-      replaceTemplate: ({ name, id }) => `${name}](${id})`,
+      replaceTemplate: ({ name, id }) => `${name}](${id}) `,
     });
     this.mentionPluginTwo = createMentionPlugin({
       theme,
@@ -93,7 +93,7 @@ class ZEditor extends Component {
     this.mentionPluginThree = createMentionPlugin({
       theme,
       mentionTrigger: '{',
-      replaceTemplate: ({ name, id }) => `${name}}(${id})`,
+      replaceTemplate: ({ name, id }) => `${name}}(${id}) `,
     });
   }
 
