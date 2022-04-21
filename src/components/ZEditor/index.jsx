@@ -83,17 +83,17 @@ class ZEditor extends Component {
     this.mentionPlugin = createMentionPlugin({
       theme,
       mentionTrigger: '[',
-      replaceTemplate: ({ name, id }) => `${name}](${id}) `,
+      replaceTemplate: ({ name, id }) => `${name}](${id})​`,
     });
     this.mentionPluginTwo = createMentionPlugin({
       theme,
       mentionTrigger: '](',
-      replaceTemplate: ({ id }) => `${id})`,
+      replaceTemplate: ({ id }) => `${id})​`,
     });
     this.mentionPluginThree = createMentionPlugin({
       theme,
       mentionTrigger: '{',
-      replaceTemplate: ({ name, id }) => `${name}}(${id}) `,
+      replaceTemplate: ({ name, id }) => `${name}}(${id})​`,
     });
   }
 
