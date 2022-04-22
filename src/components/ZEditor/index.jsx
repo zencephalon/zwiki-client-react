@@ -76,6 +76,8 @@ const theme = {
   mentionSuggestionsEntryText: 'mentionSuggestionsEntryText',
 };
 
+const invisibleSpace = '​';
+
 class ZEditor extends Component {
   constructor(props) {
     super(props);
@@ -83,17 +85,17 @@ class ZEditor extends Component {
     this.mentionPlugin = createMentionPlugin({
       theme,
       mentionTrigger: '[',
-      replaceTemplate: ({ name, id }) => `${name}](${id})​`,
+      replaceTemplate: ({ name, id }) => `${name}](${id})${invisibleSpace}`,
     });
     this.mentionPluginTwo = createMentionPlugin({
       theme,
       mentionTrigger: '](',
-      replaceTemplate: ({ id }) => `${id})​`,
+      replaceTemplate: ({ id }) => `${id})${invisibleSpace}`,
     });
     this.mentionPluginThree = createMentionPlugin({
       theme,
       mentionTrigger: '{',
-      replaceTemplate: ({ name, id }) => `${name}}(${id})​`,
+      replaceTemplate: ({ name, id }) => `${name}}(${id})${invisibleSpace}`,
     });
   }
 

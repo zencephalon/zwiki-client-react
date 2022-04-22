@@ -291,13 +291,15 @@ export const getSelectionNodeId = (editorState) => {
   return match ? match[2] : null;
 };
 
+const invisibleSpace = '​';
+
 export const insertLinkCompletion = (editorState, nodeId, char) =>
   EditorState.push(
     editorState,
     Modifier.insertText(
       editorState.getCurrentContent(),
       editorState.getSelection(),
-      `${{ '[': ']', '{': '}' }[char]}(${nodeId})`
+      `${{ '[': ']', '{': '}' }[char]}(${nodeId})${invisibleSpace}`
     ),
     'insert-characters'
   );
