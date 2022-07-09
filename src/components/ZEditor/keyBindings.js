@@ -20,6 +20,7 @@ export default function keyBindings(e) {
     return 'REFOCUS';
   }
   if (e.key === ' ' && e.ctrlKey) {
+    e.preventDefault();
     return 'SWITCH_FOCUS';
   }
   if (e.key === 'q' && e.ctrlKey) {
