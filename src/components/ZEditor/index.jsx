@@ -77,6 +77,7 @@ const theme = {
 };
 
 const invisibleSpace = '​';
+const zeroWidthNonJoiner = '‌';
 
 class ZEditor extends Component {
   constructor(props) {
@@ -85,17 +86,17 @@ class ZEditor extends Component {
     this.mentionPlugin = createMentionPlugin({
       theme,
       mentionTrigger: '[',
-      replaceTemplate: ({ name, id }) => `${name}](${id})${invisibleSpace}`,
+      replaceTemplate: ({ name, id }) => `${name}](${id})${zeroWidthNonJoiner}`,
     });
     this.mentionPluginTwo = createMentionPlugin({
       theme,
       mentionTrigger: '](',
-      replaceTemplate: ({ id }) => `${id})${invisibleSpace}`,
+      replaceTemplate: ({ id }) => `${id})${zeroWidthNonJoiner}`,
     });
     this.mentionPluginThree = createMentionPlugin({
       theme,
       mentionTrigger: '{',
-      replaceTemplate: ({ name, id }) => `${name}}(${id})${invisibleSpace}`,
+      replaceTemplate: ({ name, id }) => `${name}}(${id})${zeroWidthNonJoiner}`,
     });
   }
 
