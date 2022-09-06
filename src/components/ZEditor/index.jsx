@@ -42,8 +42,9 @@ import {
   LINK_REGEX,
   IMPORT_REGEX,
   LINK_AND_IMPORT_REGEX,
+  zeroWidthNonJoiner,
 } from '~/constants';
-import { fuseSort } from '~/helpers';
+
 import {
   findWithRegex,
   selectMatch,
@@ -75,9 +76,6 @@ const theme = {
   mentionSuggestionsEntryFocused: 'mentionSuggestionsEntryFocused',
   mentionSuggestionsEntryText: 'mentionSuggestionsEntryText',
 };
-
-const invisibleSpace = '​';
-const zeroWidthNonJoiner = '‌';
 
 class ZEditor extends Component {
   constructor(props) {
