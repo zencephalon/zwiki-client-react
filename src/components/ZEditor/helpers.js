@@ -12,7 +12,11 @@ import generateRandomKey from 'draft-js/lib/generateRandomKey';
 
 import { List, Repeat } from 'immutable';
 
-import { LINK_REGEX_NO_G, DONE_TODO, NOT_DONE_TODO } from '~/constants';
+import {
+  LINK_AND_IMPORT_REGEX_NO_G,
+  DONE_TODO,
+  NOT_DONE_TODO,
+} from '~/constants';
 
 import { getDateStamp } from '~/helpers';
 
@@ -287,7 +291,7 @@ export const getSelectedText = (editorState) => {
 
 export const getSelectionNodeId = (editorState) => {
   const selectedText = getSelectedText(editorState);
-  const match = LINK_REGEX_NO_G.exec(selectedText);
+  const match = LINK_AND_IMPORT_REGEX_NO_G.exec(selectedText);
   return match ? match[2] : null;
 };
 
