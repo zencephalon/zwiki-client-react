@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import Context from './Context';
 import { connect } from 'react-redux';
 
-import { LINK_AND_IMPORT_REGEX } from '~/constants';
+import { LINK_AND_IMPORT_REGEX_NO_G } from '~/constants';
 import { TOGGLE_LINK } from '~/apis/flex/actions';
 
 class Link extends Component {
@@ -15,7 +15,7 @@ class Link extends Component {
 
   onClick = () => {
     const { dispatch, decoratedText } = this.props;
-    const nodeId = LINK_AND_IMPORT_REGEX.exec(decoratedText)?.[2];
+    const nodeId = LINK_AND_IMPORT_REGEX_NO_G.exec(decoratedText)?.[2];
     dispatch(TOGGLE_LINK({ nodeId }));
   };
 
@@ -27,7 +27,7 @@ class Link extends Component {
       return this.props.children;
     }
 
-    const match = LINK_AND_IMPORT_REGEX.exec(decoratedText);
+    const match = LINK_AND_IMPORT_REGEX_NO_G.exec(decoratedText);
     const nodeText = match?.[1];
     return nodeText;
   };
