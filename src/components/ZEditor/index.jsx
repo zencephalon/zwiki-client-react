@@ -289,7 +289,6 @@ class ZEditor extends Component {
 
       dispatch(
         POST('NEW_NODE', {
-          content: `# ${title}\n\n`,
           name: title,
         })
       ).then(({ data: { id, name } }) => {

@@ -59,14 +59,11 @@ class OmniSearch extends Component {
 
   createOrOpen = (q) => {
     const { dispatch } = this.props;
-    // ILUVU: not a great idea to have a content template here
-    dispatch(POST('new-omni', { content: `# ${q}\n\n`, name: q })).then(
-      (ret) => {
-        const { data: new_node } = ret;
-        dispatch(OPEN_NODE({ nodeId: new_node.id }));
-        dispatch(NEW_ENTRY(new_node.name, new_node.id));
-      }
-    );
+    dispatch(POST('new-omni', { name: q })).then((ret) => {
+      const { data: new_node } = ret;
+      dispatch(OPEN_NODE({ nodeId: new_node.id }));
+      dispatch(NEW_ENTRY(new_node.name, new_node.id));
+    });
   };
 
   handleKeyPress = (e) => {
