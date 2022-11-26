@@ -21,7 +21,7 @@ const startState = {
     makeColumn(),
   ],
   leftmostVisibleColumnId: 0,
-  visibleColumns: 2,
+  visibleColumns: 3,
   focusedColumnId: 0,
   focusType: EDITOR,
 };
