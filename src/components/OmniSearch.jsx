@@ -11,7 +11,7 @@ import { RECEIVE_INDEX } from '~/apis/suggest/actions';
 
 import { FOCUS, OPEN_NODE } from '~/apis/flex/actions';
 import { OMNI_SEARCH, EDITOR } from '~/constants';
-import { fuseSort, getDateStamp } from '~/helpers';
+import { getDateStamp } from '~/helpers';
 
 import { NEW_ENTRY } from '~/apis/suggest/actions';
 
