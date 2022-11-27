@@ -84,12 +84,13 @@ figure {
 
 .omni-search {
   input {
-    font-size: 66%;
-    line-height: 1.5em;
+    font-size: 40%;
+    line-height: 1em;
     font-family: 'Vollkorn', serif;
     width: 33em;
     padding: 0px;
     border-width: 0px;
+    padding-left: 0.5em;
   }
 
   input:focus {
@@ -97,8 +98,8 @@ figure {
   }
 
   .suggestions {
-    height: 1em;
-    font-size: 66%;
+    font-size: 40%;
+    height: 1px;
 
     .suggestion-popover {
       position: relative;

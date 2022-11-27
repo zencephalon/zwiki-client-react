@@ -24,7 +24,6 @@ class Flex extends Component {
         .then((ret) => {
           const { data: new_node } = ret;
           this.props.actions.OPEN_NODE({ nodeId: new_node.id });
-          this.props.actions.NEW_ENTRY(new_node.name, new_node.id);
         });
     }
   }
