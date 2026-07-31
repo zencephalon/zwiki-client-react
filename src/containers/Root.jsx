@@ -3,6 +3,8 @@ import { Provider } from "react-redux";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { configureStore } from "~/store/configureStore";
 import App from "./App";
+import Agent from "./Agent";
+import { AgentPath } from "~/routes";
 
 const store = configureStore();
 
@@ -10,6 +12,9 @@ const Root = () => (
   <Provider store={store}>
     <Router>
       <Switch>
+        <Route exact path={AgentPath()}>
+          <Agent />
+        </Route>
         <Route exact path="/">
           <App />
         </Route>

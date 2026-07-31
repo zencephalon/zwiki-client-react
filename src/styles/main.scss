@@ -177,6 +177,251 @@ figure {
   color: $accent-blue;
 }
 
+// ==== Agent ====
+
+// The global body font-size is viewport-relative, which is unreadable on a
+// phone. The agent page opts out and sizes in rem.
+body.agent-body {
+  display: block;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.agent-page {
+  font-size: 1rem;
+  line-height: 1.5;
+  width: 100%;
+  max-width: 38rem;
+  margin: 0 auto;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+
+  .agent-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid $accent-gray;
+
+    a {
+      color: $accent-blue;
+      text-decoration: none;
+    }
+
+    h1 {
+      font-size: 1.1rem;
+      margin: 0;
+    }
+  }
+
+  .agent-thread {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 1rem;
+  }
+
+  .agent-empty {
+    color: #7a7873;
+  }
+
+  .exchange {
+    margin-bottom: 2rem;
+  }
+
+  .query {
+    background-color: $lightest-blue;
+    border-left: 3px solid $accent-blue;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.75rem;
+    white-space: pre-wrap;
+  }
+
+  .error {
+    color: $accent-red;
+  }
+
+  .markdown {
+    h3,
+    h4,
+    h5,
+    h6 {
+      margin: 1rem 0 0.4rem;
+      font-size: 1.05rem;
+    }
+
+    p,
+    ul,
+    ol,
+    blockquote {
+      margin: 0 0 0.75rem;
+    }
+
+    ul,
+    ol {
+      padding-left: 1.25rem;
+    }
+
+    blockquote {
+      border-left: 3px solid $accent-gray;
+      padding-left: 0.75rem;
+      margin-left: 0;
+    }
+
+    code {
+      font-family: monospace;
+      font-size: 0.85em;
+      background-color: #f4f3f1;
+      padding: 0 0.2em;
+    }
+
+    pre {
+      background-color: #f4f3f1;
+      padding: 0.75rem;
+      overflow-x: auto;
+    }
+
+    .node-ref {
+      color: $accent-blue;
+      border-bottom: 1px dotted $accent-blue;
+    }
+  }
+
+  .nodes-touched {
+    list-style: none;
+    padding: 0;
+    margin: 0.75rem 0 0;
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+    }
+
+    .action {
+      background-color: $accent-orange;
+      color: white;
+      border-radius: 3px;
+      padding: 0 0.4em;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+    }
+  }
+
+  .tool-calls {
+    margin-top: 0.75rem;
+    font-size: 0.8rem;
+    color: #7a7873;
+
+    summary {
+      cursor: pointer;
+    }
+
+    ol {
+      padding-left: 1.25rem;
+    }
+
+    li {
+      margin-bottom: 0.25rem;
+      overflow-wrap: anywhere;
+    }
+
+    .tool-name {
+      font-family: monospace;
+      margin-right: 0.4em;
+    }
+
+    .errored .tool-error {
+      display: block;
+      color: $accent-red;
+    }
+  }
+
+  // Indeterminate: the endpoint gives no progress events, so nothing here
+  // implies a percentage or partial output.
+  .progress {
+    height: 3px;
+    background-color: $lighter-blue;
+    overflow: hidden;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 40%;
+      background-color: $accent-blue;
+      animation: agent-progress 1.4s ease-in-out infinite;
+    }
+  }
+
+  .pending-note {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: #7a7873;
+    margin-top: 0.4rem;
+  }
+
+  .cancel {
+    font: inherit;
+    background: none;
+    border: none;
+    color: $accent-blue;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  .agent-composer {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
+    border-top: 1px solid $accent-gray;
+
+    textarea {
+      flex: 1;
+      font-family: 'Vollkorn', serif;
+      // 16px keeps iOS Safari from zooming on focus.
+      font-size: 1rem;
+      line-height: 1.4;
+      padding: 0.5rem;
+      border: 1px solid $accent-gray;
+      border-radius: 4px;
+      resize: none;
+    }
+
+    button {
+      font: inherit;
+      border: none;
+      padding: 0.6rem 1.1rem;
+      min-height: 2.75rem;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+  }
+}
+
+@keyframes agent-progress {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(250%);
+  }
+}
+
 // ==== Util ====
 
 .hidden {
